@@ -117,10 +117,12 @@ export function CustomersList() {
       </View>
 
       {/* Add Button */}
+      {/*
       <TouchableOpacity style={styles.addButton}>
         <Ionicons name="add" size={20} color="#FFFFFF" />
         <Text style={styles.addButtonText}>Neuer Kunde</Text>
       </TouchableOpacity>
+      */}
 
       {/* Loading State */}
       {isLoading ? (
