@@ -1,11 +1,41 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { StorageService } from "../services/storage";
 
 interface SettingsProps {
   onBack: () => void;
+  onLogout?: () => void;
 }
 
-export function Settings({ onBack }: SettingsProps) {
+export function Settings({ onBack, onLogout }: SettingsProps) {
+  const handleLogout = () => {
+    Alert.alert(
+      "Abmelden",
+      "Möchtest du dich wirklich abmelden?",
+      [
+        {
+          text: "Abbrechen",
+          style: "cancel",
+        },
+        {
+          text: "Abmelden",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await StorageService.clearAll();
+              if (onLogout) {
+                onLogout();
+              }
+            } catch (error) {
+              console.error("Error during logout:", error);
+              Alert.alert("Fehler", "Abmelden fehlgeschlagen. Bitte versuche es erneut.");
+            }
+          },
+        },
+      ]
+    );
+  };
+
   const settingsOptions = [
     { id: 1, title: "Business Profile", icon: "business-outline", color: "#7C3AED" },
     { id: 2, title: "Working Hours", icon: "time-outline", color: "#60A5FA" },
@@ -49,9 +79,9 @@ export function Settings({ onBack }: SettingsProps) {
       </View>
 
       {/* Logout Button */}
-      <TouchableOpacity style={styles.logoutButton}>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Ionicons name="log-out-outline" size={20} color="#EF4444" />
-        <Text style={styles.logoutButtonText}>Logout</Text>
+        <Text style={styles.logoutButtonText}>Abmelden</Text>
       </TouchableOpacity>
 
       {/* Version */}

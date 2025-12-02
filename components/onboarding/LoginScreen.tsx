@@ -5,7 +5,7 @@ import { API } from "../../services/api";
 
 interface LoginScreenProps {
   domain: string;
-  onLoginSuccess: (token: string) => void;
+  onLoginSuccess: (token: string, staff: any) => void;
   onBack: () => void;
 }
 
@@ -38,10 +38,15 @@ export function LoginScreen({ domain, onLoginSuccess, onBack }: LoginScreenProps
       // Login mit echter API
       const response = await API.login(username, password);
 
+      console.log("Login response:", JSON.stringify(response, null, 2));
+
       setIsLoading(false);
 
-      // Erfolgreicher Login - Token weitergeben
-      onLoginSuccess(response.token);
+      // Erfolgreicher Login - Token und Staff-Daten weitergeben
+      if (!response.staff) {
+        console.warn("No staff data in response");
+      }
+      onLoginSuccess(response.token, response.staff);
     } catch (err: any) {
       setIsLoading(false);
 

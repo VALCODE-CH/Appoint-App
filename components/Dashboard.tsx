@@ -1,32 +1,215 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import { useState, useEffect } from "react";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { API, Appointment } from "../services/api";
+import { StorageService } from "../services/storage";
 
 interface DashboardProps {
   onNavigateToSettings: () => void;
+  shouldRefresh?: number; // Timestamp um Refresh zu triggern
 }
 
-export function Dashboard({ onNavigateToSettings }: DashboardProps) {
-  const todayAppointments = [
-    { id: 1, time: "09:00", customer: "Sarah Johnson", service: "Haircut & Style", staff: "Emma Wilson" },
-    { id: 2, time: "10:30", customer: "Michael Chen", service: "Men's Haircut", staff: "James Miller" },
-    { id: 3, time: "11:00", customer: "Lisa Anderson", service: "Color Treatment", staff: "Emma Wilson" },
-    { id: 4, time: "14:00", customer: "David Brown", service: "Beard Trim", staff: "James Miller" },
+export function Dashboard({ onNavigateToSettings, shouldRefresh }: DashboardProps) {
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState("");
+  const [showingTomorrow, setShowingTomorrow] = useState(false);
+  const [stats, setStats] = useState({
+    todayAppointmentsCount: 0,
+    monthlyGrowth: "+0%",
+    totalCustomers: 0,
+    todayRevenue: "0.00"
+  });
+
+  // Lade Daten beim ersten Render UND jedes Mal wenn shouldRefresh sich ändert
+  useEffect(() => {
+    loadAppointments();
+  }, [shouldRefresh]);
+
+  const loadAppointments = async () => {
+    try {
+      setError("");
+      setShowingTomorrow(false);
+      const staff = await StorageService.getStaffData();
+
+      console.log("Loaded staff data:", JSON.stringify(staff, null, 2));
+
+      if (!staff) {
+        // Prüfe alle gespeicherten Daten
+        const token = await StorageService.getToken();
+        const domain = await StorageService.getDomain();
+        console.log("Token exists:", !!token);
+        console.log("Domain:", domain);
+
+        setError(`Staff-Daten nicht gefunden. Token: ${!!token}, Domain: ${domain}`);
+        setIsLoading(false);
+        return;
+      }
+
+      // Hole heutige Termine
+      const today = new Date();
+      const startOfDay = formatDate(today) + " 00:00:00";
+      const endOfDay = formatDate(today) + " 23:59:59";
+
+      const todayData = await API.getAppointments({
+        staff_id: staff.id,
+        start: startOfDay,
+        end: endOfDay,
+      });
+
+      // Filtere nur zukünftige Termine (die noch bevorstehen)
+      const now = new Date();
+      const upcomingToday = todayData.filter((apt) => {
+        const appointmentTime = new Date(apt.starts_at);
+        return appointmentTime > now;
+      });
+
+      // Lade auch Statistiken
+      await loadStats(staff.id, today, todayData);
+
+      // Wenn heute keine Termine mehr, hole morgige Termine
+      if (upcomingToday.length === 0) {
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tomorrowStart = formatDate(tomorrow) + " 00:00:00";
+        const tomorrowEnd = formatDate(tomorrow) + " 23:59:59";
+
+        const tomorrowData = await API.getAppointments({
+          staff_id: staff.id,
+          start: tomorrowStart,
+          end: tomorrowEnd,
+        });
+
+        if (tomorrowData.length > 0) {
+          setShowingTomorrow(true);
+          // Sortiere nach Zeit
+          tomorrowData.sort((a, b) =>
+            new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime()
+          );
+          setAppointments(tomorrowData);
+        } else {
+          setAppointments([]);
+        }
+      } else {
+        // Sortiere nach Zeit
+        upcomingToday.sort((a, b) =>
+          new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime()
+        );
+        setAppointments(upcomingToday);
+      }
+    } catch (err: any) {
+      console.error("Error loading appointments:", err);
+      setError("Fehler beim Laden der Termine");
+    } finally {
+      setIsLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  const loadStats = async (staffId: string, today: Date, todayAppointments: Appointment[]) => {
+    try {
+      // Hole alle Kunden
+      const customers = await API.getCustomers();
+
+      // Berechne monatliche Termine für Wachstum
+      const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+      const monthStart = formatDate(firstDayOfMonth) + " 00:00:00";
+      const monthEnd = formatDate(lastDayOfMonth) + " 23:59:59";
+
+      const monthAppointments = await API.getAppointments({
+        staff_id: staffId,
+        start: monthStart,
+        end: monthEnd,
+      });
+
+      // Berechne vorherigen Monat für Vergleich
+      const firstDayLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      const lastDayLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+
+      const lastMonthStart = formatDate(firstDayLastMonth) + " 00:00:00";
+      const lastMonthEnd = formatDate(lastDayLastMonth) + " 23:59:59";
+
+      const lastMonthAppointments = await API.getAppointments({
+        staff_id: staffId,
+        start: lastMonthStart,
+        end: lastMonthEnd,
+      });
+
+      // Berechne Wachstum
+      const growth = lastMonthAppointments.length > 0
+        ? Math.round(((monthAppointments.length - lastMonthAppointments.length) / lastMonthAppointments.length) * 100)
+        : 0;
+
+      // Berechne heutiges Revenue (Summe aller Service-Preise von heute)
+      const todayRevenue = todayAppointments.reduce((sum, apt) => {
+        // Annahme: Service hat einen Preis, falls verfügbar
+        return sum + 0; // Wird später implementiert wenn Service-Details verfügbar sind
+      }, 0);
+
+      setStats({
+        todayAppointmentsCount: todayAppointments.length,
+        monthlyGrowth: `${growth > 0 ? '+' : ''}${growth}%`,
+        totalCustomers: customers.length,
+        todayRevenue: todayRevenue.toFixed(2)
+      });
+    } catch (err) {
+      console.error("Error loading stats:", err);
+      // Behalte Standard-Werte bei Fehler
+    }
+  };
+
+  const formatDate = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const formatTime = (dateString: string): string => {
+    const date = new Date(dateString);
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    loadAppointments();
+  };
+
+  const statsDisplay = [
+    { label: "Heutige Termine", value: stats.todayAppointmentsCount.toString(), icon: "calendar-outline", color: "#60A5FA" },
+    { label: "Wachstum", value: stats.monthlyGrowth, icon: "trending-up-outline", color: "#FB923C" },
+    { label: "Kunden", value: stats.totalCustomers.toString(), icon: "people-outline", color: "#A78BFA" },
+    { label: "Heute Umsatz", value: `CHF ${stats.todayRevenue}`, icon: "cash-outline", color: "#4ADE80" },
   ];
 
-  const stats = [
-    { label: "Today's Revenue", value: "$850", icon: "cash-outline", color: "#4ADE80" },
-    { label: "Appointments", value: "12", icon: "calendar-outline", color: "#60A5FA" },
-    { label: "Active Customers", value: "48", icon: "people-outline", color: "#A78BFA" },
-    { label: "This Month", value: "+24%", icon: "trending-up-outline", color: "#FB923C" },
-  ];
+  const getCurrentDate = (): string => {
+    const date = new Date();
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    };
+    return date.toLocaleDateString('de-DE', options);
+  };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#7C3AED" />
+      }
+    >
       {/* Header */}
       <View style={styles.header}>
         <View>
           <Text style={styles.title}>Dashboard</Text>
-          <Text style={styles.subtitle}>Monday, November 24, 2025</Text>
+          <Text style={styles.subtitle}>{getCurrentDate()}</Text>
         </View>
         <TouchableOpacity
           onPress={onNavigateToSettings}
@@ -38,7 +221,7 @@ export function Dashboard({ onNavigateToSettings }: DashboardProps) {
 
       {/* Stats Grid */}
       <View style={styles.statsGrid}>
-        {stats.map((stat, index) => (
+        {statsDisplay.map((stat, index) => (
           <View key={stat.label} style={styles.statCard}>
             <View style={styles.statIconContainer}>
               <Ionicons name={stat.icon as any} size={20} color={stat.color} />
@@ -51,26 +234,61 @@ export function Dashboard({ onNavigateToSettings }: DashboardProps) {
 
       {/* Today's Appointments */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Today's Appointments</Text>
-        <View style={styles.appointmentsList}>
-          {todayAppointments.map((appointment) => (
-            <View key={appointment.id} style={styles.appointmentCard}>
-              <View style={styles.appointmentHeader}>
-                <View style={styles.appointmentInfo}>
-                  <Text style={styles.customerName}>{appointment.customer}</Text>
-                  <Text style={styles.serviceName}>{appointment.service}</Text>
-                </View>
-                <Text style={styles.appointmentTime}>{appointment.time}</Text>
-              </View>
-              <View style={styles.appointmentFooter}>
-                <View style={styles.staffIconContainer}>
-                  <Ionicons name="person-outline" size={16} color="#A78BFA" />
-                </View>
-                <Text style={styles.staffName}>{appointment.staff}</Text>
-              </View>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>
+            {showingTomorrow ? "Termine von Morgen" : "Heutige Termine"}
+          </Text>
+          {showingTomorrow && (
+            <View style={styles.tomorrowBadge}>
+              <Ionicons name="calendar" size={14} color="#60A5FA" />
+              <Text style={styles.tomorrowBadgeText}>Morgen</Text>
             </View>
-          ))}
+          )}
         </View>
+
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#7C3AED" />
+            <Text style={styles.loadingText}>Lade Termine...</Text>
+          </View>
+        ) : error ? (
+          <View style={styles.errorCard}>
+            <Ionicons name="alert-circle" size={24} color="#EF4444" />
+            <Text style={styles.errorText}>{error}</Text>
+            <TouchableOpacity style={styles.retryButton} onPress={loadAppointments}>
+              <Text style={styles.retryButtonText}>Erneut versuchen</Text>
+            </TouchableOpacity>
+          </View>
+        ) : appointments.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Ionicons name="calendar-outline" size={48} color="#6B7280" />
+            <Text style={styles.emptyText}>
+              {showingTomorrow
+                ? "Keine Termine für morgen"
+                : "Keine bevorstehenden Termine heute oder morgen"}
+            </Text>
+          </View>
+        ) : (
+          <View style={styles.appointmentsList}>
+            {appointments.map((appointment) => (
+              <View key={appointment.id} style={styles.appointmentCard}>
+                <View style={styles.appointmentHeader}>
+                  <View style={styles.appointmentInfo}>
+                    <Text style={styles.customerName}>{appointment.customer_name}</Text>
+                    <Text style={styles.serviceName}>{appointment.service_name}</Text>
+                  </View>
+                  <Text style={styles.appointmentTime}>{formatTime(appointment.starts_at)}</Text>
+                </View>
+                <View style={styles.appointmentFooter}>
+                  <View style={styles.staffIconContainer}>
+                    <Ionicons name="person-outline" size={16} color="#A78BFA" />
+                  </View>
+                  <Text style={styles.staffName}>{appointment.staff_name}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -134,11 +352,32 @@ const styles = StyleSheet.create({
   section: {
     marginBottom: 24,
   },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#FFFFFF",
-    marginBottom: 16,
+  },
+  tomorrowBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: "rgba(96, 165, 250, 0.15)",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "rgba(96, 165, 250, 0.3)",
+  },
+  tomorrowBadgeText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#60A5FA",
   },
   appointmentsList: {
     gap: 12,
@@ -192,5 +431,54 @@ const styles = StyleSheet.create({
   staffName: {
     fontSize: 14,
     color: "#9CA3AF",
+  },
+  loadingContainer: {
+    backgroundColor: "#1E1E1E",
+    borderRadius: 16,
+    padding: 40,
+    alignItems: "center",
+    gap: 16,
+  },
+  loadingText: {
+    fontSize: 14,
+    color: "#9CA3AF",
+  },
+  errorCard: {
+    backgroundColor: "rgba(239, 68, 68, 0.1)",
+    borderRadius: 16,
+    padding: 24,
+    alignItems: "center",
+    gap: 12,
+    borderWidth: 1,
+    borderColor: "rgba(239, 68, 68, 0.2)",
+  },
+  errorText: {
+    fontSize: 14,
+    color: "#EF4444",
+    textAlign: "center",
+  },
+  retryButton: {
+    marginTop: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: "#7C3AED",
+    borderRadius: 8,
+  },
+  retryButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#FFFFFF",
+  },
+  emptyContainer: {
+    backgroundColor: "#1E1E1E",
+    borderRadius: 16,
+    padding: 40,
+    alignItems: "center",
+    gap: 16,
+  },
+  emptyText: {
+    fontSize: 14,
+    color: "#9CA3AF",
+    textAlign: "center",
   },
 });

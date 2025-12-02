@@ -22,6 +22,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("dashboard");
   const [currentScreen, setCurrentScreen] = useState<Screen>("dashboard");
   const [selectedStaffId, setSelectedStaffId] = useState<number | null>(null);
+  const [dashboardRefreshKey, setDashboardRefreshKey] = useState(Date.now());
 
   // Check if user has completed onboarding
   useEffect(() => {
@@ -48,10 +49,11 @@ export default function App() {
     }
   };
 
-  const handleOnboardingComplete = async (domain: string, token: string) => {
+  const handleOnboardingComplete = async (domain: string, token: string, staff: any) => {
     try {
       await StorageService.saveDomain(domain);
       await StorageService.saveToken(token);
+      await StorageService.saveStaffData(staff);
       await StorageService.setOnboardingCompleted();
       setIsAuthenticated(true);
     } catch (error) {
@@ -77,6 +79,8 @@ export default function App() {
     switch (tab) {
       case "dashboard":
         setCurrentScreen("dashboard");
+        // Trigger Dashboard refresh
+        setDashboardRefreshKey(Date.now());
         break;
       case "staff":
         setCurrentScreen("staff-list");
@@ -93,10 +97,16 @@ export default function App() {
     }
   };
 
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setCurrentScreen("dashboard");
+    setActiveTab("dashboard");
+  };
+
   const renderScreen = () => {
     switch (currentScreen) {
       case "dashboard":
-        return <Dashboard onNavigateToSettings={navigateToSettings} />;
+        return <Dashboard onNavigateToSettings={navigateToSettings} shouldRefresh={dashboardRefreshKey} />;
       case "staff-list":
         return <StaffList onStaffClick={navigateToStaffDetail} />;
       case "staff-detail":
@@ -108,9 +118,15 @@ export default function App() {
       case "appointments":
         return <Appointments />;
       case "settings":
-        return <Settings onBack={() => setCurrentScreen("dashboard")} />;
+        return <Settings
+          onBack={() => {
+            setCurrentScreen("dashboard");
+            setDashboardRefreshKey(Date.now()); // Refresh Dashboard when returning from settings
+          }}
+          onLogout={handleLogout}
+        />;
       default:
-        return <Dashboard onNavigateToSettings={navigateToSettings} />;
+        return <Dashboard onNavigateToSettings={navigateToSettings} shouldRefresh={dashboardRefreshKey} />;
     }
   };
 

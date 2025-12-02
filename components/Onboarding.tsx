@@ -3,9 +3,10 @@ import { View, StyleSheet } from "react-native";
 import { WelcomeScreen } from "./onboarding/WelcomeScreen";
 import { DomainSetupScreen } from "./onboarding/DomainSetupScreen";
 import { LoginScreen } from "./onboarding/LoginScreen";
+import { Staff } from "../services/api";
 
 interface OnboardingProps {
-  onComplete: (domain: string, token: string) => void;
+  onComplete: (domain: string, token: string, staff: Staff) => void;
 }
 
 export function Onboarding({ onComplete }: OnboardingProps) {
@@ -21,8 +22,8 @@ export function Onboarding({ onComplete }: OnboardingProps) {
     setStep(3);
   };
 
-  const handleLoginSuccess = (token: string) => {
-    onComplete(domain, token);
+  const handleLoginSuccess = (token: string, staff: Staff) => {
+    onComplete(domain, token, staff);
   };
 
   return (
