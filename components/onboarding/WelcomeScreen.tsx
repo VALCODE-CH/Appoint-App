@@ -18,24 +18,9 @@ export function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
       description: "Behalte den Überblick über dein Team und deine Kunden",
     },
     {
-      icon: "cut-outline",
+      icon: "briefcase-outline",
       title: "Dienstleistungen",
       description: "Organisiere deine Services mit Preisen und Dauer",
-    },
-    {
-      icon: "stats-chart-outline",
-      title: "Statistiken",
-      description: "Verfolge Umsätze und wichtige Kennzahlen in Echtzeit",
-    },
-    {
-      icon: "notifications-outline",
-      title: "Benachrichtigungen",
-      description: "Verpasse keine wichtigen Termine mehr",
-    },
-    {
-      icon: "sync-outline",
-      title: "WordPress Integration",
-      description: "Nahtlose Synchronisation mit deinem Booking-Plugin",
     },
   ];
 
@@ -44,7 +29,7 @@ export function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
       {/* Logo/Header */}
       <View style={styles.header}>
         <View style={styles.logoContainer}>
-          <Ionicons name="calendar" size={64} color="#7C3AED" />
+          <Ionicons name="calendar" size={48} color="#7C3AED" />
         </View>
         <Text style={styles.title}>Willkommen bei Appoint</Text>
         <Text style={styles.subtitle}>
@@ -88,16 +73,17 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 24,
-    paddingTop: 40,
+    paddingTop: 60,
+    paddingBottom: 40,
   },
   header: {
     alignItems: "center",
-    marginBottom: 32,
+    marginBottom: 40,
   },
   logoContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    width: 96,
+    height: 96,
+    borderRadius: 48,
     backgroundColor: "rgba(124, 58, 237, 0.15)",
     alignItems: "center",
     justifyContent: "center",

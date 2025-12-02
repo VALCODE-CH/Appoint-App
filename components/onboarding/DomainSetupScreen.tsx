@@ -140,24 +140,8 @@ export function DomainSetupScreen({ onContinue }: DomainSetupScreenProps) {
         ) : null}
 
         <Text style={styles.hint}>
-          Beispiele: meinefirma.de, booking.salon-mueller.com, 192.168.1.100:8080
+          Beispiele: meinefirma.de, booking.salon-mueller.com
         </Text>
-      </View>
-
-      {/* Examples */}
-      <View style={styles.examplesContainer}>
-        <Text style={styles.examplesTitle}>Schnellauswahl:</Text>
-        <View style={styles.examplesGrid}>
-          {["beispiel.de", "booking.beispiel.de", "localhost:8000"].map((example) => (
-            <TouchableOpacity
-              key={example}
-              style={styles.exampleChip}
-              onPress={() => setDomain(example)}
-            >
-              <Text style={styles.exampleText}>{example}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
       </View>
 
       {/* Continue Button */}
@@ -288,32 +272,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#6B7280",
     marginTop: 8,
-  },
-  examplesContainer: {
-    marginBottom: 32,
-  },
-  examplesTitle: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#9CA3AF",
-    marginBottom: 12,
-  },
-  examplesGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
-  exampleChip: {
-    backgroundColor: "#1E1E1E",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#2A2A2A",
-  },
-  exampleText: {
-    fontSize: 14,
-    color: "#9CA3AF",
   },
   continueButton: {
     backgroundColor: "#7C3AED",
