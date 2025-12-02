@@ -1,60 +1,261 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import { useState, useEffect } from "react";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { API, Appointment } from "../services/api";
+import { StorageService } from "../services/storage";
+
+interface GroupedAppointments {
+  heute: Appointment[];
+  morgen: Appointment[];
+  zukunft: Appointment[];
+}
 
 export function Appointments() {
-  const appointments = [
-    { id: 1, date: "Today", time: "09:00", customer: "Sarah Johnson", service: "Haircut & Style", staff: "Emma Wilson", status: "confirmed" },
-    { id: 2, date: "Today", time: "10:30", customer: "Michael Chen", service: "Men's Haircut", staff: "James Miller", status: "confirmed" },
-    { id: 3, date: "Today", time: "14:00", customer: "Lisa Anderson", service: "Color Treatment", staff: "Emma Wilson", status: "pending" },
-    { id: 4, date: "Tomorrow", time: "09:00", customer: "David Brown", service: "Beard Trim", staff: "James Miller", status: "confirmed" },
-  ];
+  const [appointments, setAppointments] = useState<GroupedAppointments>({
+    heute: [],
+    morgen: [],
+    zukunft: []
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    loadAppointments();
+  }, []);
+
+  const loadAppointments = async () => {
+    try {
+      setError("");
+      const staff = await StorageService.getStaffData();
+
+      if (!staff) {
+        setError("Staff-Daten nicht gefunden");
+        setIsLoading(false);
+        return;
+      }
+
+      // Hole alle Termine ab heute
+      const today = new Date();
+      const startOfToday = formatDate(today) + " 00:00:00";
+
+      // Hole Termine für die nächsten 30 Tage
+      const futureDate = new Date(today);
+      futureDate.setDate(futureDate.getDate() + 30);
+      const endOfFuture = formatDate(futureDate) + " 23:59:59";
+
+      const allAppointments = await API.getAppointments({
+        staff_id: staff.id,
+        start: startOfToday,
+        end: endOfFuture,
+      });
+
+      // Gruppiere Termine nach Datum
+      const grouped = groupAppointmentsByDate(allAppointments, today);
+      setAppointments(grouped);
+
+    } catch (err: any) {
+      console.error("Error loading appointments:", err);
+      setError("Fehler beim Laden der Termine");
+    } finally {
+      setIsLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  const groupAppointmentsByDate = (appointments: Appointment[], today: Date): GroupedAppointments => {
+    const grouped: GroupedAppointments = {
+      heute: [],
+      morgen: [],
+      zukunft: []
+    };
+
+    const todayStr = formatDate(today);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = formatDate(tomorrow);
+
+    appointments.forEach((apt) => {
+      const aptDate = apt.starts_at.split(" ")[0];
+
+      if (aptDate === todayStr) {
+        grouped.heute.push(apt);
+      } else if (aptDate === tomorrowStr) {
+        grouped.morgen.push(apt);
+      } else {
+        grouped.zukunft.push(apt);
+      }
+    });
+
+    // Sortiere jede Gruppe nach Zeit
+    grouped.heute.sort((a, b) => new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime());
+    grouped.morgen.sort((a, b) => new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime());
+    grouped.zukunft.sort((a, b) => new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime());
+
+    return grouped;
+  };
+
+  const formatDate = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const formatTime = (dateString: string): string => {
+    const date = new Date(dateString);
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
+  const formatDisplayDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'short',
+      day: '2-digit',
+      month: '2-digit'
+    };
+    return date.toLocaleDateString('de-DE', options);
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'confirmed':
+        return { bg: "rgba(74, 222, 128, 0.2)", text: "#4ADE80", label: "Bestätigt" };
+      case 'pending':
+        return { bg: "rgba(251, 146, 60, 0.2)", text: "#FB923C", label: "Ausstehend" };
+      case 'cancelled':
+        return { bg: "rgba(239, 68, 68, 0.2)", text: "#EF4444", label: "Abgesagt" };
+      default:
+        return { bg: "rgba(156, 163, 175, 0.2)", text: "#9CA3AF", label: status };
+    }
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    loadAppointments();
+  };
+
+  const totalAppointments = appointments.heute.length + appointments.morgen.length + appointments.zukunft.length;
+
+  const renderAppointmentCard = (appointment: Appointment, dateLabel: string) => {
+    const statusStyle = getStatusColor(appointment.status);
+
+    return (
+      <TouchableOpacity key={appointment.id} style={styles.appointmentCard}>
+        <View style={styles.appointmentHeader}>
+          <View style={styles.dateTimeContainer}>
+            <Text style={styles.timeText}>{formatTime(appointment.starts_at)}</Text>
+          </View>
+          <View style={[styles.statusBadge, { backgroundColor: statusStyle.bg }]}>
+            <Text style={[styles.statusText, { color: statusStyle.text }]}>
+              {statusStyle.label}
+            </Text>
+          </View>
+        </View>
+        <View style={styles.appointmentBody}>
+          <Text style={styles.customerName}>{appointment.customer_name}</Text>
+          <Text style={styles.serviceName}>{appointment.service_name}</Text>
+          <View style={styles.staffContainer}>
+            <Ionicons name="person-outline" size={16} color="#A78BFA" />
+            <Text style={styles.staffName}>{appointment.staff_name}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#7C3AED" />
+      }
+    >
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>Bookings</Text>
-        <Text style={styles.subtitle}>Manage appointments</Text>
+        <View>
+          <Text style={styles.title}>Termine</Text>
+          <Text style={styles.subtitle}>
+            {isLoading ? "Lade..." : `${totalAppointments} Termine`}
+          </Text>
+        </View>
       </View>
 
       {/* Add Button */}
       <TouchableOpacity style={styles.addButton}>
         <Ionicons name="add" size={20} color="#FFFFFF" />
-        <Text style={styles.addButtonText}>New Booking</Text>
+        <Text style={styles.addButtonText}>Neuer Termin</Text>
       </TouchableOpacity>
 
-      {/* Appointments List */}
-      <View style={styles.appointmentsList}>
-        {appointments.map((appointment) => (
-          <TouchableOpacity key={appointment.id} style={styles.appointmentCard}>
-            <View style={styles.appointmentHeader}>
-              <View style={styles.dateTimeContainer}>
-                <Text style={styles.dateText}>{appointment.date}</Text>
-                <Text style={styles.timeText}>{appointment.time}</Text>
-              </View>
-              <View style={[
-                styles.statusBadge,
-                appointment.status === "confirmed" ? styles.statusConfirmed : styles.statusPending
-              ]}>
-                <Text style={[
-                  styles.statusText,
-                  appointment.status === "confirmed" ? styles.statusTextConfirmed : styles.statusTextPending
-                ]}>
-                  {appointment.status === "confirmed" ? "Confirmed" : "Pending"}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.appointmentBody}>
-              <Text style={styles.customerName}>{appointment.customer}</Text>
-              <Text style={styles.serviceName}>{appointment.service}</Text>
-              <View style={styles.staffContainer}>
-                <Ionicons name="person-outline" size={16} color="#A78BFA" />
-                <Text style={styles.staffName}>{appointment.staff}</Text>
-              </View>
-            </View>
+      {/* Loading State */}
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#7C3AED" />
+          <Text style={styles.loadingText}>Lade Termine...</Text>
+        </View>
+      ) : error ? (
+        /* Error State */
+        <View style={styles.errorCard}>
+          <Ionicons name="alert-circle" size={24} color="#EF4444" />
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity style={styles.retryButton} onPress={loadAppointments}>
+            <Text style={styles.retryButtonText}>Erneut versuchen</Text>
           </TouchableOpacity>
-        ))}
-      </View>
+        </View>
+      ) : totalAppointments === 0 ? (
+        /* Empty State */
+        <View style={styles.emptyContainer}>
+          <Ionicons name="calendar-outline" size={48} color="#6B7280" />
+          <Text style={styles.emptyText}>Keine bevorstehenden Termine</Text>
+          <Text style={styles.emptySubtext}>
+            Erstelle einen neuen Termin mit dem Button oben
+          </Text>
+        </View>
+      ) : (
+        /* Appointments List */
+        <View style={styles.appointmentsList}>
+          {/* Heute */}
+          {appointments.heute.length > 0 && (
+            <View style={styles.sectionContainer}>
+              <View style={styles.sectionHeader}>
+                <Ionicons name="today" size={20} color="#60A5FA" />
+                <Text style={styles.sectionTitle}>Heute ({appointments.heute.length})</Text>
+              </View>
+              {appointments.heute.map((apt) =>
+                renderAppointmentCard(apt, formatTime(apt.starts_at))
+              )}
+            </View>
+          )}
+
+          {/* Morgen */}
+          {appointments.morgen.length > 0 && (
+            <View style={styles.sectionContainer}>
+              <View style={styles.sectionHeader}>
+                <Ionicons name="calendar" size={20} color="#FB923C" />
+                <Text style={styles.sectionTitle}>Morgen ({appointments.morgen.length})</Text>
+              </View>
+              {appointments.morgen.map((apt) =>
+                renderAppointmentCard(apt, formatTime(apt.starts_at))
+              )}
+            </View>
+          )}
+
+          {/* Zukunft */}
+          {appointments.zukunft.length > 0 && (
+            <View style={styles.sectionContainer}>
+              <View style={styles.sectionHeader}>
+                <Ionicons name="time" size={20} color="#A78BFA" />
+                <Text style={styles.sectionTitle}>Kommende ({appointments.zukunft.length})</Text>
+              </View>
+              {appointments.zukunft.map((apt) =>
+                renderAppointmentCard(apt, formatDisplayDate(apt.starts_at))
+              )}
+            </View>
+          )}
+        </View>
+      )}
     </ScrollView>
   );
 }
@@ -87,14 +288,91 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
     marginBottom: 24,
+    shadowColor: "#7C3AED",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
   addButtonText: {
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",
   },
-  appointmentsList: {
+  loadingContainer: {
+    backgroundColor: "#1E1E1E",
+    borderRadius: 16,
+    padding: 40,
+    alignItems: "center",
+    gap: 16,
+  },
+  loadingText: {
+    fontSize: 14,
+    color: "#9CA3AF",
+  },
+  errorCard: {
+    backgroundColor: "rgba(239, 68, 68, 0.1)",
+    borderRadius: 16,
+    padding: 24,
+    alignItems: "center",
     gap: 12,
+    borderWidth: 1,
+    borderColor: "rgba(239, 68, 68, 0.2)",
+  },
+  errorText: {
+    fontSize: 14,
+    color: "#EF4444",
+    textAlign: "center",
+  },
+  retryButton: {
+    marginTop: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: "#7C3AED",
+    borderRadius: 8,
+  },
+  retryButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#FFFFFF",
+  },
+  emptyContainer: {
+    backgroundColor: "#1E1E1E",
+    borderRadius: 16,
+    padding: 40,
+    alignItems: "center",
+    gap: 16,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: "#FFFFFF",
+    textAlign: "center",
+    fontWeight: "600",
+  },
+  emptySubtext: {
+    fontSize: 14,
+    color: "#9CA3AF",
+    textAlign: "center",
+  },
+  appointmentsList: {
+    gap: 24,
+  },
+  sectionContainer: {
+    gap: 12,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 8,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#FFFFFF",
   },
   appointmentCard: {
     backgroundColor: "#1E1E1E",
@@ -130,21 +408,9 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 12,
   },
-  statusConfirmed: {
-    backgroundColor: "rgba(74, 222, 128, 0.2)",
-  },
-  statusPending: {
-    backgroundColor: "rgba(251, 146, 60, 0.2)",
-  },
   statusText: {
     fontSize: 12,
     fontWeight: "600",
-  },
-  statusTextConfirmed: {
-    color: "#4ADE80",
-  },
-  statusTextPending: {
-    color: "#FB923C",
   },
   appointmentBody: {
     gap: 4,
