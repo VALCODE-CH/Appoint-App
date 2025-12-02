@@ -1,0 +1,138 @@
+import { ChevronLeft, Check, AlertCircle, Wifi } from "lucide-react";
+import { useState } from "react";
+
+interface SettingsProps {
+  onBack: () => void;
+}
+
+export function Settings({ onBack }: SettingsProps) {
+  const [domain, setDomain] = useState("mysalon.com");
+  const [apiKey, setApiKey] = useState("wp_abc123xyz789");
+  const [isConnected, setIsConnected] = useState(true);
+
+  const handleTestConnection = () => {
+    // Simulate connection test
+    setIsConnected(!isConnected);
+  };
+
+  return (
+    <div className="p-6">
+      {/* Header */}
+      <div className="flex items-center gap-4 mb-6">
+        <button
+          onClick={onBack}
+          className="p-2 rounded-full bg-[#1e1e1e] hover:bg-[#2a2a2a] transition-colors"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <h1>Settings</h1>
+      </div>
+
+      {/* Connection Status */}
+      <div className={`rounded-2xl p-4 mb-6 ${isConnected ? "bg-green-500/10 border border-green-500/20" : "bg-orange-500/10 border border-orange-500/20"}`}>
+        <div className="flex items-center gap-3">
+          {isConnected ? (
+            <>
+              <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
+                <Check className="w-5 h-5 text-green-400" />
+              </div>
+              <div>
+                <p className="text-green-400">Connected</p>
+                <p className="text-green-400/70">WordPress plugin is active</p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="w-10 h-10 bg-orange-500/20 rounded-full flex items-center justify-center">
+                <AlertCircle className="w-5 h-5 text-orange-400" />
+              </div>
+              <div>
+                <p className="text-orange-400">Disconnected</p>
+                <p className="text-orange-400/70">Check your credentials</p>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* WordPress Connection */}
+      <div className="mb-6">
+        <h2 className="mb-4">WordPress Connection</h2>
+        
+        <div className="space-y-4">
+          {/* Domain Input */}
+          <div>
+            <label className="block text-gray-400 mb-2">Website Domain</label>
+            <input
+              type="text"
+              value={domain}
+              onChange={(e) => setDomain(e.target.value)}
+              placeholder="yoursalon.com"
+              className="w-full bg-[#1e1e1e] rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+          </div>
+
+          {/* API Key Input */}
+          <div>
+            <label className="block text-gray-400 mb-2">API Key</label>
+            <input
+              type="password"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="Enter your WordPress API key"
+              className="w-full bg-[#1e1e1e] rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+            <p className="text-gray-500 mt-2">
+              Generate API key from your WordPress admin panel
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="space-y-3 mb-6">
+        <button
+          onClick={handleTestConnection}
+          className="w-full bg-purple-600 hover:bg-purple-700 rounded-xl py-3 flex items-center justify-center gap-2 transition-colors"
+        >
+          <Wifi className="w-5 h-5" />
+          <span>Test Connection</span>
+        </button>
+        <button className="w-full bg-[#1e1e1e] hover:bg-[#2a2a2a] rounded-xl py-3 transition-colors">
+          Save Settings
+        </button>
+      </div>
+
+      {/* Additional Settings */}
+      <div className="mb-6">
+        <h2 className="mb-4">Additional Settings</h2>
+        
+        <div className="bg-[#1e1e1e] rounded-2xl overflow-hidden">
+          <button className="w-full p-4 text-left hover:bg-[#2a2a2a] transition-colors border-b border-gray-800">
+            <p className="mb-1">Sync Frequency</p>
+            <p className="text-gray-400">Every 5 minutes</p>
+          </button>
+          <button className="w-full p-4 text-left hover:bg-[#2a2a2a] transition-colors border-b border-gray-800">
+            <p className="mb-1">Notifications</p>
+            <p className="text-gray-400">Push notifications enabled</p>
+          </button>
+          <button className="w-full p-4 text-left hover:bg-[#2a2a2a] transition-colors">
+            <p className="mb-1">App Version</p>
+            <p className="text-gray-400">1.0.0</p>
+          </button>
+        </div>
+      </div>
+
+      {/* Help Section */}
+      <div className="bg-[#1e1e1e] rounded-2xl p-4">
+        <p className="mb-2">Need Help?</p>
+        <p className="text-gray-400 mb-4">
+          Check our documentation for setup instructions and troubleshooting.
+        </p>
+        <button className="text-purple-400 hover:text-purple-300 transition-colors">
+          View Documentation →
+        </button>
+      </div>
+    </div>
+  );
+}

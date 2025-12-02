@@ -1,0 +1,25 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    }
+  },
+  "include": [
+    "App.tsx",
+    "components/Dashboard.tsx",
+    "components/StaffList.tsx",
+    "components/StaffDetail.tsx",
+    "components/ServicesList.tsx",
+    "components/CustomersList.tsx",
+    "components/Appointments.tsx",
+    "components/Settings.tsx"
+  ],
+  "exclude": [
+    "components/ui/**/*",
+    "components/**/*.web.tsx.backup"
+  ]
+}

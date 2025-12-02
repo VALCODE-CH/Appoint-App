@@ -1,0 +1,97 @@
+import { Search, Plus, Mail, Phone } from "lucide-react";
+import { useState } from "react";
+
+export function CustomersList() {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const customers = [
+    { id: 1, name: "Sarah Johnson", email: "sarah.j@email.com", phone: "+1 555-0101", visits: 12, avatar: "SJ", color: "bg-pink-500" },
+    { id: 2, name: "Michael Chen", email: "m.chen@email.com", phone: "+1 555-0102", visits: 8, avatar: "MC", color: "bg-blue-500" },
+    { id: 3, name: "Lisa Anderson", email: "lisa.a@email.com", phone: "+1 555-0103", visits: 15, avatar: "LA", color: "bg-purple-500" },
+    { id: 4, name: "David Brown", email: "d.brown@email.com", phone: "+1 555-0104", visits: 5, avatar: "DB", color: "bg-green-500" },
+    { id: 5, name: "Emily Taylor", email: "emily.t@email.com", phone: "+1 555-0105", visits: 20, avatar: "ET", color: "bg-orange-500" },
+    { id: 6, name: "Robert Wilson", email: "r.wilson@email.com", phone: "+1 555-0106", visits: 3, avatar: "RW", color: "bg-teal-500" },
+  ];
+
+  const filteredCustomers = customers.filter((customer) =>
+    customer.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <div className="p-6">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="mb-1">Customers</h1>
+        <p className="text-gray-400">Manage your client base</p>
+      </div>
+
+      {/* Search Bar */}
+      <div className="relative mb-4">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+        <input
+          type="text"
+          placeholder="Search customers..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full bg-[#1e1e1e] rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+        />
+      </div>
+
+      {/* Add Button */}
+      <button className="w-full bg-purple-600 hover:bg-purple-700 rounded-xl py-3 mb-6 flex items-center justify-center gap-2 transition-colors">
+        <Plus className="w-5 h-5" />
+        <span>Add Customer</span>
+      </button>
+
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="bg-[#1e1e1e] rounded-xl p-3 text-center">
+          <p className="text-purple-400 mb-1">{customers.length}</p>
+          <p className="text-xs text-gray-400">Total</p>
+        </div>
+        <div className="bg-[#1e1e1e] rounded-xl p-3 text-center">
+          <p className="text-green-400 mb-1">42</p>
+          <p className="text-xs text-gray-400">This Month</p>
+        </div>
+        <div className="bg-[#1e1e1e] rounded-xl p-3 text-center">
+          <p className="text-blue-400 mb-1">8</p>
+          <p className="text-xs text-gray-400">New</p>
+        </div>
+      </div>
+
+      {/* Customers List */}
+      <div className="space-y-3">
+        {filteredCustomers.map((customer) => (
+          <div
+            key={customer.id}
+            className="bg-[#1e1e1e] rounded-2xl p-4 shadow-lg hover:bg-[#2a2a2a] transition-colors cursor-pointer"
+          >
+            <div className="flex items-start gap-4">
+              <div className={`w-12 h-12 ${customer.color} rounded-full flex items-center justify-center flex-shrink-0`}>
+                <span>{customer.avatar}</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="mb-1">{customer.name}</p>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 text-gray-400">
+                    <Mail className="w-3 h-3" />
+                    <span className="truncate">{customer.email}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-400">
+                    <Phone className="w-3 h-3" />
+                    <span>{customer.phone}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col items-end gap-1">
+                <span className="text-xs text-purple-400 bg-purple-500/20 px-2 py-1 rounded-full">
+                  {customer.visits} visits
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

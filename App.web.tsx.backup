@@ -1,0 +1,137 @@
+import { useState } from "react";
+import { Home, Users, Scissors, UserCircle, Calendar, Settings as SettingsIcon } from "lucide-react";
+import { Dashboard } from "./components/Dashboard";
+import { StaffList } from "./components/StaffList";
+import { StaffDetail } from "./components/StaffDetail";
+import { ServicesList } from "./components/ServicesList";
+import { CustomersList } from "./components/CustomersList";
+import { Appointments } from "./components/Appointments";
+import { Settings } from "./components/Settings";
+
+type Tab = "dashboard" | "staff" | "services" | "customers" | "appointments";
+type Screen = "dashboard" | "staff-list" | "staff-detail" | "services" | "customers" | "appointments" | "settings";
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState<Tab>("dashboard");
+  const [currentScreen, setCurrentScreen] = useState<Screen>("dashboard");
+  const [selectedStaffId, setSelectedStaffId] = useState<number | null>(null);
+
+  const navigateToStaffDetail = (staffId: number) => {
+    setSelectedStaffId(staffId);
+    setCurrentScreen("staff-detail");
+  };
+
+  const navigateBack = () => {
+    setCurrentScreen("staff-list");
+  };
+
+  const navigateToSettings = () => {
+    setCurrentScreen("settings");
+  };
+
+  const handleTabChange = (tab: Tab) => {
+    setActiveTab(tab);
+    switch (tab) {
+      case "dashboard":
+        setCurrentScreen("dashboard");
+        break;
+      case "staff":
+        setCurrentScreen("staff-list");
+        break;
+      case "services":
+        setCurrentScreen("services");
+        break;
+      case "customers":
+        setCurrentScreen("customers");
+        break;
+      case "appointments":
+        setCurrentScreen("appointments");
+        break;
+    }
+  };
+
+  const renderScreen = () => {
+    switch (currentScreen) {
+      case "dashboard":
+        return <Dashboard onNavigateToSettings={navigateToSettings} />;
+      case "staff-list":
+        return <StaffList onStaffClick={navigateToStaffDetail} />;
+      case "staff-detail":
+        return <StaffDetail staffId={selectedStaffId} onBack={navigateBack} />;
+      case "services":
+        return <ServicesList />;
+      case "customers":
+        return <CustomersList />;
+      case "appointments":
+        return <Appointments />;
+      case "settings":
+        return <Settings onBack={() => setCurrentScreen("dashboard")} />;
+      default:
+        return <Dashboard onNavigateToSettings={navigateToSettings} />;
+    }
+  };
+
+  return (
+    <div className="flex flex-col h-screen bg-[#121212] text-white max-w-md mx-auto">
+      {/* Main Content */}
+      <div className="flex-1 overflow-y-auto pb-20">
+        {renderScreen()}
+      </div>
+
+      {/* Bottom Tab Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#1e1e1e] border-t border-gray-800 px-4 py-3 safe-area-bottom">
+        <div className="flex items-center justify-around">
+          <button
+            onClick={() => handleTabChange("dashboard")}
+            className={`flex flex-col items-center gap-1 px-3 py-1 rounded-lg transition-colors ${
+              activeTab === "dashboard" ? "text-white" : "text-gray-500"
+            }`}
+          >
+            <Home className={`w-6 h-6 ${activeTab === "dashboard" ? "fill-white" : ""}`} />
+            <span className="text-xs">Home</span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange("staff")}
+            className={`flex flex-col items-center gap-1 px-3 py-1 rounded-lg transition-colors ${
+              activeTab === "staff" ? "text-white" : "text-gray-500"
+            }`}
+          >
+            <Users className={`w-6 h-6 ${activeTab === "staff" ? "fill-white" : ""}`} />
+            <span className="text-xs">Staff</span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange("services")}
+            className={`flex flex-col items-center gap-1 px-3 py-1 rounded-lg transition-colors ${
+              activeTab === "services" ? "text-white" : "text-gray-500"
+            }`}
+          >
+            <Scissors className={`w-6 h-6 ${activeTab === "services" ? "fill-white" : ""}`} />
+            <span className="text-xs">Services</span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange("customers")}
+            className={`flex flex-col items-center gap-1 px-3 py-1 rounded-lg transition-colors ${
+              activeTab === "customers" ? "text-white" : "text-gray-500"
+            }`}
+          >
+            <UserCircle className={`w-6 h-6 ${activeTab === "customers" ? "fill-white" : ""}`} />
+            <span className="text-xs">Customers</span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange("appointments")}
+            className={`flex flex-col items-center gap-1 px-3 py-1 rounded-lg transition-colors ${
+              activeTab === "appointments" ? "text-white" : "text-gray-500"
+            }`}
+          >
+            <Calendar className={`w-6 h-6 ${activeTab === "appointments" ? "fill-white" : ""}`} />
+            <span className="text-xs">Bookings</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,77 @@
+import { Plus, Clock, DollarSign } from "lucide-react";
+
+export function ServicesList() {
+  const services = [
+    { id: 1, name: "Haircut & Style", duration: "60 min", price: "$65", category: "Hair" },
+    { id: 2, name: "Men's Haircut", duration: "30 min", price: "$35", category: "Hair" },
+    { id: 3, name: "Color Treatment", duration: "120 min", price: "$150", category: "Color" },
+    { id: 4, name: "Highlights", duration: "180 min", price: "$200", category: "Color" },
+    { id: 5, name: "Beard Trim", duration: "20 min", price: "$25", category: "Grooming" },
+    { id: 6, name: "Blow Dry", duration: "30 min", price: "$40", category: "Styling" },
+    { id: 7, name: "Deep Conditioning", duration: "45 min", price: "$55", category: "Treatment" },
+    { id: 8, name: "Keratin Treatment", duration: "180 min", price: "$250", category: "Treatment" },
+  ];
+
+  const categories = ["All", "Hair", "Color", "Styling", "Treatment", "Grooming"];
+
+  return (
+    <div className="p-6">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="mb-1">Services</h1>
+        <p className="text-gray-400">Manage your service menu</p>
+      </div>
+
+      {/* Add Button */}
+      <button className="w-full bg-purple-600 hover:bg-purple-700 rounded-xl py-3 mb-6 flex items-center justify-center gap-2 transition-colors">
+        <Plus className="w-5 h-5" />
+        <span>Add New Service</span>
+      </button>
+
+      {/* Category Filter */}
+      <div className="flex gap-2 overflow-x-auto mb-6 pb-2 scrollbar-hide">
+        {categories.map((category) => (
+          <button
+            key={category}
+            className={`px-4 py-2 rounded-full whitespace-nowrap transition-colors ${
+              category === "All"
+                ? "bg-purple-600 text-white"
+                : "bg-[#1e1e1e] text-gray-400 hover:bg-[#2a2a2a]"
+            }`}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+
+      {/* Services List */}
+      <div className="space-y-3">
+        {services.map((service) => (
+          <div
+            key={service.id}
+            className="bg-[#1e1e1e] rounded-2xl p-4 shadow-lg hover:bg-[#2a2a2a] transition-colors cursor-pointer"
+          >
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex-1">
+                <p className="mb-1">{service.name}</p>
+                <span className="text-xs text-purple-400 bg-purple-500/20 px-2 py-1 rounded-full">
+                  {service.category}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 text-gray-400">
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                <span>{service.duration}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <DollarSign className="w-4 h-4" />
+                <span className="text-white">{service.price}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

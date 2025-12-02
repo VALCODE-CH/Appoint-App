@@ -1,0 +1,119 @@
+import { Calendar, ChevronLeft, ChevronRight, Clock, User } from "lucide-react";
+import { useState } from "react";
+
+export function Appointments() {
+  const [selectedDate, setSelectedDate] = useState("Today");
+
+  const appointments = [
+    { id: 1, time: "09:00", duration: "60 min", customer: "Sarah Johnson", service: "Haircut & Style", staff: "Emma Wilson", status: "confirmed" },
+    { id: 2, time: "10:30", duration: "30 min", customer: "Michael Chen", service: "Men's Haircut", staff: "James Miller", status: "confirmed" },
+    { id: 3, time: "11:00", duration: "120 min", customer: "Lisa Anderson", service: "Color Treatment", staff: "Emma Wilson", status: "in-progress" },
+    { id: 4, time: "14:00", duration: "20 min", customer: "David Brown", service: "Beard Trim", staff: "James Miller", status: "confirmed" },
+    { id: 5, time: "15:00", duration: "60 min", customer: "Emily Taylor", service: "Haircut & Style", staff: "Sophia Davis", status: "confirmed" },
+    { id: 6, time: "16:30", duration: "45 min", customer: "Robert Wilson", service: "Deep Conditioning", staff: "Emma Wilson", status: "pending" },
+  ];
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "confirmed":
+        return "bg-green-500/20 text-green-400";
+      case "in-progress":
+        return "bg-blue-500/20 text-blue-400";
+      case "pending":
+        return "bg-orange-500/20 text-orange-400";
+      default:
+        return "bg-gray-500/20 text-gray-400";
+    }
+  };
+
+  return (
+    <div className="p-6">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="mb-1">Appointments</h1>
+        <p className="text-gray-400">Monday, November 24, 2025</p>
+      </div>
+
+      {/* Date Navigation */}
+      <div className="bg-[#1e1e1e] rounded-xl p-4 mb-6 flex items-center justify-between">
+        <button className="p-2 hover:bg-[#2a2a2a] rounded-lg transition-colors">
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <div className="flex items-center gap-2">
+          <Calendar className="w-5 h-5 text-purple-400" />
+          <span>{selectedDate}</span>
+        </div>
+        <button className="p-2 hover:bg-[#2a2a2a] rounded-lg transition-colors">
+          <ChevronRight className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* Quick Stats */}
+      <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="bg-[#1e1e1e] rounded-xl p-3 text-center">
+          <p className="text-blue-400 mb-1">{appointments.length}</p>
+          <p className="text-xs text-gray-400">Total</p>
+        </div>
+        <div className="bg-[#1e1e1e] rounded-xl p-3 text-center">
+          <p className="text-green-400 mb-1">
+            {appointments.filter((a) => a.status === "confirmed").length}
+          </p>
+          <p className="text-xs text-gray-400">Confirmed</p>
+        </div>
+        <div className="bg-[#1e1e1e] rounded-xl p-3 text-center">
+          <p className="text-orange-400 mb-1">
+            {appointments.filter((a) => a.status === "pending").length}
+          </p>
+          <p className="text-xs text-gray-400">Pending</p>
+        </div>
+      </div>
+
+      {/* Timeline View */}
+      <div className="space-y-3">
+        {appointments.map((appointment, index) => (
+          <div key={appointment.id} className="relative">
+            {/* Timeline connector */}
+            {index !== appointments.length - 1 && (
+              <div className="absolute left-6 top-16 w-0.5 h-6 bg-gray-800" />
+            )}
+            
+            <div className="bg-[#1e1e1e] rounded-2xl p-4 shadow-lg hover:bg-[#2a2a2a] transition-colors cursor-pointer">
+              <div className="flex gap-4">
+                {/* Time indicator */}
+                <div className="flex flex-col items-center">
+                  <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs">{appointment.time}</span>
+                  </div>
+                </div>
+
+                {/* Appointment details */}
+                <div className="flex-1">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <p className="mb-1">{appointment.customer}</p>
+                      <p className="text-gray-400">{appointment.service}</p>
+                    </div>
+                    <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(appointment.status)}`}>
+                      {appointment.status}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-4 mt-3 pt-3 border-t border-gray-800 text-gray-400">
+                    <div className="flex items-center gap-2">
+                      <User className="w-4 h-4" />
+                      <span>{appointment.staff}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4" />
+                      <span>{appointment.duration}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

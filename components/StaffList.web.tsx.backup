@@ -1,0 +1,82 @@
+import { Search, Plus, ChevronRight } from "lucide-react";
+import { useState } from "react";
+
+interface StaffListProps {
+  onStaffClick: (staffId: number) => void;
+}
+
+export function StaffList({ onStaffClick }: StaffListProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const staff = [
+    { id: 1, name: "Emma Wilson", role: "Senior Stylist", avatar: "EW", status: "active", color: "bg-purple-500" },
+    { id: 2, name: "James Miller", role: "Barber", avatar: "JM", status: "active", color: "bg-blue-500" },
+    { id: 3, name: "Sophia Davis", role: "Colorist", avatar: "SD", status: "active", color: "bg-pink-500" },
+    { id: 4, name: "Oliver Brown", role: "Junior Stylist", avatar: "OB", status: "off", color: "bg-green-500" },
+  ];
+
+  const filteredStaff = staff.filter((member) =>
+    member.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <div className="p-6">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="mb-1">Staff</h1>
+        <p className="text-gray-400">Manage your team</p>
+      </div>
+
+      {/* Search Bar */}
+      <div className="relative mb-4">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+        <input
+          type="text"
+          placeholder="Search staff..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full bg-[#1e1e1e] rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+        />
+      </div>
+
+      {/* Add Button */}
+      <button className="w-full bg-purple-600 hover:bg-purple-700 rounded-xl py-3 mb-6 flex items-center justify-center gap-2 transition-colors">
+        <Plus className="w-5 h-5" />
+        <span>Add Staff Member</span>
+      </button>
+
+      {/* Staff List */}
+      <div className="space-y-3">
+        {filteredStaff.map((member) => (
+          <div
+            key={member.id}
+            onClick={() => onStaffClick(member.id)}
+            className="bg-[#1e1e1e] rounded-2xl p-4 shadow-lg cursor-pointer hover:bg-[#2a2a2a] transition-colors"
+          >
+            <div className="flex items-center gap-4">
+              <div className={`w-12 h-12 ${member.color} rounded-full flex items-center justify-center`}>
+                <span>{member.avatar}</span>
+              </div>
+              <div className="flex-1">
+                <p className="mb-1">{member.name}</p>
+                <p className="text-gray-400">{member.role}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span
+                  className={`px-3 py-1 rounded-full text-xs ${
+                    member.status === "active"
+                      ? "bg-green-500/20 text-green-400"
+                      : "bg-gray-500/20 text-gray-400"
+                  }`}
+                >
+                  {member.status === "active" ? "Active" : "Off"}
+                </span>
+                <ChevronRight className="w-5 h-5 text-gray-500" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

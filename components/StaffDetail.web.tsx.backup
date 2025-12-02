@@ -1,0 +1,127 @@
+import { ChevronLeft, Edit2, Clock, Calendar } from "lucide-react";
+
+interface StaffDetailProps {
+  staffId: number | null;
+  onBack: () => void;
+}
+
+export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
+  const staffData = {
+    1: {
+      name: "Emma Wilson",
+      role: "Senior Stylist",
+      avatar: "EW",
+      color: "bg-purple-500",
+      email: "emma.wilson@salon.com",
+      phone: "+1 (555) 123-4567",
+      schedule: [
+        { day: "Monday", hours: "9:00 AM - 5:00 PM" },
+        { day: "Tuesday", hours: "9:00 AM - 5:00 PM" },
+        { day: "Wednesday", hours: "9:00 AM - 5:00 PM" },
+        { day: "Thursday", hours: "9:00 AM - 5:00 PM" },
+        { day: "Friday", hours: "9:00 AM - 5:00 PM" },
+        { day: "Saturday", hours: "10:00 AM - 3:00 PM" },
+        { day: "Sunday", hours: "Off" },
+      ],
+    },
+    2: {
+      name: "James Miller",
+      role: "Barber",
+      avatar: "JM",
+      color: "bg-blue-500",
+      email: "james.miller@salon.com",
+      phone: "+1 (555) 234-5678",
+      schedule: [
+        { day: "Monday", hours: "10:00 AM - 6:00 PM" },
+        { day: "Tuesday", hours: "10:00 AM - 6:00 PM" },
+        { day: "Wednesday", hours: "Off" },
+        { day: "Thursday", hours: "10:00 AM - 6:00 PM" },
+        { day: "Friday", hours: "10:00 AM - 6:00 PM" },
+        { day: "Saturday", hours: "9:00 AM - 4:00 PM" },
+        { day: "Sunday", hours: "Off" },
+      ],
+    },
+  };
+
+  const staff = staffData[staffId as keyof typeof staffData] || staffData[1];
+
+  return (
+    <div className="p-6">
+      {/* Header */}
+      <div className="flex items-center gap-4 mb-6">
+        <button
+          onClick={onBack}
+          className="p-2 rounded-full bg-[#1e1e1e] hover:bg-[#2a2a2a] transition-colors"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <h1>Staff Details</h1>
+      </div>
+
+      {/* Profile Card */}
+      <div className="bg-[#1e1e1e] rounded-2xl p-6 shadow-lg mb-6">
+        <div className="flex items-start justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <div className={`w-16 h-16 ${staff.color} rounded-full flex items-center justify-center`}>
+              <span className="text-xl">{staff.avatar}</span>
+            </div>
+            <div>
+              <p className="mb-1">{staff.name}</p>
+              <p className="text-gray-400">{staff.role}</p>
+            </div>
+          </div>
+          <button className="p-2 rounded-full bg-purple-600 hover:bg-purple-700 transition-colors">
+            <Edit2 className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex items-center gap-3 text-gray-400">
+            <span>Email:</span>
+            <span className="text-white">{staff.email}</span>
+          </div>
+          <div className="flex items-center gap-3 text-gray-400">
+            <span>Phone:</span>
+            <span className="text-white">{staff.phone}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Schedule */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Calendar className="w-5 h-5 text-purple-400" />
+          <h2>Weekly Schedule</h2>
+        </div>
+        <div className="bg-[#1e1e1e] rounded-2xl p-4 shadow-lg">
+          <div className="space-y-3">
+            {staff.schedule.map((item, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between py-2 border-b border-gray-800 last:border-0"
+              >
+                <span className="text-gray-400">{item.day}</span>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-gray-500" />
+                  <span className={item.hours === "Off" ? "text-gray-500" : "text-white"}>
+                    {item.hours}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="space-y-3">
+        <button className="w-full bg-purple-600 hover:bg-purple-700 rounded-xl py-3 transition-colors">
+          Edit Schedule
+        </button>
+        <button className="w-full bg-[#1e1e1e] hover:bg-[#2a2a2a] rounded-xl py-3 text-red-400 transition-colors">
+          Remove Staff
+        </button>
+      </div>
+    </div>
+  );
+}
