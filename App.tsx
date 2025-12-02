@@ -137,7 +137,7 @@ export default function App() {
       case "staff":
         return focused ? "people" : "people-outline";
       case "services":
-        return focused ? "cut" : "cut-outline";
+        return focused ? "briefcase" : "briefcase-outline";
       case "customers":
         return focused ? "person-circle" : "person-circle-outline";
       case "appointments":
