@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Activi
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import { API, Customer } from "../services/api";
+import { StorageService } from "../services/storage";
 
 interface CustomerWithStats extends Customer {
   fullName: string;
@@ -14,10 +15,32 @@ export function CustomersList() {
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
+  const [hasViewPermission, setHasViewPermission] = useState(true);
+  const [hasEditPermission, setHasEditPermission] = useState(true);
 
   useEffect(() => {
-    loadCustomers();
+    checkPermissionsAndLoadCustomers();
   }, []);
+
+  const checkPermissionsAndLoadCustomers = async () => {
+    try {
+      const staffData = await StorageService.getStaffData();
+      const canViewCustomers = staffData?.permissions?.can_view_customers ?? true;
+      const canEditCustomers = staffData?.permissions?.can_edit_customers ?? true;
+
+      setHasViewPermission(canViewCustomers);
+      setHasEditPermission(canEditCustomers);
+
+      if (canViewCustomers) {
+        await loadCustomers();
+      } else {
+        setIsLoading(false);
+      }
+    } catch (err) {
+      console.error("Error checking permissions:", err);
+      setIsLoading(false);
+    }
+  };
 
   const loadCustomers = async () => {
     try {
@@ -46,7 +69,7 @@ export function CustomersList() {
 
   const onRefresh = () => {
     setRefreshing(true);
-    loadCustomers();
+    checkPermissionsAndLoadCustomers();
   };
 
   const formatDate = (dateString: string): string => {
@@ -124,8 +147,22 @@ export function CustomersList() {
       </TouchableOpacity>
       */}
 
-      {/* Loading State */}
-      {isLoading ? (
+      {/* No Permission State */}
+      {!hasViewPermission ? (
+        <View style={styles.noPermissionContainer}>
+          <View style={styles.noPermissionIcon}>
+            <Ionicons name="lock-closed" size={64} color="#6B7280" />
+          </View>
+          <Text style={styles.noPermissionTitle}>Keine Berechtigung</Text>
+          <Text style={styles.noPermissionText}>
+            Du hast keine Berechtigung, Kunden anzuzeigen.
+          </Text>
+          <Text style={styles.noPermissionHint}>
+            Kontaktiere den Administrator, um Zugriff zu erhalten.
+          </Text>
+        </View>
+      ) : isLoading ? (
+        /* Loading State */
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#7C3AED" />
           <Text style={styles.loadingText}>Lade Kunden...</Text>
@@ -156,7 +193,15 @@ export function CustomersList() {
         /* Customers List */
         <View style={styles.customersList}>
           {filteredCustomers.map((customer) => (
-            <TouchableOpacity key={customer.id} style={styles.customerCard}>
+            <TouchableOpacity
+              key={customer.id}
+              style={[
+                styles.customerCard,
+                !hasEditPermission && styles.customerCardDisabled
+              ]}
+              disabled={!hasEditPermission}
+              activeOpacity={hasEditPermission ? 0.7 : 1}
+            >
               <View style={styles.avatar}>
                 <Text style={styles.avatarText}>{customer.initials}</Text>
               </View>
@@ -175,7 +220,13 @@ export function CustomersList() {
                   <Text style={styles.metaText}>Erstellt: {formatDate(customer.created_at)}</Text>
                 </View>
               </View>
-              <Ionicons name="chevron-forward" size={20} color="#6B7280" />
+              {hasEditPermission ? (
+                <Ionicons name="chevron-forward" size={20} color="#6B7280" />
+              ) : (
+                <View style={styles.lockIconContainer}>
+                  <Ionicons name="lock-closed" size={16} color="#6B7280" />
+                </View>
+              )}
             </TouchableOpacity>
           ))}
         </View>
@@ -253,6 +304,43 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+  noPermissionContainer: {
+    backgroundColor: "#1E1E1E",
+    borderRadius: 16,
+    padding: 40,
+    alignItems: "center",
+    gap: 16,
+    borderWidth: 2,
+    borderColor: "#2A2A2A",
+  },
+  noPermissionIcon: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: "#2A2A2A",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 8,
+  },
+  noPermissionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#FFFFFF",
+    textAlign: "center",
+  },
+  noPermissionText: {
+    fontSize: 16,
+    color: "#9CA3AF",
+    textAlign: "center",
+    lineHeight: 24,
+  },
+  noPermissionHint: {
+    fontSize: 14,
+    color: "#6B7280",
+    textAlign: "center",
+    fontStyle: "italic",
+    marginTop: 8,
+  },
   loadingContainer: {
     backgroundColor: "#1E1E1E",
     borderRadius: 16,
@@ -319,6 +407,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 16,
     marginBottom: 12,
+  },
+  customerCardDisabled: {
+    opacity: 0.7,
+  },
+  lockIconContainer: {
+    width: 20,
+    height: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
   avatar: {
     width: 56,

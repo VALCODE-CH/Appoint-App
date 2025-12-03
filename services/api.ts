@@ -96,7 +96,7 @@ class ApiService {
     this.token = token;
   }
 
-  private async request<T>(
+  async request<T>(
     endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
@@ -188,6 +188,7 @@ class ApiService {
     staff_id: number;
     customer_name: string;
     customer_email: string;
+    customer_phone?: string;
     starts_at: string;
     ends_at: string;
     status: string;

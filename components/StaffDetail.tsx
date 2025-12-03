@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import { API, Staff, Appointment } from "../services/api";
+import { StorageService } from "../services/storage";
 
 interface StaffDetailProps {
   staffId: number | null;
@@ -13,6 +14,7 @@ export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [hasPermission, setHasPermission] = useState(true);
   const [stats, setStats] = useState({
     todayCount: 0,
     weekRevenue: 0,
@@ -20,9 +22,27 @@ export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
 
   useEffect(() => {
     if (staffId) {
-      loadStaffDetail();
+      checkPermissionAndLoadDetail();
     }
   }, [staffId]);
+
+  const checkPermissionAndLoadDetail = async () => {
+    try {
+      const staffData = await StorageService.getStaffData();
+      const canViewAllStaff = staffData?.permissions?.can_view_all_staff ?? true;
+
+      setHasPermission(canViewAllStaff);
+
+      if (canViewAllStaff) {
+        await loadStaffDetail();
+      } else {
+        setIsLoading(false);
+      }
+    } catch (err) {
+      console.error("Error checking permissions:", err);
+      setIsLoading(false);
+    }
+  };
 
   const loadStaffDetail = async () => {
     if (!staffId) return;
@@ -101,6 +121,32 @@ export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
     );
   }
 
+  if (!hasPermission) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={onBack} style={styles.backButton}>
+            <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+          <Text style={styles.title}>Personal Details</Text>
+          <View style={{ width: 40 }} />
+        </View>
+        <View style={styles.noPermissionContainer}>
+          <View style={styles.noPermissionIcon}>
+            <Ionicons name="lock-closed" size={64} color="#6B7280" />
+          </View>
+          <Text style={styles.noPermissionTitle}>Keine Berechtigung</Text>
+          <Text style={styles.noPermissionText}>
+            Du hast keine Berechtigung, Personaldetails anzuzeigen.
+          </Text>
+          <Text style={styles.noPermissionHint}>
+            Kontaktiere den Administrator, um Zugriff zu erhalten.
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
   if (error || !staff) {
     return (
       <View style={styles.container}>
@@ -114,7 +160,7 @@ export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
         <View style={styles.errorContainer}>
           <Ionicons name="alert-circle" size={48} color="#EF4444" />
           <Text style={styles.errorText}>{error || "Mitarbeiter nicht gefunden"}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={loadStaffDetail}>
+          <TouchableOpacity style={styles.retryButton} onPress={checkPermissionAndLoadDetail}>
             <Text style={styles.retryButtonText}>Erneut versuchen</Text>
           </TouchableOpacity>
         </View>
@@ -269,6 +315,41 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     color: "#FFFFFF",
+  },
+  noPermissionContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 40,
+    gap: 16,
+  },
+  noPermissionIcon: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: "#2A2A2A",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 8,
+  },
+  noPermissionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#FFFFFF",
+    textAlign: "center",
+  },
+  noPermissionText: {
+    fontSize: 16,
+    color: "#9CA3AF",
+    textAlign: "center",
+    lineHeight: 24,
+  },
+  noPermissionHint: {
+    fontSize: 14,
+    color: "#6B7280",
+    textAlign: "center",
+    fontStyle: "italic",
+    marginTop: 8,
   },
   profileSection: {
     alignItems: "center",

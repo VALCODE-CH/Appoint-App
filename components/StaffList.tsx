@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Activi
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import { API, Staff } from "../services/api";
+import { StorageService } from "../services/storage";
 
 interface StaffListProps {
   onStaffClick: (staffId: number) => void;
@@ -18,10 +19,29 @@ export function StaffList({ onStaffClick }: StaffListProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
+  const [hasPermission, setHasPermission] = useState(true);
 
   useEffect(() => {
-    loadStaff();
+    checkPermissionAndLoadStaff();
   }, []);
+
+  const checkPermissionAndLoadStaff = async () => {
+    try {
+      const staffData = await StorageService.getStaffData();
+      const canViewAllStaff = staffData?.permissions?.can_view_all_staff ?? true;
+
+      setHasPermission(canViewAllStaff);
+
+      if (canViewAllStaff) {
+        await loadStaff();
+      } else {
+        setIsLoading(false);
+      }
+    } catch (err) {
+      console.error("Error checking permissions:", err);
+      setIsLoading(false);
+    }
+  };
 
   const loadStaff = async () => {
     try {
@@ -59,7 +79,7 @@ export function StaffList({ onStaffClick }: StaffListProps) {
 
   const onRefresh = () => {
     setRefreshing(true);
-    loadStaff();
+    checkPermissionAndLoadStaff();
   };
 
   const filteredStaff = staff.filter((member) =>
@@ -112,8 +132,22 @@ export function StaffList({ onStaffClick }: StaffListProps) {
       </TouchableOpacity>
       */}
 
-      {/* Loading State */}
-      {isLoading ? (
+      {/* No Permission State */}
+      {!hasPermission ? (
+        <View style={styles.noPermissionContainer}>
+          <View style={styles.noPermissionIcon}>
+            <Ionicons name="lock-closed" size={64} color="#6B7280" />
+          </View>
+          <Text style={styles.noPermissionTitle}>Keine Berechtigung</Text>
+          <Text style={styles.noPermissionText}>
+            Du hast keine Berechtigung, das Personal anzuzeigen.
+          </Text>
+          <Text style={styles.noPermissionHint}>
+            Kontaktiere den Administrator, um Zugriff zu erhalten.
+          </Text>
+        </View>
+      ) : isLoading ? (
+        /* Loading State */
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#7C3AED" />
           <Text style={styles.loadingText}>Lade Personal...</Text>
@@ -240,6 +274,43 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",
+  },
+  noPermissionContainer: {
+    backgroundColor: "#1E1E1E",
+    borderRadius: 16,
+    padding: 40,
+    alignItems: "center",
+    gap: 16,
+    borderWidth: 2,
+    borderColor: "#2A2A2A",
+  },
+  noPermissionIcon: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: "#2A2A2A",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 8,
+  },
+  noPermissionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#FFFFFF",
+    textAlign: "center",
+  },
+  noPermissionText: {
+    fontSize: 16,
+    color: "#9CA3AF",
+    textAlign: "center",
+    lineHeight: 24,
+  },
+  noPermissionHint: {
+    fontSize: 14,
+    color: "#6B7280",
+    textAlign: "center",
+    fontStyle: "italic",
+    marginTop: 8,
   },
   loadingContainer: {
     backgroundColor: "#1E1E1E",

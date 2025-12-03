@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator
 import { Ionicons } from "@expo/vector-icons";
 import { API, Appointment } from "../services/api";
 import { StorageService } from "../services/storage";
+import { CreateAppointment } from "./CreateAppointment";
 
 interface GroupedAppointments {
   heute: Appointment[];
@@ -19,10 +20,36 @@ export function Appointments() {
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
+  const [hasViewPermission, setHasViewPermission] = useState(true);
+  const [hasCreatePermission, setHasCreatePermission] = useState(true);
+  const [hasEditPermission, setHasEditPermission] = useState(true);
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   useEffect(() => {
-    loadAppointments();
+    checkPermissionsAndLoadAppointments();
   }, []);
+
+  const checkPermissionsAndLoadAppointments = async () => {
+    try {
+      const staffData = await StorageService.getStaffData();
+      const canViewAllAppointments = staffData?.permissions?.can_view_all_appointments ?? true;
+      const canCreateAppointments = staffData?.permissions?.can_create_appointments ?? true;
+      const canEditAppointments = staffData?.permissions?.can_edit_appointments ?? true;
+
+      setHasViewPermission(canViewAllAppointments);
+      setHasCreatePermission(canCreateAppointments);
+      setHasEditPermission(canEditAppointments);
+
+      if (canViewAllAppointments) {
+        await loadAppointments();
+      } else {
+        setIsLoading(false);
+      }
+    } catch (err) {
+      console.error("Error checking permissions:", err);
+      setIsLoading(false);
+    }
+  };
 
   const loadAppointments = async () => {
     try {
@@ -134,16 +161,29 @@ export function Appointments() {
 
   const onRefresh = () => {
     setRefreshing(true);
-    loadAppointments();
+    checkPermissionsAndLoadAppointments();
   };
 
   const totalAppointments = appointments.heute.length + appointments.morgen.length + appointments.zukunft.length;
+
+  const handleCreateSuccess = () => {
+    // Lade Termine neu nach erfolgreichem Erstellen
+    checkPermissionsAndLoadAppointments();
+  };
 
   const renderAppointmentCard = (appointment: Appointment, dateLabel: string) => {
     const statusStyle = getStatusColor(appointment.status);
 
     return (
-      <TouchableOpacity key={appointment.id} style={styles.appointmentCard}>
+      <TouchableOpacity
+        key={appointment.id}
+        style={[
+          styles.appointmentCard,
+          !hasEditPermission && styles.appointmentCardDisabled
+        ]}
+        disabled={!hasEditPermission}
+        activeOpacity={hasEditPermission ? 0.7 : 1}
+      >
         <View style={styles.appointmentHeader}>
           <View style={styles.dateTimeContainer}>
             <Text style={styles.timeText}>{formatTime(appointment.starts_at)}</Text>
@@ -162,9 +202,26 @@ export function Appointments() {
             <Text style={styles.staffName}>{appointment.staff_name}</Text>
           </View>
         </View>
+        {hasEditPermission ? (
+          <Ionicons name="chevron-forward" size={20} color="#6B7280" style={styles.chevronIcon} />
+        ) : (
+          <View style={styles.lockIconContainer}>
+            <Ionicons name="lock-closed" size={16} color="#6B7280" />
+          </View>
+        )}
       </TouchableOpacity>
     );
   };
+
+  // Zeige CreateAppointment-Formular wenn aktiv
+  if (showCreateForm) {
+    return (
+      <CreateAppointment
+        onBack={() => setShowCreateForm(false)}
+        onSuccess={handleCreateSuccess}
+      />
+    );
+  }
 
   return (
     <ScrollView
@@ -183,14 +240,33 @@ export function Appointments() {
         </View>
       </View>
 
-      {/* Add Button */}
-      <TouchableOpacity style={styles.addButton}>
-        <Ionicons name="add" size={20} color="#FFFFFF" />
-        <Text style={styles.addButtonText}>Neuer Termin</Text>
-      </TouchableOpacity>
+      {/* Add Button - nur anzeigen wenn Berechtigung vorhanden */}
+      {hasCreatePermission && (
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => setShowCreateForm(true)}
+        >
+          <Ionicons name="add" size={20} color="#FFFFFF" />
+          <Text style={styles.addButtonText}>Neuer Termin</Text>
+        </TouchableOpacity>
+      )}
 
-      {/* Loading State */}
-      {isLoading ? (
+      {/* No Permission State */}
+      {!hasViewPermission ? (
+        <View style={styles.noPermissionContainer}>
+          <View style={styles.noPermissionIcon}>
+            <Ionicons name="lock-closed" size={64} color="#6B7280" />
+          </View>
+          <Text style={styles.noPermissionTitle}>Keine Berechtigung</Text>
+          <Text style={styles.noPermissionText}>
+            Du hast keine Berechtigung, Termine anzuzeigen.
+          </Text>
+          <Text style={styles.noPermissionHint}>
+            Kontaktiere den Administrator, um Zugriff zu erhalten.
+          </Text>
+        </View>
+      ) : isLoading ? (
+        /* Loading State */
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#7C3AED" />
           <Text style={styles.loadingText}>Lade Termine...</Text>
@@ -374,11 +450,68 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#FFFFFF",
   },
+  noPermissionContainer: {
+    backgroundColor: "#1E1E1E",
+    borderRadius: 16,
+    padding: 40,
+    alignItems: "center",
+    gap: 16,
+    borderWidth: 2,
+    borderColor: "#2A2A2A",
+  },
+  noPermissionIcon: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: "#2A2A2A",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 8,
+  },
+  noPermissionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#FFFFFF",
+    textAlign: "center",
+  },
+  noPermissionText: {
+    fontSize: 16,
+    color: "#9CA3AF",
+    textAlign: "center",
+    lineHeight: 24,
+  },
+  noPermissionHint: {
+    fontSize: 14,
+    color: "#6B7280",
+    textAlign: "center",
+    fontStyle: "italic",
+    marginTop: 8,
+  },
   appointmentCard: {
     backgroundColor: "#1E1E1E",
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
+    position: "relative",
+  },
+  appointmentCardDisabled: {
+    opacity: 0.7,
+  },
+  lockIconContainer: {
+    position: "absolute",
+    right: 16,
+    top: "50%",
+    marginTop: -10,
+    width: 20,
+    height: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  chevronIcon: {
+    position: "absolute",
+    right: 16,
+    top: "50%",
+    marginTop: -10,
   },
   appointmentHeader: {
     flexDirection: "row",
