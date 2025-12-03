@@ -14,7 +14,17 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.appointapp"
+      "bundleIdentifier": "com.appointapp",
+      "buildNumber": "1",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "remote-notification",
+          "remote-notification"
+        ],
+        "NSPhotoLibraryUsageDescription": "Die App benötigt Zugriff auf deine Fotos, um Profilbilder hochzuladen.",
+        "NSCameraUsageDescription": "Die App benötigt Zugriff auf die Kamera, um Fotos aufzunehmen.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -26,6 +36,11 @@
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c8d27049-58ce-4415-99c3-095f200fd9eb"
+      }
     }
   }
 }
