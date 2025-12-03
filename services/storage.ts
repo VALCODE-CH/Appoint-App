@@ -1,10 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Staff } from './api';
+import { Staff, License } from './api';
 
 const DOMAIN_KEY = '@appoint_domain';
 const TOKEN_KEY = '@appoint_token';
 const ONBOARDING_KEY = '@appoint_onboarding_completed';
 const STAFF_KEY = '@appoint_staff_data';
+const LICENSE_KEY = '@appoint_license_data';
 
 export const StorageService = {
   // Domain
@@ -85,10 +86,30 @@ export const StorageService = {
     }
   },
 
+  // License Data
+  async saveLicenseData(license: License): Promise<void> {
+    try {
+      await AsyncStorage.setItem(LICENSE_KEY, JSON.stringify(license));
+    } catch (error) {
+      console.error('Error saving license data:', error);
+      throw error;
+    }
+  },
+
+  async getLicenseData(): Promise<License | null> {
+    try {
+      const data = await AsyncStorage.getItem(LICENSE_KEY);
+      return data ? JSON.parse(data) : null;
+    } catch (error) {
+      console.error('Error getting license data:', error);
+      return null;
+    }
+  },
+
   // Clear all data (logout)
   async clearAll(): Promise<void> {
     try {
-      await AsyncStorage.multiRemove([DOMAIN_KEY, TOKEN_KEY, ONBOARDING_KEY, STAFF_KEY]);
+      await AsyncStorage.multiRemove([DOMAIN_KEY, TOKEN_KEY, ONBOARDING_KEY, STAFF_KEY, LICENSE_KEY]);
     } catch (error) {
       console.error('Error clearing storage:', error);
       throw error;

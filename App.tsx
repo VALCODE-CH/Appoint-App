@@ -49,11 +49,12 @@ export default function App() {
     }
   };
 
-  const handleOnboardingComplete = async (domain: string, token: string, staff: any) => {
+  const handleOnboardingComplete = async (domain: string, token: string, staff: any, license: any) => {
     try {
       await StorageService.saveDomain(domain);
       await StorageService.saveToken(token);
       await StorageService.saveStaffData(staff);
+      await StorageService.saveLicenseData(license);
       await StorageService.setOnboardingCompleted();
       setIsAuthenticated(true);
     } catch (error) {

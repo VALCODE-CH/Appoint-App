@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, ActivityIndicator, KeyboardAvoidingView, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { API } from "../../services/api";
+import { API, Staff, License } from "../../services/api";
 
 interface LoginScreenProps {
   domain: string;
-  onLoginSuccess: (token: string, staff: any) => void;
+  onLoginSuccess: (token: string, staff: Staff, license: License) => void;
   onBack: () => void;
 }
 
@@ -42,11 +42,14 @@ export function LoginScreen({ domain, onLoginSuccess, onBack }: LoginScreenProps
 
       setIsLoading(false);
 
-      // Erfolgreicher Login - Token und Staff-Daten weitergeben
+      // Erfolgreicher Login - Token, Staff-Daten und License weitergeben
       if (!response.staff) {
         console.warn("No staff data in response");
       }
-      onLoginSuccess(response.token, response.staff);
+      if (!response.license) {
+        console.warn("No license data in response");
+      }
+      onLoginSuccess(response.token, response.staff, response.license);
     } catch (err: any) {
       setIsLoading(false);
 

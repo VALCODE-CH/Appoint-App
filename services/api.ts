@@ -2,6 +2,22 @@ import { StorageService } from './storage';
 
 const API_BASE_PATH = '/wp-json/valcode-appoint/v1';
 
+export interface Permissions {
+  can_view_all_appointments: boolean;
+  can_create_appointments: boolean;
+  can_edit_appointments: boolean;
+  can_delete_appointments: boolean;
+  can_view_customers: boolean;
+  can_edit_customers: boolean;
+  can_edit_blockers: boolean;
+  can_view_all_staff: boolean;
+}
+
+export interface License {
+  valid: boolean;
+  type: string;
+}
+
 export interface LoginResponse {
   token: string;
   staff: {
@@ -9,7 +25,9 @@ export interface LoginResponse {
     name: string;
     email: string;
     phone: string;
+    permissions: Permissions;
   };
+  license: License;
 }
 
 export interface Service {
@@ -27,6 +45,7 @@ export interface Staff {
   name: string;
   email: string;
   phone: string;
+  permissions?: Permissions;
 }
 
 export interface Appointment {
