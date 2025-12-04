@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "Appoint App",
-    "slug": "appoint-app",
+    "name": "VALCODE Appoint",
+    "slug": "valcode-appoint",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "scheme": "appoint-app",
+    "scheme": "valcode-appoint",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -14,7 +14,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.appointapp",
+      "bundleIdentifier": "com.valcode.appoint",
       "buildNumber": "1",
       "infoPlist": {
         "UIBackgroundModes": [
@@ -31,7 +31,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#121212"
       },
-      "package": "com.appointapp"
+      "package": "com.valcode.appoint",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png",
