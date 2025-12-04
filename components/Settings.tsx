@@ -44,6 +44,31 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
     }
   };
 
+  const refreshPermissions = async () => {
+    try {
+      setIsLoading(true);
+
+      // Hole aktuelle Staff-Daten vom Server über validateToken
+      const response = await API.validateToken();
+
+      console.log("Aktualisierte Staff-Daten vom Server:", JSON.stringify(response.staff, null, 2));
+
+      // Speichere aktualisierte Daten
+      await StorageService.saveStaffData(response.staff);
+      setStaffData(response.staff);
+      setEditedName(response.staff.name);
+      setEditedEmail(response.staff.email);
+      setEditedPhone(response.staff.phone || "");
+
+      Alert.alert("Erfolg", "Berechtigungen wurden erfolgreich aktualisiert.");
+    } catch (error: any) {
+      console.error("Error refreshing permissions:", error);
+      Alert.alert("Fehler", error.message || "Berechtigungen konnten nicht aktualisiert werden.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSaveProfile = async () => {
     if (!staffData) return;
 
@@ -60,22 +85,17 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
     try {
       setIsSaving(true);
 
-      // API Call - update staff member
-      await API.request(`/staff/${staffData.id}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          name: editedName,
-          email: editedEmail,
-          phone: editedPhone,
-        }),
-      });
-
-      // Update local storage
-      const updatedStaff = {
-        ...staffData,
+      // API Call - update staff member mit der neuen Methode
+      const response = await API.updateStaff(staffData.id, {
         name: editedName,
         email: editedEmail,
         phone: editedPhone,
+      });
+
+      // Update local storage mit den vom Server zurückgegebenen Daten
+      const updatedStaff = {
+        ...staffData,
+        ...response.staff,
       };
       await StorageService.saveStaffData(updatedStaff);
       setStaffData(updatedStaff);
@@ -174,7 +194,7 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
       {/* Business Profile Section */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Business Profile</Text>
+          <Text style={styles.sectionTitle}>Mitarbeiterprofil</Text>
           {!isEditing ? (
             <TouchableOpacity onPress={() => setIsEditing(true)} style={styles.editButton}>
               <Ionicons name="create-outline" size={20} color="#7C3AED" />
@@ -290,6 +310,20 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
             <Text style={styles.settingDescription}>Benachrichtigungseinstellungen verwalten</Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color="#6B7280" />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.settingItem}
+          onPress={refreshPermissions}
+        >
+          <View style={[styles.settingIcon, { backgroundColor: "rgba(124, 58, 237, 0.15)" }]}>
+            <Ionicons name="shield-checkmark-outline" size={24} color="#7C3AED" />
+          </View>
+          <View style={styles.settingContent}>
+            <Text style={styles.settingTitle}>Berechtigungen aktualisieren</Text>
+            <Text style={styles.settingDescription}>Lade die neuesten Berechtigungen vom Server</Text>
+          </View>
+          <Ionicons name="refresh" size={20} color="#6B7280" />
         </TouchableOpacity>
       </View>
 

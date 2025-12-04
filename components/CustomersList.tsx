@@ -9,7 +9,11 @@ interface CustomerWithStats extends Customer {
   initials: string;
 }
 
-export function CustomersList() {
+interface CustomersListProps {
+  onCustomerClick?: (customerId: string) => void;
+}
+
+export function CustomersList({ onCustomerClick }: CustomersListProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [customers, setCustomers] = useState<CustomerWithStats[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -99,7 +103,7 @@ export function CustomersList() {
   const filteredCustomers = customers.filter((customer) =>
     customer.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     customer.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    customer.phone.includes(searchQuery)
+    (customer.phone && customer.phone.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
@@ -197,10 +201,11 @@ export function CustomersList() {
               key={customer.id}
               style={[
                 styles.customerCard,
-                !hasEditPermission && styles.customerCardDisabled
+                !hasViewPermission && styles.customerCardDisabled
               ]}
-              disabled={!hasEditPermission}
-              activeOpacity={hasEditPermission ? 0.7 : 1}
+              disabled={!hasViewPermission}
+              activeOpacity={hasViewPermission ? 0.7 : 1}
+              onPress={() => onCustomerClick && onCustomerClick(customer.id)}
             >
               <View style={styles.avatar}>
                 <Text style={styles.avatarText}>{customer.initials}</Text>
@@ -220,7 +225,7 @@ export function CustomersList() {
                   <Text style={styles.metaText}>Erstellt: {formatDate(customer.created_at)}</Text>
                 </View>
               </View>
-              {hasEditPermission ? (
+              {hasViewPermission ? (
                 <Ionicons name="chevron-forward" size={20} color="#6B7280" />
               ) : (
                 <View style={styles.lockIconContainer}>

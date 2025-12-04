@@ -144,10 +144,21 @@ export function Dashboard({ onNavigateToSettings, shouldRefresh }: DashboardProp
         : 0;
 
       // Berechne heutiges Revenue (Summe aller Service-Preise von heute)
-      const todayRevenue = todayAppointments.reduce((sum, apt) => {
-        // Annahme: Service hat einen Preis, falls verfügbar
-        return sum + 0; // Wird später implementiert wenn Service-Details verfügbar sind
-      }, 0);
+      let todayRevenue = 0;
+
+      // Lade Service-Details für jeden Termin und summiere die Preise
+      for (const apt of todayAppointments) {
+        try {
+          const service = await API.getService(apt.service_id);
+          const price = parseFloat(service.price);
+          if (!isNaN(price)) {
+            todayRevenue += price;
+          }
+        } catch (err) {
+          console.error(`Error loading service ${apt.service_id}:`, err);
+          // Ignoriere Fehler für einzelne Services und fahre fort
+        }
+      }
 
       setStats({
         todayAppointmentsCount: todayAppointments.length,

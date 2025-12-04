@@ -6,15 +6,18 @@ import { Dashboard } from "./components/Dashboard";
 import { StaffList } from "./components/StaffList";
 import { StaffDetail } from "./components/StaffDetail";
 import { ServicesList } from "./components/ServicesList";
+import { ServiceDetail } from "./components/ServiceDetail";
 import { CustomersList } from "./components/CustomersList";
+import { CustomerDetail } from "./components/CustomerDetail";
 import { Appointments } from "./components/Appointments";
+import { AppointmentDetail } from "./components/AppointmentDetail";
 import { Settings } from "./components/Settings";
 import { Onboarding } from "./components/Onboarding";
 import { StorageService } from "./services/storage";
 import { API } from "./services/api";
 
 type Tab = "dashboard" | "staff" | "services" | "customers" | "appointments";
-type Screen = "dashboard" | "staff-list" | "staff-detail" | "services" | "customers" | "appointments" | "settings";
+type Screen = "dashboard" | "staff-list" | "staff-detail" | "services" | "services-detail" | "customers" | "customers-detail" | "appointments" | "appointments-detail" | "settings";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -22,6 +25,9 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("dashboard");
   const [currentScreen, setCurrentScreen] = useState<Screen>("dashboard");
   const [selectedStaffId, setSelectedStaffId] = useState<number | null>(null);
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState<string | null>(null);
   const [dashboardRefreshKey, setDashboardRefreshKey] = useState(Date.now());
 
   // Check if user has completed onboarding
@@ -38,6 +44,57 @@ export default function App() {
       // Initialisiere API mit gespeicherten Werten
       if (domain && token) {
         await API.initialize();
+
+        // Aktualisiere Permissions automatisch beim App-Start
+        try {
+          console.log("===============================================");
+          console.log("AKTUALISIERE PERMISSIONS BEIM APP-START");
+          console.log("===============================================");
+          console.log("Rufe /auth/validate auf...");
+
+          const response = await API.validateToken();
+
+          console.log("===============================================");
+          console.log("KOMPLETTE RESPONSE VON /auth/validate:");
+          console.log(JSON.stringify(response, null, 2));
+          console.log("===============================================");
+          console.log("Staff-Daten:");
+          console.log(JSON.stringify(response.staff, null, 2));
+          console.log("===============================================");
+          console.log("Permissions vom Server:");
+          console.log(JSON.stringify(response.staff.permissions, null, 2));
+          console.log("===============================================");
+
+          // Speichere aktualisierte Staff-Daten
+          await StorageService.saveStaffData(response.staff);
+
+          // Speichere auch License-Daten falls vorhanden
+          if (response.license) {
+            await StorageService.saveLicenseData(response.license);
+            console.log("License-Daten gespeichert:", JSON.stringify(response.license, null, 2));
+          }
+
+          console.log("✅ Permissions erfolgreich aktualisiert und gespeichert");
+          console.log("===============================================");
+        } catch (permError) {
+          console.error("===============================================");
+          console.error("❌ FEHLER beim Aktualisieren der Permissions:");
+          console.error(permError);
+          console.error("===============================================");
+
+          // Wenn Token ungültig ist, logout
+          if (permError instanceof Error &&
+              (permError.message.includes("401") ||
+               permError.message.includes("Invalid or expired token"))) {
+            console.log("⚠️ Token ungültig oder abgelaufen - Automatischer Logout");
+            await StorageService.clearAll();
+            setIsAuthenticated(false);
+            setIsLoading(false);
+            return;
+          }
+          // Bei anderen Fehlern trotzdem fortfahren mit gecachten Daten
+          console.log("⚠️ Fortfahren mit gecachten Daten");
+        }
       }
 
       setIsAuthenticated(onboardingCompleted && !!token && !!domain);
@@ -67,8 +124,35 @@ export default function App() {
     setCurrentScreen("staff-detail");
   };
 
-  const navigateBack = () => {
+  const navigateToServiceDetail = (serviceId: string) => {
+    setSelectedServiceId(serviceId);
+    setCurrentScreen("services-detail");
+  };
+
+  const navigateToCustomerDetail = (customerId: string) => {
+    setSelectedCustomerId(customerId);
+    setCurrentScreen("customers-detail");
+  };
+
+  const navigateToAppointmentDetail = (appointmentId: string) => {
+    setSelectedAppointmentId(appointmentId);
+    setCurrentScreen("appointments-detail");
+  };
+
+  const navigateBackFromStaff = () => {
     setCurrentScreen("staff-list");
+  };
+
+  const navigateBackFromService = () => {
+    setCurrentScreen("services");
+  };
+
+  const navigateBackFromCustomer = () => {
+    setCurrentScreen("customers");
+  };
+
+  const navigateBackFromAppointment = () => {
+    setCurrentScreen("appointments");
   };
 
   const navigateToSettings = () => {
@@ -111,13 +195,19 @@ export default function App() {
       case "staff-list":
         return <StaffList onStaffClick={navigateToStaffDetail} />;
       case "staff-detail":
-        return <StaffDetail staffId={selectedStaffId} onBack={navigateBack} />;
+        return <StaffDetail staffId={selectedStaffId} onBack={navigateBackFromStaff} />;
       case "services":
-        return <ServicesList />;
+        return <ServicesList onServiceClick={navigateToServiceDetail} />;
+      case "services-detail":
+        return <ServiceDetail serviceId={selectedServiceId} onBack={navigateBackFromService} />;
       case "customers":
-        return <CustomersList />;
+        return <CustomersList onCustomerClick={navigateToCustomerDetail} />;
+      case "customers-detail":
+        return <CustomerDetail customerId={selectedCustomerId} onBack={navigateBackFromCustomer} />;
       case "appointments":
-        return <Appointments />;
+        return <Appointments onAppointmentClick={navigateToAppointmentDetail} />;
+      case "appointments-detail":
+        return <AppointmentDetail appointmentId={selectedAppointmentId} onBack={navigateBackFromAppointment} />;
       case "settings":
         return <Settings
           onBack={() => {

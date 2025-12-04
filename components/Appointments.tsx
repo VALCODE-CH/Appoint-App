@@ -11,7 +11,11 @@ interface GroupedAppointments {
   zukunft: Appointment[];
 }
 
-export function Appointments() {
+interface AppointmentsProps {
+  onAppointmentClick?: (appointmentId: string) => void;
+}
+
+export function Appointments({ onAppointmentClick }: AppointmentsProps) {
   const [appointments, setAppointments] = useState<GroupedAppointments>({
     heute: [],
     morgen: [],
@@ -179,10 +183,11 @@ export function Appointments() {
         key={appointment.id}
         style={[
           styles.appointmentCard,
-          !hasEditPermission && styles.appointmentCardDisabled
+          !hasViewPermission && styles.appointmentCardDisabled
         ]}
-        disabled={!hasEditPermission}
-        activeOpacity={hasEditPermission ? 0.7 : 1}
+        disabled={!hasViewPermission}
+        activeOpacity={hasViewPermission ? 0.7 : 1}
+        onPress={() => onAppointmentClick && onAppointmentClick(appointment.id)}
       >
         <View style={styles.appointmentHeader}>
           <View style={styles.dateTimeContainer}>
@@ -202,7 +207,7 @@ export function Appointments() {
             <Text style={styles.staffName}>{appointment.staff_name}</Text>
           </View>
         </View>
-        {hasEditPermission ? (
+        {hasViewPermission ? (
           <Ionicons name="chevron-forward" size={20} color="#6B7280" style={styles.chevronIcon} />
         ) : (
           <View style={styles.lockIconContainer}>

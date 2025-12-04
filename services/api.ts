@@ -142,8 +142,10 @@ class ApiService {
     return response;
   }
 
-  async validateToken(): Promise<{ valid: boolean; staff: Staff }> {
-    return this.request('/auth/validate');
+  async validateToken(): Promise<{ valid: boolean; staff: Staff; license: License }> {
+    return this.request('/auth/validate', {
+      method: 'POST',
+    });
   }
 
   // Services
@@ -162,6 +164,20 @@ class ApiService {
 
   async getStaffMember(id: string): Promise<Staff> {
     return this.request(`/staff/${id}`);
+  }
+
+  async updateStaff(
+    id: string,
+    data: {
+      name: string;
+      email: string;
+      phone?: string;
+    }
+  ): Promise<{ message: string; staff: Staff }> {
+    return this.request(`/staff/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
   }
 
   // Appointments

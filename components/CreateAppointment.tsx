@@ -209,10 +209,7 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
 
     if (event.type === 'set' && date) {
       setSelectedDate(date);
-      // Auf iOS schließen wir den Picker nach der Auswahl
-      if (Platform.OS === 'ios') {
-        setShowDatePicker(false);
-      }
+      // Auf iOS bleibt der Picker offen zum weiteren Bearbeiten
     } else if (event.type === 'dismissed') {
       // Benutzer hat abgebrochen
       setShowDatePicker(false);
@@ -227,10 +224,7 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
 
     if (event.type === 'set' && date) {
       setSelectedTime(date);
-      // Auf iOS schließen wir den Picker nach der Auswahl
-      if (Platform.OS === 'ios') {
-        setShowTimePicker(false);
-      }
+      // Auf iOS bleibt der Picker offen zum weiteren Bearbeiten
     } else if (event.type === 'dismissed') {
       // Benutzer hat abgebrochen
       setShowTimePicker(false);
@@ -409,6 +403,7 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
                   display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                   onChange={handleDateChange}
                   minimumDate={new Date()}
+                  locale="de-DE"
                 />
                 {Platform.OS === 'ios' && (
                   <TouchableOpacity
@@ -446,6 +441,7 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
                   display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                   onChange={handleTimeChange}
                   is24Hour={true}
+                  locale="de-DE"
                 />
                 {Platform.OS === 'ios' && (
                   <TouchableOpacity

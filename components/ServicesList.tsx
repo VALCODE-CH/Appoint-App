@@ -3,7 +3,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import { API, Service } from "../services/api";
 
-export function ServicesList() {
+interface ServicesListProps {
+  onServiceClick?: (serviceId: string) => void;
+}
+
+export function ServicesList({ onServiceClick }: ServicesListProps) {
   const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -144,7 +148,11 @@ export function ServicesList() {
         /* Services List */
         <View style={styles.servicesList}>
           {services.map((service) => (
-            <TouchableOpacity key={service.id} style={styles.serviceCard}>
+            <TouchableOpacity
+              key={service.id}
+              style={styles.serviceCard}
+              onPress={() => onServiceClick && onServiceClick(service.id)}
+            >
               <View style={styles.serviceIcon}>
                 <Ionicons name={getServiceIcon(service.name) as any} size={24} color="#7C3AED" />
               </View>
