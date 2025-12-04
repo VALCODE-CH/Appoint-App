@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
-import { View, TouchableOpacity, StyleSheet, SafeAreaView, Platform, ActivityIndicator } from "react-native";
+import { useState, useEffect, useRef } from "react";
+import { View, TouchableOpacity, StyleSheet, SafeAreaView, Platform, ActivityIndicator, Animated, Dimensions } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
+import { GestureHandlerRootView, GestureDetector, Gesture } from "react-native-gesture-handler";
+import * as Haptics from "expo-haptics";
 import { Dashboard } from "./components/Dashboard";
 import { StaffList } from "./components/StaffList";
 import { StaffDetail } from "./components/StaffDetail";
@@ -16,6 +18,9 @@ import { Onboarding } from "./components/Onboarding";
 import { StorageService } from "./services/storage";
 import { API } from "./services/api";
 
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const TABS: Tab[] = ["dashboard", "staff", "services", "customers", "appointments"];
+
 type Tab = "dashboard" | "staff" | "services" | "customers" | "appointments";
 type Screen = "dashboard" | "staff-list" | "staff-detail" | "services" | "services-detail" | "customers" | "customers-detail" | "appointments" | "appointments-detail" | "settings";
 
@@ -29,6 +34,10 @@ export default function App() {
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
   const [selectedAppointmentId, setSelectedAppointmentId] = useState<string | null>(null);
   const [dashboardRefreshKey, setDashboardRefreshKey] = useState(Date.now());
+
+  // Animation values
+  const translateX = useRef(new Animated.Value(0)).current;
+  const opacity = useRef(new Animated.Value(1)).current;
 
   // Check if user has completed onboarding
   useEffect(() => {
@@ -159,26 +168,82 @@ export default function App() {
     setCurrentScreen("settings");
   };
 
-  const handleTabChange = (tab: Tab) => {
-    setActiveTab(tab);
-    switch (tab) {
-      case "dashboard":
-        setCurrentScreen("dashboard");
-        // Trigger Dashboard refresh
-        setDashboardRefreshKey(Date.now());
-        break;
-      case "staff":
-        setCurrentScreen("staff-list");
-        break;
-      case "services":
-        setCurrentScreen("services");
-        break;
-      case "customers":
-        setCurrentScreen("customers");
-        break;
-      case "appointments":
-        setCurrentScreen("appointments");
-        break;
+  const handleTabChange = (tab: Tab, animated: boolean = true) => {
+    const currentIndex = TABS.indexOf(activeTab);
+    const newIndex = TABS.indexOf(tab);
+    const direction = newIndex > currentIndex ? -1 : 1;
+
+    if (animated) {
+      // Fade out + slide
+      Animated.parallel([
+        Animated.timing(opacity, {
+          toValue: 0,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateX, {
+          toValue: direction * 20,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        // Update tab
+        setActiveTab(tab);
+        switch (tab) {
+          case "dashboard":
+            setCurrentScreen("dashboard");
+            setDashboardRefreshKey(Date.now());
+            break;
+          case "staff":
+            setCurrentScreen("staff-list");
+            break;
+          case "services":
+            setCurrentScreen("services");
+            break;
+          case "customers":
+            setCurrentScreen("customers");
+            break;
+          case "appointments":
+            setCurrentScreen("appointments");
+            break;
+        }
+
+        // Reset position and fade in
+        translateX.setValue(direction * -20);
+        Animated.parallel([
+          Animated.timing(opacity, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+          Animated.spring(translateX, {
+            toValue: 0,
+            tension: 80,
+            friction: 10,
+            useNativeDriver: true,
+          }),
+        ]).start();
+      });
+    } else {
+      setActiveTab(tab);
+      switch (tab) {
+        case "dashboard":
+          setCurrentScreen("dashboard");
+          setDashboardRefreshKey(Date.now());
+          break;
+        case "staff":
+          setCurrentScreen("staff-list");
+          break;
+        case "services":
+          setCurrentScreen("services");
+          break;
+        case "customers":
+          setCurrentScreen("customers");
+          break;
+        case "appointments":
+          setCurrentScreen("appointments");
+          break;
+      }
     }
   };
 
@@ -256,41 +321,109 @@ export default function App() {
     );
   }
 
+  // Swipe gesture for main tabs only
+  const isMainTabScreen = ["dashboard", "staff-list", "services", "customers", "appointments"].includes(currentScreen);
+
+  const panGesture = Gesture.Pan()
+    .enabled(isMainTabScreen)
+    .onUpdate((event) => {
+      if (!isMainTabScreen) return;
+      const currentIndex = TABS.indexOf(activeTab);
+      const translation = event.translationX;
+
+      // Subtle movement while swiping
+      if ((currentIndex > 0 && translation > 0) || (currentIndex < TABS.length - 1 && translation < 0)) {
+        translateX.setValue(translation * 0.3);
+      }
+    })
+    .onEnd((event) => {
+      if (!isMainTabScreen) return;
+
+      const currentIndex = TABS.indexOf(activeTab);
+      const velocity = event.velocityX;
+      const translation = event.translationX;
+
+      const shouldSwitchTab = Math.abs(translation) > SCREEN_WIDTH / 4 || Math.abs(velocity) > 800;
+
+      if (shouldSwitchTab) {
+        if (translation > 0 && currentIndex > 0) {
+          // Swipe right - previous tab
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          handleTabChange(TABS[currentIndex - 1]);
+        } else if (translation < 0 && currentIndex < TABS.length - 1) {
+          // Swipe left - next tab
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          handleTabChange(TABS[currentIndex + 1]);
+        } else {
+          // Spring back
+          Animated.spring(translateX, {
+            toValue: 0,
+            tension: 80,
+            friction: 10,
+            useNativeDriver: true,
+          }).start();
+        }
+      } else {
+        // Spring back
+        Animated.spring(translateX, {
+          toValue: 0,
+          tension: 80,
+          friction: 10,
+          useNativeDriver: true,
+        }).start();
+      }
+    });
+
   // Main App
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="light" />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaView style={styles.container}>
+        <StatusBar style="light" />
 
-      {/* Main Content */}
-      <View style={styles.content}>
-        {renderScreen()}
-      </View>
+        {/* Main Content with Swipe Gesture */}
+        <GestureDetector gesture={panGesture}>
+          <Animated.View
+            style={[
+              styles.content,
+              {
+                opacity,
+                transform: [{ translateX }],
+              },
+            ]}
+          >
+            {renderScreen()}
+          </Animated.View>
+        </GestureDetector>
 
-      {/* Bottom Tab Navigation - Modern Design */}
-      <View style={styles.tabBarContainer}>
-        <View style={styles.tabBar}>
-          {(["dashboard", "staff", "services", "customers", "appointments"] as Tab[]).map((tab) => {
-            const isActive = activeTab === tab;
-            return (
-              <TouchableOpacity
-                key={tab}
-                onPress={() => handleTabChange(tab)}
-                style={[styles.tabItem, isActive && styles.tabItemActive]}
-                activeOpacity={0.7}
-              >
-                <View style={[styles.iconContainer, isActive && styles.iconContainerActive]}>
-                  <Ionicons
-                    name={getIconName(tab, isActive)}
-                    size={24}
-                    color={isActive ? "#FFFFFF" : "#6B7280"}
-                  />
-                </View>
-              </TouchableOpacity>
-            );
-          })}
+        {/* Bottom Tab Navigation - Modern Design */}
+        <View style={styles.tabBarContainer}>
+          <View style={styles.tabBar}>
+            {TABS.map((tab) => {
+              const isActive = activeTab === tab;
+              return (
+                <TouchableOpacity
+                  key={tab}
+                  onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    handleTabChange(tab);
+                  }}
+                  style={[styles.tabItem, isActive && styles.tabItemActive]}
+                  activeOpacity={0.7}
+                >
+                  <View style={[styles.iconContainer, isActive && styles.iconContainerActive]}>
+                    <Ionicons
+                      name={getIconName(tab, isActive)}
+                      size={24}
+                      color={isActive ? "#FFFFFF" : "#6B7280"}
+                    />
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }
 
