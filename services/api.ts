@@ -72,6 +72,15 @@ export interface Customer {
   created_at: string;
 }
 
+export interface DesignSettings {
+  primary_color: string;
+  accent_color: string;
+  accent_gradient_start: string;
+  accent_gradient_end: string;
+  radius: string;
+  font_family: string;
+}
+
 class ApiService {
   private baseUrl: string = '';
   private token: string = '';
@@ -300,6 +309,11 @@ class ApiService {
       queryParams.append('staff_id', params.staff_id);
     }
     return this.request(`/slots?${queryParams.toString()}`);
+  }
+
+  // Design Settings
+  async getDesignSettings(): Promise<DesignSettings> {
+    return this.request('/design-settings');
   }
 
   // Check if API is available

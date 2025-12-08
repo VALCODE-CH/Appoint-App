@@ -17,6 +17,7 @@ import { Settings } from "./components/Settings";
 import { Onboarding } from "./components/Onboarding";
 import { StorageService } from "./services/storage";
 import { API } from "./services/api";
+import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const TABS: Tab[] = ["dashboard", "staff", "services", "customers", "appointments"];
@@ -24,7 +25,8 @@ const TABS: Tab[] = ["dashboard", "staff", "services", "customers", "appointment
 type Tab = "dashboard" | "staff" | "services" | "customers" | "appointments";
 type Screen = "dashboard" | "staff-list" | "staff-detail" | "services" | "services-detail" | "customers" | "customers-detail" | "appointments" | "appointments-detail" | "settings";
 
-export default function App() {
+function AppContent() {
+  const { theme, refreshTheme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>("dashboard");
@@ -304,9 +306,9 @@ export default function App() {
   // Loading Screen
   if (isLoading) {
     return (
-      <View style={styles.loadingContainer}>
+      <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
         <StatusBar style="light" />
-        <ActivityIndicator size="large" color="#7C3AED" />
+        <ActivityIndicator size="large" color={theme.primary} />
       </View>
     );
   }
@@ -377,7 +379,7 @@ export default function App() {
   // Main App
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
         <StatusBar style="light" />
 
         {/* Main Content with Swipe Gesture */}
@@ -396,8 +398,8 @@ export default function App() {
         </GestureDetector>
 
         {/* Bottom Tab Navigation - Modern Design */}
-        <View style={styles.tabBarContainer}>
-          <View style={styles.tabBar}>
+        <View style={[styles.tabBarContainer, { backgroundColor: theme.background }]}>
+          <View style={[styles.tabBar, { backgroundColor: theme.card, shadowColor: theme.shadow }]}>
             {TABS.map((tab) => {
               const isActive = activeTab === tab;
               return (
@@ -410,7 +412,13 @@ export default function App() {
                   style={[styles.tabItem, isActive && styles.tabItemActive]}
                   activeOpacity={0.7}
                 >
-                  <View style={[styles.iconContainer, isActive && styles.iconContainerActive]}>
+                  <View style={[
+                    styles.iconContainer,
+                    isActive && {
+                      backgroundColor: theme.primary,
+                      shadowColor: theme.shadow
+                    }
+                  ]}>
                     <Ionicons
                       name={getIconName(tab, isActive)}
                       size={24}
@@ -427,27 +435,31 @@ export default function App() {
   );
 }
 
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
+  );
+}
+
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
-    backgroundColor: "#121212",
     justifyContent: "center",
     alignItems: "center",
   },
   container: {
     flex: 1,
-    backgroundColor: "#121212",
   },
   content: {
     flex: 1,
   },
   tabBarContainer: {
-    backgroundColor: "#121212",
     paddingBottom: Platform.OS === "ios" ? 0 : 8,
   },
   tabBar: {
     flexDirection: "row",
-    backgroundColor: "#1E1E1E",
     marginHorizontal: 16,
     marginBottom: 8,
     marginTop: 8,
@@ -455,7 +467,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 8,
     justifyContent: "space-around",
-    shadowColor: "#7C3AED",
     shadowOffset: {
       width: 0,
       height: 4,
@@ -478,10 +489,6 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     alignItems: "center",
     justifyContent: "center",
-  },
-  iconContainerActive: {
-    backgroundColor: "#7C3AED",
-    shadowColor: "#7C3AED",
     shadowOffset: {
       width: 0,
       height: 4,

@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, TextInput, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, TextInput, ActivityIndicator, Switch } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StorageService } from "../services/storage";
 import { API, Staff } from "../services/api";
 import { Notifications } from "./Notifications";
+import { ThemeServiceInstance, ThemeMode } from "../services/theme";
 
 interface SettingsProps {
   onBack: () => void;
@@ -21,9 +22,12 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
   const [editedPhone, setEditedPhone] = useState("");
+  const [themeMode, setThemeMode] = useState<ThemeMode>("standard");
+  const [isThemeLoading, setIsThemeLoading] = useState(false);
 
   useEffect(() => {
     loadUserData();
+    loadThemeSettings();
   }, []);
 
   const loadUserData = async () => {
@@ -41,6 +45,36 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
       Alert.alert("Fehler", "Benutzerdaten konnten nicht geladen werden.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const loadThemeSettings = async () => {
+    try {
+      await ThemeServiceInstance.initialize();
+      const mode = ThemeServiceInstance.getThemeMode();
+      setThemeMode(mode);
+    } catch (error) {
+      console.error("Error loading theme settings:", error);
+    }
+  };
+
+  const handleThemeToggle = async (useCustom: boolean) => {
+    try {
+      setIsThemeLoading(true);
+      const newMode: ThemeMode = useCustom ? "custom" : "standard";
+      await ThemeServiceInstance.setThemeMode(newMode);
+      setThemeMode(newMode);
+
+      Alert.alert(
+        "Design aktualisiert",
+        "Bitte starte die App neu, damit die Änderungen vollständig angewendet werden.",
+        [{ text: "OK" }]
+      );
+    } catch (error) {
+      console.error("Error changing theme:", error);
+      Alert.alert("Fehler", "Design konnte nicht geändert werden.");
+    } finally {
+      setIsThemeLoading(false);
     }
   };
 
@@ -297,6 +331,26 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
       {/* Other Settings */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Weitere Einstellungen</Text>
+
+        {/* Theme Toggle */}
+        <View style={styles.settingItem}>
+          <View style={[styles.settingIcon, { backgroundColor: "rgba(139, 92, 246, 0.15)" }]}>
+            <Ionicons name="color-palette-outline" size={24} color="#8B5CF6" />
+          </View>
+          <View style={styles.settingContent}>
+            <Text style={styles.settingTitle}>Custom Design</Text>
+            <Text style={styles.settingDescription}>
+              {themeMode === "custom" ? "Verwendet Server-Farben" : "Verwendet Standard-Design"}
+            </Text>
+          </View>
+          <Switch
+            value={themeMode === "custom"}
+            onValueChange={handleThemeToggle}
+            trackColor={{ false: "#3A3A3A", true: "#7C3AED" }}
+            thumbColor={themeMode === "custom" ? "#FFFFFF" : "#9CA3AF"}
+            disabled={isThemeLoading}
+          />
+        </View>
 
         <TouchableOpacity
           style={styles.settingItem}

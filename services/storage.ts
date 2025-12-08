@@ -6,6 +6,7 @@ const TOKEN_KEY = '@appoint_token';
 const ONBOARDING_KEY = '@appoint_onboarding_completed';
 const STAFF_KEY = '@appoint_staff_data';
 const LICENSE_KEY = '@appoint_license_data';
+const THEME_MODE_KEY = '@appoint_theme_mode';
 
 export const StorageService = {
   // Domain
@@ -106,10 +107,31 @@ export const StorageService = {
     }
   },
 
+  // Theme Mode
+  async saveThemeMode(mode: 'standard' | 'custom'): Promise<void> {
+    try {
+      await AsyncStorage.setItem(THEME_MODE_KEY, mode);
+    } catch (error) {
+      console.error('Error saving theme mode:', error);
+      throw error;
+    }
+  },
+
+  async getThemeMode(): Promise<'standard' | 'custom'> {
+    try {
+      const mode = await AsyncStorage.getItem(THEME_MODE_KEY);
+      return (mode as 'standard' | 'custom') || 'standard';
+    } catch (error) {
+      console.error('Error getting theme mode:', error);
+      return 'standard';
+    }
+  },
+
   // Clear all data (logout)
   async clearAll(): Promise<void> {
     try {
       await AsyncStorage.multiRemove([DOMAIN_KEY, TOKEN_KEY, ONBOARDING_KEY, STAFF_KEY, LICENSE_KEY]);
+      // Keep theme mode even after logout
     } catch (error) {
       console.error('Error clearing storage:', error);
       throw error;

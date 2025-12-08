@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "VALCODE Appoint",
-    "slug": "valcode-appoint",
-    "version": "1.0.0",
+    "name": "Appoint App",
+    "slug": "appoint-app",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "scheme": "valcode-appoint",
+    "scheme": "appoint-app",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
