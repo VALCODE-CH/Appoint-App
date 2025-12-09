@@ -36,6 +36,7 @@ function AppContent() {
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
   const [selectedAppointmentId, setSelectedAppointmentId] = useState<string | null>(null);
   const [dashboardRefreshKey, setDashboardRefreshKey] = useState(Date.now());
+  const [appointmentReturnScreen, setAppointmentReturnScreen] = useState<"dashboard" | "appointments">("appointments");
 
   // Animation values
   const translateX = useRef(new Animated.Value(0)).current;
@@ -145,8 +146,9 @@ function AppContent() {
     setCurrentScreen("customers-detail");
   };
 
-  const navigateToAppointmentDetail = (appointmentId: string) => {
+  const navigateToAppointmentDetail = (appointmentId: string, fromDashboard: boolean = false) => {
     setSelectedAppointmentId(appointmentId);
+    setAppointmentReturnScreen(fromDashboard ? "dashboard" : "appointments");
     setCurrentScreen("appointments-detail");
   };
 
@@ -163,7 +165,14 @@ function AppContent() {
   };
 
   const navigateBackFromAppointment = () => {
-    setCurrentScreen("appointments");
+    if (appointmentReturnScreen === "dashboard") {
+      setCurrentScreen("dashboard");
+      setActiveTab("dashboard");
+      setDashboardRefreshKey(Date.now());
+    } else {
+      setCurrentScreen("appointments");
+      setActiveTab("appointments");
+    }
   };
 
   const navigateToSettings = () => {
@@ -258,7 +267,13 @@ function AppContent() {
   const renderScreen = () => {
     switch (currentScreen) {
       case "dashboard":
-        return <Dashboard onNavigateToSettings={navigateToSettings} shouldRefresh={dashboardRefreshKey} />;
+        return <Dashboard
+          onNavigateToSettings={navigateToSettings}
+          onNavigateToAppointment={(id) => navigateToAppointmentDetail(id, true)}
+          onNavigateToAppointments={() => handleTabChange("appointments", false)}
+          onNavigateToCustomers={() => handleTabChange("customers", false)}
+          shouldRefresh={dashboardRefreshKey}
+        />;
       case "staff-list":
         return <StaffList onStaffClick={navigateToStaffDetail} />;
       case "staff-detail":
@@ -284,7 +299,13 @@ function AppContent() {
           onLogout={handleLogout}
         />;
       default:
-        return <Dashboard onNavigateToSettings={navigateToSettings} shouldRefresh={dashboardRefreshKey} />;
+        return <Dashboard
+          onNavigateToSettings={navigateToSettings}
+          onNavigateToAppointment={(id) => navigateToAppointmentDetail(id, true)}
+          onNavigateToAppointments={() => handleTabChange("appointments", false)}
+          onNavigateToCustomers={() => handleTabChange("customers", false)}
+          shouldRefresh={dashboardRefreshKey}
+        />;
     }
   };
 

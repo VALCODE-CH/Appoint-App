@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Appoint App",
+    "name": "VALCODE Appoint",
     "slug": "appoint-app",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -14,7 +14,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.valcode.appoint",
+      "bundleIdentifier": "com.appointapp",
       "buildNumber": "1",
       "infoPlist": {
         "UIBackgroundModes": [

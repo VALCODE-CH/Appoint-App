@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, ActivityIndicator, KeyboardAvoidingView, Platform } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, ActivityIndicator, KeyboardAvoidingView, Platform, Linking } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { API } from "../../services/api";
 
@@ -109,6 +109,13 @@ export function DomainSetupScreen({ onContinue }: DomainSetupScreenProps) {
           <Text style={styles.infoText}>
             Stelle sicher, dass das Appoint Booking Plugin auf deiner WordPress-Seite installiert und aktiviert ist.
           </Text>
+          <TouchableOpacity
+            onPress={() => Linking.openURL('https://appoint.valcode.ch')}
+            style={styles.linkButton}
+          >
+            <Text style={styles.linkText}>Mehr Informationen</Text>
+            <Ionicons name="open-outline" size={16} color="#60A5FA" />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -296,6 +303,17 @@ const styles = StyleSheet.create({
   continueButtonText: {
     color: "#FFFFFF",
     fontSize: 18,
+    fontWeight: "600",
+  },
+  linkButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginTop: 12,
+  },
+  linkText: {
+    fontSize: 14,
+    color: "#60A5FA",
     fontWeight: "600",
   },
 });

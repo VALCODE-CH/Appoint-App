@@ -6,10 +6,13 @@ import { StorageService } from "../services/storage";
 
 interface DashboardProps {
   onNavigateToSettings: () => void;
+  onNavigateToAppointment?: (appointmentId: string) => void;
+  onNavigateToAppointments?: () => void;
+  onNavigateToCustomers?: () => void;
   shouldRefresh?: number; // Timestamp um Refresh zu triggern
 }
 
-export function Dashboard({ onNavigateToSettings, shouldRefresh }: DashboardProps) {
+export function Dashboard({ onNavigateToSettings, onNavigateToAppointment, onNavigateToAppointments, onNavigateToCustomers, shouldRefresh }: DashboardProps) {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -232,15 +235,44 @@ export function Dashboard({ onNavigateToSettings, shouldRefresh }: DashboardProp
 
       {/* Stats Grid */}
       <View style={styles.statsGrid}>
-        {statsDisplay.map((stat, index) => (
-          <View key={stat.label} style={styles.statCard}>
-            <View style={styles.statIconContainer}>
-              <Ionicons name={stat.icon as any} size={20} color={stat.color} />
+        {statsDisplay.map((stat, index) => {
+          const isClickable = stat.label === "Heutige Termine" || stat.label === "Kunden";
+          const onPress = stat.label === "Heutige Termine"
+            ? onNavigateToAppointments
+            : stat.label === "Kunden"
+            ? onNavigateToCustomers
+            : undefined;
+
+          if (isClickable && onPress) {
+            return (
+              <TouchableOpacity
+                key={stat.label}
+                style={styles.statCard}
+                onPress={onPress}
+                activeOpacity={0.7}
+              >
+                <View style={styles.statIconContainer}>
+                  <Ionicons name={stat.icon as any} size={20} color={stat.color} />
+                </View>
+                <Text style={styles.statValue}>{stat.value}</Text>
+                <View style={styles.statLabelContainer}>
+                  <Text style={styles.statLabel}>{stat.label}</Text>
+                  <Ionicons name="chevron-forward" size={14} color="#6B7280" />
+                </View>
+              </TouchableOpacity>
+            );
+          }
+
+          return (
+            <View key={stat.label} style={styles.statCard}>
+              <View style={styles.statIconContainer}>
+                <Ionicons name={stat.icon as any} size={20} color={stat.color} />
+              </View>
+              <Text style={styles.statValue}>{stat.value}</Text>
+              <Text style={styles.statLabel}>{stat.label}</Text>
             </View>
-            <Text style={styles.statValue}>{stat.value}</Text>
-            <Text style={styles.statLabel}>{stat.label}</Text>
-          </View>
-        ))}
+          );
+        })}
       </View>
 
       {/* Today's Appointments */}
@@ -282,13 +314,21 @@ export function Dashboard({ onNavigateToSettings, shouldRefresh }: DashboardProp
         ) : (
           <View style={styles.appointmentsList}>
             {appointments.map((appointment) => (
-              <View key={appointment.id} style={styles.appointmentCard}>
+              <TouchableOpacity
+                key={appointment.id}
+                style={styles.appointmentCard}
+                onPress={() => onNavigateToAppointment?.(appointment.id)}
+                activeOpacity={0.7}
+              >
                 <View style={styles.appointmentHeader}>
                   <View style={styles.appointmentInfo}>
                     <Text style={styles.customerName}>{appointment.customer_name}</Text>
                     <Text style={styles.serviceName}>{appointment.service_name}</Text>
                   </View>
-                  <Text style={styles.appointmentTime}>{formatTime(appointment.starts_at)}</Text>
+                  <View style={styles.timeContainer}>
+                    <Text style={styles.appointmentTime}>{formatTime(appointment.starts_at)}</Text>
+                    <Ionicons name="chevron-forward" size={16} color="#6B7280" />
+                  </View>
                 </View>
                 <View style={styles.appointmentFooter}>
                   <View style={styles.staffIconContainer}>
@@ -296,7 +336,7 @@ export function Dashboard({ onNavigateToSettings, shouldRefresh }: DashboardProp
                   </View>
                   <Text style={styles.staffName}>{appointment.staff_name}</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
         )}
@@ -355,6 +395,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#FFFFFF",
     marginBottom: 4,
+  },
+  statLabelContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
   },
   statLabel: {
     fontSize: 12,
@@ -417,6 +462,11 @@ const styles = StyleSheet.create({
   serviceName: {
     fontSize: 14,
     color: "#9CA3AF",
+  },
+  timeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
   },
   appointmentTime: {
     fontSize: 14,
