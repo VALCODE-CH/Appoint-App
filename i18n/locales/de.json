@@ -63,6 +63,7 @@
   },
   "settings": {
     "title": "Einstellungen",
+    "loadingUserData": "Lade Benutzerdaten...",
     "profile": {
       "title": "Mitarbeiterprofil",
       "name": "Name",
@@ -71,20 +72,32 @@
       "namePlaceholder": "Dein Name",
       "emailPlaceholder": "deine@email.de",
       "phonePlaceholder": "+49 123 456789",
+      "unknown": "Unbekannt",
+      "noEmail": "Keine E-Mail",
+      "edit": "Bearbeiten",
       "errors": {
         "nameRequired": "Bitte gib einen Namen ein",
+        "emailRequired": "Bitte gib eine E-Mail-Adresse ein",
         "emailInvalid": "Bitte gib eine gültige E-Mail ein",
-        "saveFailed": "Fehler beim Speichern des Profils"
+        "saveFailed": "Fehler beim Speichern des Profils",
+        "loadFailed": "Benutzerdaten konnten nicht geladen werden",
+        "updateFailed": "Profil konnte nicht aktualisiert werden"
       },
-      "saveSuccess": "Profil erfolgreich gespeichert"
+      "saveSuccess": "Deine Daten wurden erfolgreich aktualisiert"
     },
     "design": {
-      "title": "Eigenes Design verwenden",
-      "description": "Verwende die Farben aus deinen WordPress-Einstellungen"
+      "title": "Custom Design",
+      "description": "Verwendet Server-Farben",
+      "descriptionStandard": "Verwendet Standard-Design",
+      "updateSuccess": "Design aktualisiert",
+      "updateMessage": "Bitte starte die App neu, damit die Änderungen vollständig angewendet werden.",
+      "updateFailed": "Design konnte nicht geändert werden"
     },
     "language": {
       "title": "Sprache",
-      "description": "Wähle deine bevorzugte Sprache"
+      "description": "Wähle deine bevorzugte Sprache",
+      "changeSuccess": "Sprache erfolgreich geändert. Bitte starte die App neu, um die Änderungen vollständig anzuwenden.",
+      "changeFailed": "Sprache konnte nicht geändert werden"
     },
     "notifications": {
       "title": "Benachrichtigungen",
@@ -92,11 +105,15 @@
     },
     "permissions": {
       "title": "Berechtigungen aktualisieren",
-      "description": "Lade die neuesten Berechtigungen vom Server"
+      "description": "Lade die neuesten Berechtigungen vom Server",
+      "updateSuccess": "Berechtigungen wurden erfolgreich aktualisiert",
+      "updateFailed": "Berechtigungen konnten nicht aktualisiert werden"
     },
+    "otherSettings": "Weitere Einstellungen",
     "logout": {
       "title": "Abmelden",
-      "confirm": "Möchtest du dich wirklich abmelden?"
+      "confirm": "Möchtest du dich wirklich abmelden?",
+      "failed": "Abmelden fehlgeschlagen. Bitte versuche es erneut."
     },
     "version": "Version"
   },

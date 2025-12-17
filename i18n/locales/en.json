@@ -63,6 +63,7 @@
   },
   "settings": {
     "title": "Settings",
+    "loadingUserData": "Loading user data...",
     "profile": {
       "title": "Staff Profile",
       "name": "Name",
@@ -71,20 +72,32 @@
       "namePlaceholder": "Your name",
       "emailPlaceholder": "your@email.com",
       "phonePlaceholder": "+1 123 456789",
+      "unknown": "Unknown",
+      "noEmail": "No email",
+      "edit": "Edit",
       "errors": {
         "nameRequired": "Please enter a name",
+        "emailRequired": "Please enter an email address",
         "emailInvalid": "Please enter a valid email",
-        "saveFailed": "Error saving profile"
+        "saveFailed": "Error saving profile",
+        "loadFailed": "Could not load user data",
+        "updateFailed": "Could not update profile"
       },
-      "saveSuccess": "Profile saved successfully"
+      "saveSuccess": "Your data has been successfully updated"
     },
     "design": {
-      "title": "Use custom design",
-      "description": "Use colors from your WordPress settings"
+      "title": "Custom Design",
+      "description": "Using server colors",
+      "descriptionStandard": "Using standard design",
+      "updateSuccess": "Design updated",
+      "updateMessage": "Please restart the app for the changes to take full effect.",
+      "updateFailed": "Design could not be changed"
     },
     "language": {
       "title": "Language",
-      "description": "Choose your preferred language"
+      "description": "Choose your preferred language",
+      "changeSuccess": "Language changed successfully. Please restart the app for full effect.",
+      "changeFailed": "Language could not be changed"
     },
     "notifications": {
       "title": "Notifications",
@@ -92,11 +105,15 @@
     },
     "permissions": {
       "title": "Refresh permissions",
-      "description": "Load the latest permissions from the server"
+      "description": "Load the latest permissions from the server",
+      "updateSuccess": "Permissions successfully updated",
+      "updateFailed": "Could not update permissions"
     },
+    "otherSettings": "Other Settings",
     "logout": {
       "title": "Sign out",
-      "confirm": "Are you sure you want to sign out?"
+      "confirm": "Are you sure you want to sign out?",
+      "failed": "Sign out failed. Please try again."
     },
     "version": "Version"
   },

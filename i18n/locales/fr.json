@@ -17,322 +17,339 @@
   },
   "onboarding": {
     "welcome": {
-      "title": "TODO",
-      "subtitle": "TODO",
+      "title": "Bienvenue sur Appoint",
+      "subtitle": "Votre solution tout-en-un pour la gestion des rendez-vous",
       "features": {
-        "appointments": "TODO",
-        "staff": "TODO",
-        "services": "TODO"
+        "appointments": "Gérer les rendez-vous",
+        "staff": "Employés & clients",
+        "services": "Organiser les services"
       },
-      "getStarted": "TODO"
+      "getStarted": "Commencer"
     },
     "domain": {
-      "title": "TODO",
-      "subtitle": "TODO",
-      "domainPlaceholder": "TODO",
-      "domainLabel": "TODO",
-      "validateButton": "TODO",
-      "validating": "TODO",
+      "title": "Connecter un domaine WordPress",
+      "subtitle": "Connectez votre installation WordPress",
+      "domainPlaceholder": "https://votre-domaine.fr",
+      "domainLabel": "Domaine WordPress",
+      "validateButton": "Valider le domaine",
+      "validating": "Validation...",
       "errors": {
-        "required": "TODO",
-        "invalid": "TODO",
-        "connectionFailed": "TODO",
-        "pluginNotInstalled": "TODO"
+        "required": "Veuillez saisir un domaine",
+        "invalid": "Veuillez saisir un domaine valide",
+        "connectionFailed": "Connexion échouée. Veuillez vérifier le domaine.",
+        "pluginNotInstalled": "Le plugin Appoint n’est pas installé"
       },
       "infoCard": {
-        "title": "TODO",
-        "description": "TODO",
-        "link": "TODO"
+        "title": "Plugin requis",
+        "description": "Assurez-vous que le plugin WordPress Appoint est installé.",
+        "link": "Voir la documentation"
       }
     },
     "login": {
-      "title": "TODO",
-      "subtitle": "TODO",
-      "connectedTo": "TODO",
-      "usernameLabel": "TODO",
-      "usernamePlaceholder": "TODO",
-      "passwordLabel": "TODO",
-      "passwordPlaceholder": "TODO",
-      "loginButton": "TODO",
-      "loggingIn": "TODO",
+      "title": "Connexion",
+      "subtitle": "Connectez-vous avec votre compte WordPress",
+      "connectedTo": "Connecté à",
+      "usernameLabel": "Nom d’utilisateur ou e-mail",
+      "usernamePlaceholder": "utilisateur@exemple.fr",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "Votre mot de passe",
+      "loginButton": "Se connecter",
+      "loggingIn": "Connexion...",
       "errors": {
-        "invalidCredentials": "TODO",
-        "loginFailed": "TODO"
+        "invalidCredentials": "Identifiants incorrects",
+        "loginFailed": "Échec de la connexion. Veuillez réessayer."
       }
     }
   },
   "settings": {
-    "title": "TODO",
+    "title": "Paramètres",
+    "loadingUserData": "Chargement des données utilisateur...",
     "profile": {
-      "title": "TODO",
-      "name": "TODO",
-      "email": "TODO",
-      "phone": "TODO",
-      "namePlaceholder": "TODO",
-      "emailPlaceholder": "TODO",
-      "phonePlaceholder": "TODO",
+      "title": "Profil employé",
+      "name": "Nom",
+      "email": "E-mail",
+      "phone": "Téléphone",
+      "namePlaceholder": "Votre nom",
+      "emailPlaceholder": "votre@email.fr",
+      "phonePlaceholder": "+33 1 23 45 67 89",
+      "unknown": "Inconnu",
+      "noEmail": "Pas d'e-mail",
+      "edit": "Modifier",
       "errors": {
-        "nameRequired": "TODO",
-        "emailInvalid": "TODO",
-        "saveFailed": "TODO"
+        "nameRequired": "Veuillez saisir un nom",
+        "emailRequired": "Veuillez saisir une adresse e-mail",
+        "emailInvalid": "Veuillez saisir un e-mail valide",
+        "saveFailed": "Erreur lors de l'enregistrement du profil",
+        "loadFailed": "Impossible de charger les données utilisateur",
+        "updateFailed": "Impossible de mettre à jour le profil"
       },
-      "saveSuccess": "TODO"
+      "saveSuccess": "Vos données ont été mises à jour avec succès"
     },
     "design": {
-      "title": "TODO",
-      "description": "TODO"
+      "title": "Design personnalisé",
+      "description": "Utilise les couleurs du serveur",
+      "descriptionStandard": "Utilise le design standard",
+      "updateSuccess": "Design mis à jour",
+      "updateMessage": "Veuillez redémarrer l'application pour que les modifications prennent pleinement effet.",
+      "updateFailed": "Impossible de changer le design"
     },
     "language": {
-      "title": "TODO",
-      "description": "TODO"
+      "title": "Langue",
+      "description": "Choisissez votre langue préférée",
+      "changeSuccess": "Langue modifiée avec succès. Veuillez redémarrer l'application pour un effet complet.",
+      "changeFailed": "Impossible de changer la langue"
     },
     "notifications": {
-      "title": "TODO",
-      "description": "TODO"
+      "title": "Notifications",
+      "description": "Gérer les paramètres de notification"
     },
     "permissions": {
-      "title": "TODO",
-      "description": "TODO"
+      "title": "Mettre à jour les autorisations",
+      "description": "Charger les dernières autorisations depuis le serveur",
+      "updateSuccess": "Autorisations mises à jour avec succès",
+      "updateFailed": "Impossible de mettre à jour les autorisations"
     },
+    "otherSettings": "Autres paramètres",
     "logout": {
-      "title": "TODO",
-      "confirm": "TODO"
+      "title": "Déconnexion",
+      "confirm": "Voulez-vous vraiment vous déconnecter ?",
+      "failed": "Échec de la déconnexion. Veuillez réessayer."
     },
-    "version": "TODO"
+    "version": "Version"
   },
   "notifications": {
-    "title": "TODO",
-    "emptyTitle": "TODO",
-    "emptyDescription": "TODO",
-    "emptyHint": "TODO"
+    "title": "Notifications",
+    "emptyTitle": "Notifications",
+    "emptyDescription": "Gérez ici vos paramètres de notification.",
+    "emptyHint": "Cette fonctionnalité sera bientôt disponible."
   },
   "dashboard": {
-    "title": "TODO",
-    "welcome": "TODO",
+    "title": "Tableau de bord",
+    "welcome": "Bon retour",
     "stats": {
-      "todayAppointments": "TODO",
-      "growth": "TODO",
-      "customers": "TODO",
-      "todayRevenue": "TODO"
+      "todayAppointments": "Rendez-vous aujourd’hui",
+      "growth": "Croissance",
+      "customers": "Clients",
+      "todayRevenue": "Chiffre d’affaires aujourd’hui"
     },
     "appointments": {
-      "today": "TODO",
-      "tomorrow": "TODO",
-      "tomorrowBadge": "TODO",
-      "loading": "TODO",
-      "retry": "TODO",
-      "errorLoading": "TODO",
-      "errorStaffNotFound": "TODO",
-      "noUpcoming": "TODO",
-      "noTomorrow": "TODO"
+      "today": "Rendez-vous aujourd’hui",
+      "tomorrow": "Rendez-vous de demain",
+      "tomorrowBadge": "Demain",
+      "loading": "Chargement des rendez-vous...",
+      "retry": "Réessayer",
+      "errorLoading": "Erreur lors du chargement des rendez-vous",
+      "errorStaffNotFound": "Données du personnel introuvables. Token : {{hasToken}}, Domaine : {{domain}}",
+      "noUpcoming": "Aucun rendez-vous prévu aujourd’hui ou demain",
+      "noTomorrow": "Aucun rendez-vous pour demain"
     }
   },
   "appointments": {
-    "title": "TODO",
-    "new": "TODO",
-    "subtitle": "TODO",
-    "loading": "TODO",
-    "loadingAppointments": "TODO",
-    "loadingDetails": "TODO",
-    "retry": "TODO",
-    "error": "TODO",
-    "errorDetails": "TODO",
-    "errorStaffNotFound": "TODO",
-    "notFound": "TODO",
+    "title": "Rendez-vous",
+    "new": "Nouveau rendez-vous",
+    "subtitle": "{{count}} rendez-vous",
+    "loading": "Chargement...",
+    "loadingAppointments": "Chargement des rendez-vous...",
+    "loadingDetails": "Chargement des détails du rendez-vous...",
+    "retry": "Réessayer",
+    "error": "Erreur lors du chargement des rendez-vous",
+    "errorDetails": "Erreur lors du chargement des détails",
+    "errorStaffNotFound": "Données du personnel introuvables",
+    "notFound": "Rendez-vous introuvable",
     "noPermission": {
-      "title": "TODO",
-      "description": "TODO",
-      "hint": "TODO"
+      "title": "Aucune autorisation",
+      "description": "Vous n’êtes pas autorisé à voir les rendez-vous.",
+      "hint": "Contactez l’administrateur pour obtenir l’accès."
     },
     "noPermissionDetails": {
-      "title": "TODO",
-      "description": "TODO"
+      "title": "Aucune autorisation",
+      "description": "Vous n’êtes pas autorisé à voir les détails du rendez-vous."
     },
     "empty": {
-      "noAppointments": "TODO",
-      "addFirst": "TODO"
+      "noAppointments": "Aucun rendez-vous à venir",
+      "addFirst": "Créez un nouveau rendez-vous avec le bouton ci-dessus"
     },
     "sections": {
-      "today": "TODO",
-      "tomorrow": "TODO",
-      "upcoming": "TODO"
+      "today": "Aujourd’hui",
+      "tomorrow": "Demain",
+      "upcoming": "À venir"
     },
     "detail": {
-      "title": "TODO",
-      "dateTime": "TODO",
-      "service": "TODO",
-      "customer": "TODO",
-      "staff": "TODO",
-      "notes": "TODO",
-      "actions": "TODO",
-      "changeStatus": "TODO",
-      "deleteAppointment": "TODO",
-      "deleteConfirm": "TODO",
-      "deleteSuccess": "TODO",
-      "deleteError": "TODO",
-      "statusUpdateSuccess": "TODO",
-      "statusUpdateError": "TODO"
+      "title": "Détails du rendez-vous",
+      "dateTime": "Date & heure",
+      "service": "Service",
+      "customer": "Client",
+      "staff": "Employé",
+      "notes": "Notes",
+      "actions": "Actions",
+      "changeStatus": "Changer le statut",
+      "deleteAppointment": "Supprimer le rendez-vous",
+      "deleteConfirm": "Voulez-vous vraiment supprimer le rendez-vous avec {{name}} ?",
+      "deleteSuccess": "Le rendez-vous a été supprimé avec succès.",
+      "deleteError": "Impossible de supprimer le rendez-vous.",
+      "statusUpdateSuccess": "Statut mis à jour avec succès.",
+      "statusUpdateError": "Impossible de mettre à jour le statut."
     },
     "create": {
-      "title": "TODO",
-      "loading": "TODO",
-      "customerData": "TODO",
-      "appointmentDetails": "TODO",
+      "title": "Nouveau rendez-vous",
+      "loading": "Chargement des données...",
+      "customerData": "Données du client",
+      "appointmentDetails": "Détails du rendez-vous",
       "labels": {
-        "name": "TODO",
-        "email": "TODO",
-        "phone": "TODO",
-        "service": "TODO",
-        "staff": "TODO",
-        "date": "TODO",
-        "time": "TODO",
-        "status": "TODO",
-        "notes": "TODO"
+        "name": "Nom *",
+        "email": "E-mail *",
+        "phone": "Téléphone",
+        "service": "Service *",
+        "staff": "Employé *",
+        "date": "Date *",
+        "time": "Heure *",
+        "status": "Statut",
+        "notes": "Notes"
       },
       "placeholders": {
-        "name": "TODO",
-        "email": "TODO",
-        "phone": "TODO",
-        "notes": "TODO",
-        "selectService": "TODO",
-        "selectStaff": "TODO"
+        "name": "Jean Dupont",
+        "email": "jean@example.fr",
+        "phone": "+33 1 23 45 67 89",
+        "notes": "Optionnel : informations supplémentaires...",
+        "selectService": "Choisir un service",
+        "selectStaff": "Choisir un employé"
       },
       "validation": {
-        "nameRequired": "TODO",
-        "emailRequired": "TODO",
-        "emailInvalid": "TODO",
-        "serviceRequired": "TODO",
-        "staffRequired": "TODO"
+        "nameRequired": "Veuillez saisir le nom du client.",
+        "emailRequired": "Veuillez saisir une adresse e-mail.",
+        "emailInvalid": "Veuillez saisir une adresse e-mail valide.",
+        "serviceRequired": "Veuillez sélectionner un service.",
+        "staffRequired": "Veuillez sélectionner un employé."
       },
-      "submit": "TODO",
-      "success": "TODO",
-      "errorLoading": "TODO",
-      "errorCreating": "TODO"
+      "submit": "Créer le rendez-vous",
+      "success": "Rendez-vous créé avec succès.",
+      "errorLoading": "Impossible de charger les données : {{error}}",
+      "errorCreating": "Impossible de créer le rendez-vous."
     }
   },
   "staff": {
-    "title": "TODO",
-    "subtitle": "TODO",
-    "search": "TODO",
-    "loading": "TODO",
-    "loadingStaff": "TODO",
-    "loadingDetails": "TODO",
-    "retry": "TODO",
+    "title": "Employés",
+    "subtitle": "{{count}} employés",
+    "search": "Rechercher un employé...",
+    "loading": "Chargement...",
+    "loadingStaff": "Chargement du personnel...",
+    "loadingDetails": "Chargement des détails...",
+    "retry": "Réessayer",
     "noPermission": {
-      "title": "TODO",
-      "description": "TODO",
-      "hint": "TODO"
+      "title": "Aucune autorisation",
+      "description": "Vous n’êtes pas autorisé à voir le personnel.",
+      "hint": "Contactez l’administrateur pour obtenir l’accès."
     },
     "noPermissionDetails": {
-      "title": "TODO",
-      "description": "TODO",
-      "hint": "TODO"
+      "title": "Aucune autorisation",
+      "description": "Vous n’êtes pas autorisé à voir les détails du personnel.",
+      "hint": "Contactez l’administrateur pour obtenir l’accès."
     },
-    "error": "TODO",
-    "errorDetails": "TODO",
-    "notFound": "TODO",
+    "error": "Erreur lors du chargement du personnel",
+    "errorDetails": "Erreur lors du chargement des détails",
+    "notFound": "Employé introuvable",
     "empty": {
-      "noStaff": "TODO",
-      "noResults": "TODO",
-      "addFirst": "TODO",
-      "tryOtherSearch": "TODO"
+      "noStaff": "Aucun employé",
+      "noResults": "Aucun employé trouvé",
+      "addFirst": "Ajoutez votre premier employé",
+      "tryOtherSearch": "Essayez un autre terme de recherche"
     },
     "detail": {
-      "title": "TODO",
-      "appointmentsToday": "TODO",
-      "totalToday": "TODO",
-      "todaysAppointments": "TODO",
-      "moreAppointments": "TODO"
+      "title": "Détails de l’employé",
+      "appointmentsToday": "Rendez-vous aujourd’hui",
+      "totalToday": "Total aujourd’hui",
+      "todaysAppointments": "Rendez-vous du jour",
+      "moreAppointments": "+{{count}} autres rendez-vous"
     }
   },
   "services": {
-    "title": "TODO",
-    "subtitle": "TODO",
-    "loading": "TODO",
-    "loadingServices": "TODO",
-    "loadingDetails": "TODO",
-    "retry": "TODO",
-    "error": "TODO",
-    "errorDetails": "TODO",
-    "notFound": "TODO",
+    "title": "Services",
+    "subtitle": "{{count}} services",
+    "loading": "Chargement...",
+    "loadingServices": "Chargement des services...",
+    "loadingDetails": "Chargement des détails du service...",
+    "retry": "Réessayer",
+    "error": "Erreur lors du chargement des services",
+    "errorDetails": "Erreur lors du chargement des détails",
+    "notFound": "Service introuvable",
     "empty": {
-      "noServices": "TODO",
-      "addFirst": "TODO"
+      "noServices": "Aucun service",
+      "addFirst": "Ajoutez votre premier service"
     },
     "duration": {
-      "minutes": "TODO",
-      "hours": "TODO",
-      "hoursMinutes": "TODO"
+      "minutes": "{{count}} min",
+      "hours": "{{count}} h",
+      "hoursMinutes": "{{hours}} h {{minutes}} min"
     },
     "status": {
-      "active": "TODO",
-      "inactive": "TODO",
-      "confirmed": "TODO",
-      "pending": "TODO",
-      "cancelled": "TODO"
+      "active": "Actif",
+      "inactive": "Inactif",
+      "confirmed": "Confirmé",
+      "pending": "En attente",
+      "cancelled": "Annulé"
     },
     "detail": {
-      "title": "TODO",
-      "created": "TODO",
-      "updated": "TODO",
-      "totalBookings": "TODO",
-      "upcomingBookings": "TODO",
-      "recentBookings": "TODO",
-      "noBookings": "TODO",
-      "noBookingsDescription": "TODO"
+      "title": "Détails du service",
+      "created": "Créé",
+      "updated": "Mis à jour",
+      "totalBookings": "Total des réservations",
+      "upcomingBookings": "À venir",
+      "recentBookings": "Récentes",
+      "noBookings": "Aucune réservation",
+      "noBookingsDescription": "Ce service n’a pas encore été réservé"
     }
   },
   "customers": {
-    "title": "TODO",
-    "subtitle": "TODO",
-    "search": "TODO",
-    "loading": "TODO",
-    "loadingCustomers": "TODO",
-    "loadingDetails": "TODO",
-    "retry": "TODO",
+    "title": "Clients",
+    "subtitle": "{{count}} clients",
+    "search": "Rechercher un client...",
+    "loading": "Chargement...",
+    "loadingCustomers": "Chargement des clients...",
+    "loadingDetails": "Chargement des détails...",
+    "retry": "Réessayer",
     "noPermission": {
-      "title": "TODO",
-      "description": "TODO",
-      "hint": "TODO"
+      "title": "Aucune autorisation",
+      "description": "Vous n’êtes pas autorisé à voir les clients.",
+      "hint": "Contactez l’administrateur pour obtenir l’accès."
     },
     "noPermissionDetails": {
-      "title": "TODO",
-      "description": "TODO"
+      "title": "Aucune autorisation",
+      "description": "Vous n’êtes pas autorisé à voir les détails du client."
     },
-    "error": "TODO",
-    "errorDetails": "TODO",
-    "notFound": "TODO",
+    "error": "Erreur lors du chargement des clients",
+    "errorDetails": "Erreur lors du chargement des détails",
+    "notFound": "Client introuvable",
     "empty": {
-      "noCustomers": "TODO",
-      "noResults": "TODO",
-      "addFirst": "TODO",
-      "tryOtherSearch": "TODO"
+      "noCustomers": "Aucun client",
+      "noResults": "Aucun client trouvé",
+      "addFirst": "Ajoutez votre premier client",
+      "tryOtherSearch": "Essayez un autre terme de recherche"
     },
-    "created": "TODO",
+    "created": "Créé",
     "relativeTime": {
-      "today": "TODO",
-      "yesterday": "TODO",
-      "daysAgo": "TODO",
-      "weekAgo": "TODO",
-      "weeksAgo": "TODO",
-      "monthAgo": "TODO",
-      "monthsAgo": "TODO",
-      "yearAgo": "TODO",
-      "yearsAgo": "TODO"
+      "today": "Aujourd’hui",
+      "yesterday": "Hier",
+      "daysAgo": "il y a {{count}} jours",
+      "weekAgo": "il y a {{count}} semaine",
+      "weeksAgo": "il y a {{count}} semaines",
+      "monthAgo": "il y a {{count}} mois",
+      "monthsAgo": "il y a {{count}} mois",
+      "yearAgo": "il y a {{count}} an",
+      "yearsAgo": "il y a {{count}} ans"
     },
     "detail": {
-      "title": "TODO",
-      "totalAppointments": "TODO",
-      "upcomingAppointments": "TODO",
-      "totalSpent": "TODO",
-      "appointmentsHistory": "TODO",
-      "noAppointments": "TODO",
-      "noAppointmentsDescription": "TODO",
+      "title": "Détails du client",
+      "totalAppointments": "Total des rendez-vous",
+      "upcomingAppointments": "À venir",
+      "totalSpent": "Total dépensé",
+      "appointmentsHistory": "Historique des rendez-vous",
+      "noAppointments": "Aucun rendez-vous",
+      "noAppointmentsDescription": "Ce client n’a encore réservé aucun rendez-vous",
       "delete": {
-        "button": "TODO",
-        "confirm": "TODO",
-        "success": "TODO",
-        "error": "TODO"
+        "button": "Supprimer le client",
+        "confirm": "Voulez-vous vraiment supprimer {{name}} ?",
+        "success": "Client supprimé avec succès.",
+        "error": "Impossible de supprimer le client."
       }
     }
   }

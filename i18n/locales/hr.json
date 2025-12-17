@@ -17,322 +17,339 @@
   },
   "onboarding": {
     "welcome": {
-      "title": "TODO",
-      "subtitle": "TODO",
+      "title": "Dobrodošli u Appoint",
+      "subtitle": "Vaše sve-u-jednom rješenje za upravljanje terminima",
       "features": {
-        "appointments": "TODO",
-        "staff": "TODO",
-        "services": "TODO"
+        "appointments": "Upravljanje terminima",
+        "staff": "Zaposlenici i klijenti",
+        "services": "Organizacija usluga"
       },
-      "getStarted": "TODO"
+      "getStarted": "Započni"
     },
     "domain": {
-      "title": "TODO",
-      "subtitle": "TODO",
-      "domainPlaceholder": "TODO",
-      "domainLabel": "TODO",
-      "validateButton": "TODO",
-      "validating": "TODO",
+      "title": "Poveži WordPress domenu",
+      "subtitle": "Povežite svoju WordPress instalaciju",
+      "domainPlaceholder": "https://tvoja-domena.hr",
+      "domainLabel": "WordPress domena",
+      "validateButton": "Provjeri domenu",
+      "validating": "Provjera...",
       "errors": {
-        "required": "TODO",
-        "invalid": "TODO",
-        "connectionFailed": "TODO",
-        "pluginNotInstalled": "TODO"
+        "required": "Molimo unesite domenu",
+        "invalid": "Molimo unesite ispravnu domenu",
+        "connectionFailed": "Povezivanje nije uspjelo. Provjerite domenu.",
+        "pluginNotInstalled": "Appoint dodatak nije instaliran"
       },
       "infoCard": {
-        "title": "TODO",
-        "description": "TODO",
-        "link": "TODO"
+        "title": "Potreban dodatak",
+        "description": "Provjerite je li Appoint WordPress dodatak instaliran.",
+        "link": "Dokumentacija"
       }
     },
     "login": {
-      "title": "TODO",
-      "subtitle": "TODO",
-      "connectedTo": "TODO",
-      "usernameLabel": "TODO",
-      "usernamePlaceholder": "TODO",
-      "passwordLabel": "TODO",
-      "passwordPlaceholder": "TODO",
-      "loginButton": "TODO",
-      "loggingIn": "TODO",
+      "title": "Prijava",
+      "subtitle": "Prijavite se svojim WordPress računom",
+      "connectedTo": "Povezano s",
+      "usernameLabel": "Korisničko ime ili e-mail",
+      "usernamePlaceholder": "korisnik@primjer.hr",
+      "passwordLabel": "Lozinka",
+      "passwordPlaceholder": "Vaša lozinka",
+      "loginButton": "Prijavi se",
+      "loggingIn": "Prijava...",
       "errors": {
-        "invalidCredentials": "TODO",
-        "loginFailed": "TODO"
+        "invalidCredentials": "Neispravni podaci za prijavu",
+        "loginFailed": "Prijava nije uspjela. Pokušajte ponovno."
       }
     }
   },
   "settings": {
-    "title": "TODO",
+    "title": "Postavke",
+    "loadingUserData": "Učitavanje korisničkih podataka...",
     "profile": {
-      "title": "TODO",
-      "name": "TODO",
-      "email": "TODO",
-      "phone": "TODO",
-      "namePlaceholder": "TODO",
-      "emailPlaceholder": "TODO",
-      "phonePlaceholder": "TODO",
+      "title": "Profil zaposlenika",
+      "name": "Ime",
+      "email": "E-mail",
+      "phone": "Telefon",
+      "namePlaceholder": "Vaše ime",
+      "emailPlaceholder": "vas@email.hr",
+      "phonePlaceholder": "+385 91 234 5678",
+      "unknown": "Nepoznato",
+      "noEmail": "Bez e-maila",
+      "edit": "Uredi",
       "errors": {
-        "nameRequired": "TODO",
-        "emailInvalid": "TODO",
-        "saveFailed": "TODO"
+        "nameRequired": "Molimo unesite ime",
+        "emailRequired": "Molimo unesite e-mail adresu",
+        "emailInvalid": "Molimo unesite ispravan e-mail",
+        "saveFailed": "Greška pri spremanju profila",
+        "loadFailed": "Nije moguće učitati korisničke podatke",
+        "updateFailed": "Nije moguće ažurirati profil"
       },
-      "saveSuccess": "TODO"
+      "saveSuccess": "Vaši podaci su uspješno ažurirani"
     },
     "design": {
-      "title": "TODO",
-      "description": "TODO"
+      "title": "Prilagođeni dizajn",
+      "description": "Koristi boje sa servera",
+      "descriptionStandard": "Koristi standardni dizajn",
+      "updateSuccess": "Dizajn ažuriran",
+      "updateMessage": "Molimo ponovo pokrenite aplikaciju kako bi se promjene u potpunosti primijenile.",
+      "updateFailed": "Nije moguće promijeniti dizajn"
     },
     "language": {
-      "title": "TODO",
-      "description": "TODO"
+      "title": "Jezik",
+      "description": "Odaberite željeni jezik",
+      "changeSuccess": "Jezik je uspješno promijenjen. Molimo ponovo pokrenite aplikaciju za potpuni učinak.",
+      "changeFailed": "Nije moguće promijeniti jezik"
     },
     "notifications": {
-      "title": "TODO",
-      "description": "TODO"
+      "title": "Obavijesti",
+      "description": "Upravljanje postavkama obavijesti"
     },
     "permissions": {
-      "title": "TODO",
-      "description": "TODO"
+      "title": "Ažuriraj dozvole",
+      "description": "Učitaj najnovije dozvole sa servera",
+      "updateSuccess": "Dozvole su uspješno ažurirane",
+      "updateFailed": "Nije moguće ažurirati dozvole"
     },
+    "otherSettings": "Ostale postavke",
     "logout": {
-      "title": "TODO",
-      "confirm": "TODO"
+      "title": "Odjava",
+      "confirm": "Želite li se zaista odjaviti?",
+      "failed": "Odjava nije uspjela. Pokušajte ponovno."
     },
-    "version": "TODO"
+    "version": "Verzija"
   },
   "notifications": {
-    "title": "TODO",
-    "emptyTitle": "TODO",
-    "emptyDescription": "TODO",
-    "emptyHint": "TODO"
+    "title": "Obavijesti",
+    "emptyTitle": "Obavijesti",
+    "emptyDescription": "Ovdje možete upravljati postavkama obavijesti.",
+    "emptyHint": "Ova funkcija uskoro će biti dostupna."
   },
   "dashboard": {
-    "title": "TODO",
-    "welcome": "TODO",
+    "title": "Nadzorna ploča",
+    "welcome": "Dobrodošli natrag",
     "stats": {
-      "todayAppointments": "TODO",
-      "growth": "TODO",
-      "customers": "TODO",
-      "todayRevenue": "TODO"
+      "todayAppointments": "Današnji termini",
+      "growth": "Rast",
+      "customers": "Klijenti",
+      "todayRevenue": "Današnji prihod"
     },
     "appointments": {
-      "today": "TODO",
-      "tomorrow": "TODO",
-      "tomorrowBadge": "TODO",
-      "loading": "TODO",
-      "retry": "TODO",
-      "errorLoading": "TODO",
-      "errorStaffNotFound": "TODO",
-      "noUpcoming": "TODO",
-      "noTomorrow": "TODO"
+      "today": "Današnji termini",
+      "tomorrow": "Sutrašnji termini",
+      "tomorrowBadge": "Sutra",
+      "loading": "Učitavanje termina...",
+      "retry": "Pokušaj ponovno",
+      "errorLoading": "Greška pri učitavanju termina",
+      "errorStaffNotFound": "Podaci o osoblju nisu pronađeni. Token: {{hasToken}}, Domena: {{domain}}",
+      "noUpcoming": "Nema nadolazećih termina danas ili sutra",
+      "noTomorrow": "Nema termina za sutra"
     }
   },
   "appointments": {
-    "title": "TODO",
-    "new": "TODO",
-    "subtitle": "TODO",
-    "loading": "TODO",
-    "loadingAppointments": "TODO",
-    "loadingDetails": "TODO",
-    "retry": "TODO",
-    "error": "TODO",
-    "errorDetails": "TODO",
-    "errorStaffNotFound": "TODO",
-    "notFound": "TODO",
+    "title": "Termini",
+    "new": "Novi termin",
+    "subtitle": "{{count}} termina",
+    "loading": "Učitavanje...",
+    "loadingAppointments": "Učitavanje termina...",
+    "loadingDetails": "Učitavanje detalja termina...",
+    "retry": "Pokušaj ponovno",
+    "error": "Greška pri učitavanju termina",
+    "errorDetails": "Greška pri učitavanju detalja",
+    "errorStaffNotFound": "Podaci o osoblju nisu pronađeni",
+    "notFound": "Termin nije pronađen",
     "noPermission": {
-      "title": "TODO",
-      "description": "TODO",
-      "hint": "TODO"
+      "title": "Nema dozvole",
+      "description": "Nemate dozvolu za pregled termina.",
+      "hint": "Kontaktirajte administratora za pristup."
     },
     "noPermissionDetails": {
-      "title": "TODO",
-      "description": "TODO"
+      "title": "Nema dozvole",
+      "description": "Nemate dozvolu za pregled detalja termina."
     },
     "empty": {
-      "noAppointments": "TODO",
-      "addFirst": "TODO"
+      "noAppointments": "Nema nadolazećih termina",
+      "addFirst": "Kreirajte novi termin pomoću gumba iznad"
     },
     "sections": {
-      "today": "TODO",
-      "tomorrow": "TODO",
-      "upcoming": "TODO"
+      "today": "Danas",
+      "tomorrow": "Sutra",
+      "upcoming": "Nadolazeći"
     },
     "detail": {
-      "title": "TODO",
-      "dateTime": "TODO",
-      "service": "TODO",
-      "customer": "TODO",
-      "staff": "TODO",
-      "notes": "TODO",
-      "actions": "TODO",
-      "changeStatus": "TODO",
-      "deleteAppointment": "TODO",
-      "deleteConfirm": "TODO",
-      "deleteSuccess": "TODO",
-      "deleteError": "TODO",
-      "statusUpdateSuccess": "TODO",
-      "statusUpdateError": "TODO"
+      "title": "Detalji termina",
+      "dateTime": "Datum i vrijeme",
+      "service": "Usluga",
+      "customer": "Klijent",
+      "staff": "Zaposlenik",
+      "notes": "Bilješke",
+      "actions": "Radnje",
+      "changeStatus": "Promijeni status",
+      "deleteAppointment": "Izbriši termin",
+      "deleteConfirm": "Želite li zaista izbrisati termin s {{name}}?",
+      "deleteSuccess": "Termin je uspješno izbrisan.",
+      "deleteError": "Termin nije moguće izbrisati.",
+      "statusUpdateSuccess": "Status je uspješno ažuriran.",
+      "statusUpdateError": "Status nije moguće ažurirati."
     },
     "create": {
-      "title": "TODO",
-      "loading": "TODO",
-      "customerData": "TODO",
-      "appointmentDetails": "TODO",
+      "title": "Novi termin",
+      "loading": "Učitavanje podataka...",
+      "customerData": "Podaci o klijentu",
+      "appointmentDetails": "Detalji termina",
       "labels": {
-        "name": "TODO",
-        "email": "TODO",
-        "phone": "TODO",
-        "service": "TODO",
-        "staff": "TODO",
-        "date": "TODO",
-        "time": "TODO",
-        "status": "TODO",
-        "notes": "TODO"
+        "name": "Ime *",
+        "email": "E-mail *",
+        "phone": "Telefon",
+        "service": "Usluga *",
+        "staff": "Zaposlenik *",
+        "date": "Datum *",
+        "time": "Vrijeme *",
+        "status": "Status",
+        "notes": "Bilješke"
       },
       "placeholders": {
-        "name": "TODO",
-        "email": "TODO",
-        "phone": "TODO",
-        "notes": "TODO",
-        "selectService": "TODO",
-        "selectStaff": "TODO"
+        "name": "Ivan Horvat",
+        "email": "ivan@primjer.hr",
+        "phone": "+385 91 234 5678",
+        "notes": "Opcionalno: dodatne informacije...",
+        "selectService": "Odaberi uslugu",
+        "selectStaff": "Odaberi zaposlenika"
       },
       "validation": {
-        "nameRequired": "TODO",
-        "emailRequired": "TODO",
-        "emailInvalid": "TODO",
-        "serviceRequired": "TODO",
-        "staffRequired": "TODO"
+        "nameRequired": "Molimo unesite ime klijenta.",
+        "emailRequired": "Molimo unesite e-mail adresu.",
+        "emailInvalid": "Molimo unesite ispravnu e-mail adresu.",
+        "serviceRequired": "Molimo odaberite uslugu.",
+        "staffRequired": "Molimo odaberite zaposlenika."
       },
-      "submit": "TODO",
-      "success": "TODO",
-      "errorLoading": "TODO",
-      "errorCreating": "TODO"
+      "submit": "Kreiraj termin",
+      "success": "Termin je uspješno kreiran.",
+      "errorLoading": "Podaci se ne mogu učitati: {{error}}",
+      "errorCreating": "Termin nije moguće kreirati."
     }
   },
   "staff": {
-    "title": "TODO",
-    "subtitle": "TODO",
-    "search": "TODO",
-    "loading": "TODO",
-    "loadingStaff": "TODO",
-    "loadingDetails": "TODO",
-    "retry": "TODO",
+    "title": "Osoblje",
+    "subtitle": "{{count}} zaposlenika",
+    "search": "Pretraži osoblje...",
+    "loading": "Učitavanje...",
+    "loadingStaff": "Učitavanje osoblja...",
+    "loadingDetails": "Učitavanje detalja...",
+    "retry": "Pokušaj ponovno",
     "noPermission": {
-      "title": "TODO",
-      "description": "TODO",
-      "hint": "TODO"
+      "title": "Nema dozvole",
+      "description": "Nemate dozvolu za pregled osoblja.",
+      "hint": "Kontaktirajte administratora za pristup."
     },
     "noPermissionDetails": {
-      "title": "TODO",
-      "description": "TODO",
-      "hint": "TODO"
+      "title": "Nema dozvole",
+      "description": "Nemate dozvolu za pregled detalja osoblja.",
+      "hint": "Kontaktirajte administratora za pristup."
     },
-    "error": "TODO",
-    "errorDetails": "TODO",
-    "notFound": "TODO",
+    "error": "Greška pri učitavanju osoblja",
+    "errorDetails": "Greška pri učitavanju detalja",
+    "notFound": "Zaposlenik nije pronađen",
     "empty": {
-      "noStaff": "TODO",
-      "noResults": "TODO",
-      "addFirst": "TODO",
-      "tryOtherSearch": "TODO"
+      "noStaff": "Još nema osoblja",
+      "noResults": "Osoblje nije pronađeno",
+      "addFirst": "Dodajte prvog zaposlenika",
+      "tryOtherSearch": "Pokušajte s drugim pojmom za pretraživanje"
     },
     "detail": {
-      "title": "TODO",
-      "appointmentsToday": "TODO",
-      "totalToday": "TODO",
-      "todaysAppointments": "TODO",
-      "moreAppointments": "TODO"
+      "title": "Detalji zaposlenika",
+      "appointmentsToday": "Termini danas",
+      "totalToday": "Ukupno danas",
+      "todaysAppointments": "Današnji termini",
+      "moreAppointments": "+{{count}} više termina"
     }
   },
   "services": {
-    "title": "TODO",
-    "subtitle": "TODO",
-    "loading": "TODO",
-    "loadingServices": "TODO",
-    "loadingDetails": "TODO",
-    "retry": "TODO",
-    "error": "TODO",
-    "errorDetails": "TODO",
-    "notFound": "TODO",
+    "title": "Usluge",
+    "subtitle": "{{count}} usluga",
+    "loading": "Učitavanje...",
+    "loadingServices": "Učitavanje usluga...",
+    "loadingDetails": "Učitavanje detalja usluge...",
+    "retry": "Pokušaj ponovno",
+    "error": "Greška pri učitavanju usluga",
+    "errorDetails": "Greška pri učitavanju detalja",
+    "notFound": "Usluga nije pronađena",
     "empty": {
-      "noServices": "TODO",
-      "addFirst": "TODO"
+      "noServices": "Nema usluga",
+      "addFirst": "Dodajte prvu uslugu"
     },
     "duration": {
-      "minutes": "TODO",
-      "hours": "TODO",
-      "hoursMinutes": "TODO"
+      "minutes": "{{count}} min",
+      "hours": "{{count}} h",
+      "hoursMinutes": "{{hours}} h {{minutes}} min"
     },
     "status": {
-      "active": "TODO",
-      "inactive": "TODO",
-      "confirmed": "TODO",
-      "pending": "TODO",
-      "cancelled": "TODO"
+      "active": "Aktivan",
+      "inactive": "Neaktivan",
+      "confirmed": "Potvrđen",
+      "pending": "Na čekanju",
+      "cancelled": "Otkazan"
     },
     "detail": {
-      "title": "TODO",
-      "created": "TODO",
-      "updated": "TODO",
-      "totalBookings": "TODO",
-      "upcomingBookings": "TODO",
-      "recentBookings": "TODO",
-      "noBookings": "TODO",
-      "noBookingsDescription": "TODO"
+      "title": "Detalji usluge",
+      "created": "Kreirano",
+      "updated": "Ažurirano",
+      "totalBookings": "Ukupno rezervacija",
+      "upcomingBookings": "Nadolazeće",
+      "recentBookings": "Nedavne rezervacije",
+      "noBookings": "Nema rezervacija",
+      "noBookingsDescription": "Ova usluga još nije rezervirana"
     }
   },
   "customers": {
-    "title": "TODO",
-    "subtitle": "TODO",
-    "search": "TODO",
-    "loading": "TODO",
-    "loadingCustomers": "TODO",
-    "loadingDetails": "TODO",
-    "retry": "TODO",
+    "title": "Klijenti",
+    "subtitle": "{{count}} klijenata",
+    "search": "Pretraži klijente...",
+    "loading": "Učitavanje...",
+    "loadingCustomers": "Učitavanje klijenata...",
+    "loadingDetails": "Učitavanje detalja...",
+    "retry": "Pokušaj ponovno",
     "noPermission": {
-      "title": "TODO",
-      "description": "TODO",
-      "hint": "TODO"
+      "title": "Nema dozvole",
+      "description": "Nemate dozvolu za pregled klijenata.",
+      "hint": "Kontaktirajte administratora za pristup."
     },
     "noPermissionDetails": {
-      "title": "TODO",
-      "description": "TODO"
+      "title": "Nema dozvole",
+      "description": "Nemate dozvolu za pregled detalja klijenta."
     },
-    "error": "TODO",
-    "errorDetails": "TODO",
-    "notFound": "TODO",
+    "error": "Greška pri učitavanju klijenata",
+    "errorDetails": "Greška pri učitavanju detalja",
+    "notFound": "Klijent nije pronađen",
     "empty": {
-      "noCustomers": "TODO",
-      "noResults": "TODO",
-      "addFirst": "TODO",
-      "tryOtherSearch": "TODO"
+      "noCustomers": "Još nema klijenata",
+      "noResults": "Klijenti nisu pronađeni",
+      "addFirst": "Dodajte prvog klijenta",
+      "tryOtherSearch": "Pokušajte s drugim pojmom za pretraživanje"
     },
-    "created": "TODO",
+    "created": "Kreirano",
     "relativeTime": {
-      "today": "TODO",
-      "yesterday": "TODO",
-      "daysAgo": "TODO",
-      "weekAgo": "TODO",
-      "weeksAgo": "TODO",
-      "monthAgo": "TODO",
-      "monthsAgo": "TODO",
-      "yearAgo": "TODO",
-      "yearsAgo": "TODO"
+      "today": "Danas",
+      "yesterday": "Jučer",
+      "daysAgo": "prije {{count}} dana",
+      "weekAgo": "prije {{count}} tjedan",
+      "weeksAgo": "prije {{count}} tjedana",
+      "monthAgo": "prije {{count}} mjesec",
+      "monthsAgo": "prije {{count}} mjeseci",
+      "yearAgo": "prije {{count}} godinu",
+      "yearsAgo": "prije {{count}} godina"
     },
     "detail": {
-      "title": "TODO",
-      "totalAppointments": "TODO",
-      "upcomingAppointments": "TODO",
-      "totalSpent": "TODO",
-      "appointmentsHistory": "TODO",
-      "noAppointments": "TODO",
-      "noAppointmentsDescription": "TODO",
+      "title": "Detalji klijenta",
+      "totalAppointments": "Ukupno termina",
+      "upcomingAppointments": "Nadolazeći",
+      "totalSpent": "Ukupno potrošeno",
+      "appointmentsHistory": "Povijest termina",
+      "noAppointments": "Nema termina",
+      "noAppointmentsDescription": "Ovaj klijent još nije rezervirao nijedan termin",
       "delete": {
-        "button": "TODO",
-        "confirm": "TODO",
-        "success": "TODO",
-        "error": "TODO"
+        "button": "Izbriši klijenta",
+        "confirm": "Želite li zaista izbrisati {{name}}?",
+        "success": "Klijent je uspješno izbrisan.",
+        "error": "Klijent nije moguće izbrisati."
       }
     }
   }
