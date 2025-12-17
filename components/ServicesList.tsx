@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { API, Service } from "../services/api";
 
 interface ServicesListProps {
@@ -8,6 +9,7 @@ interface ServicesListProps {
 }
 
 export function ServicesList({ onServiceClick }: ServicesListProps) {
+  const { t } = useTranslation();
   const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -28,7 +30,7 @@ export function ServicesList({ onServiceClick }: ServicesListProps) {
       setServices(servicesData);
     } catch (err: any) {
       console.error("Error loading services:", err);
-      setError("Fehler beim Laden der Dienstleistungen");
+      setError(t('services.error'));
     } finally {
       setIsLoading(false);
       setRefreshing(false);
@@ -43,14 +45,14 @@ export function ServicesList({ onServiceClick }: ServicesListProps) {
   const formatDuration = (minutes: string): string => {
     const mins = parseInt(minutes);
     if (mins < 60) {
-      return `${mins} Min.`;
+      return t('services.duration.minutes', { count: mins });
     } else {
       const hours = Math.floor(mins / 60);
       const remainingMins = mins % 60;
       if (remainingMins === 0) {
-        return `${hours} ${hours === 1 ? 'Std.' : 'Std.'}`;
+        return t('services.duration.hours', { count: hours });
       } else {
-        return `${hours} Std. ${remainingMins} Min.`;
+        return t('services.duration.hoursMinutes', { hours, minutes: remainingMins });
       }
     }
   };
@@ -105,9 +107,9 @@ export function ServicesList({ onServiceClick }: ServicesListProps) {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>Dienstleistungen</Text>
+          <Text style={styles.title}>{t('services.title')}</Text>
           <Text style={styles.subtitle}>
-            {isLoading ? "Lade..." : `${services.length} Dienstleistungen`}
+            {isLoading ? t('services.loading') : t('services.subtitle', { count: services.length })}
           </Text>
         </View>
       </View>
@@ -124,7 +126,7 @@ export function ServicesList({ onServiceClick }: ServicesListProps) {
       {isLoading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#7C3AED" />
-          <Text style={styles.loadingText}>Lade Dienstleistungen...</Text>
+          <Text style={styles.loadingText}>{t('services.loadingServices')}</Text>
         </View>
       ) : error ? (
         /* Error State */
@@ -132,16 +134,16 @@ export function ServicesList({ onServiceClick }: ServicesListProps) {
           <Ionicons name="alert-circle" size={24} color="#EF4444" />
           <Text style={styles.errorText}>{error}</Text>
           <TouchableOpacity style={styles.retryButton} onPress={loadServices}>
-            <Text style={styles.retryButtonText}>Erneut versuchen</Text>
+            <Text style={styles.retryButtonText}>{t('services.retry')}</Text>
           </TouchableOpacity>
         </View>
       ) : services.length === 0 ? (
         /* Empty State */
         <View style={styles.emptyContainer}>
           <Ionicons name="briefcase-outline" size={48} color="#6B7280" />
-          <Text style={styles.emptyText}>Keine Dienstleistungen</Text>
+          <Text style={styles.emptyText}>{t('services.empty.noServices')}</Text>
           <Text style={styles.emptySubtext}>
-            Füge deine erste Dienstleistung hinzu
+            {t('services.empty.addFirst')}
           </Text>
         </View>
       ) : (

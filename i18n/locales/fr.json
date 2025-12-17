@@ -1,0 +1,339 @@
+{
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "done": "Terminé",
+    "yes": "Oui",
+    "no": "Non",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "close": "Fermer"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "TODO",
+      "subtitle": "TODO",
+      "features": {
+        "appointments": "TODO",
+        "staff": "TODO",
+        "services": "TODO"
+      },
+      "getStarted": "TODO"
+    },
+    "domain": {
+      "title": "TODO",
+      "subtitle": "TODO",
+      "domainPlaceholder": "TODO",
+      "domainLabel": "TODO",
+      "validateButton": "TODO",
+      "validating": "TODO",
+      "errors": {
+        "required": "TODO",
+        "invalid": "TODO",
+        "connectionFailed": "TODO",
+        "pluginNotInstalled": "TODO"
+      },
+      "infoCard": {
+        "title": "TODO",
+        "description": "TODO",
+        "link": "TODO"
+      }
+    },
+    "login": {
+      "title": "TODO",
+      "subtitle": "TODO",
+      "connectedTo": "TODO",
+      "usernameLabel": "TODO",
+      "usernamePlaceholder": "TODO",
+      "passwordLabel": "TODO",
+      "passwordPlaceholder": "TODO",
+      "loginButton": "TODO",
+      "loggingIn": "TODO",
+      "errors": {
+        "invalidCredentials": "TODO",
+        "loginFailed": "TODO"
+      }
+    }
+  },
+  "settings": {
+    "title": "TODO",
+    "profile": {
+      "title": "TODO",
+      "name": "TODO",
+      "email": "TODO",
+      "phone": "TODO",
+      "namePlaceholder": "TODO",
+      "emailPlaceholder": "TODO",
+      "phonePlaceholder": "TODO",
+      "errors": {
+        "nameRequired": "TODO",
+        "emailInvalid": "TODO",
+        "saveFailed": "TODO"
+      },
+      "saveSuccess": "TODO"
+    },
+    "design": {
+      "title": "TODO",
+      "description": "TODO"
+    },
+    "language": {
+      "title": "TODO",
+      "description": "TODO"
+    },
+    "notifications": {
+      "title": "TODO",
+      "description": "TODO"
+    },
+    "permissions": {
+      "title": "TODO",
+      "description": "TODO"
+    },
+    "logout": {
+      "title": "TODO",
+      "confirm": "TODO"
+    },
+    "version": "TODO"
+  },
+  "notifications": {
+    "title": "TODO",
+    "emptyTitle": "TODO",
+    "emptyDescription": "TODO",
+    "emptyHint": "TODO"
+  },
+  "dashboard": {
+    "title": "TODO",
+    "welcome": "TODO",
+    "stats": {
+      "todayAppointments": "TODO",
+      "growth": "TODO",
+      "customers": "TODO",
+      "todayRevenue": "TODO"
+    },
+    "appointments": {
+      "today": "TODO",
+      "tomorrow": "TODO",
+      "tomorrowBadge": "TODO",
+      "loading": "TODO",
+      "retry": "TODO",
+      "errorLoading": "TODO",
+      "errorStaffNotFound": "TODO",
+      "noUpcoming": "TODO",
+      "noTomorrow": "TODO"
+    }
+  },
+  "appointments": {
+    "title": "TODO",
+    "new": "TODO",
+    "subtitle": "TODO",
+    "loading": "TODO",
+    "loadingAppointments": "TODO",
+    "loadingDetails": "TODO",
+    "retry": "TODO",
+    "error": "TODO",
+    "errorDetails": "TODO",
+    "errorStaffNotFound": "TODO",
+    "notFound": "TODO",
+    "noPermission": {
+      "title": "TODO",
+      "description": "TODO",
+      "hint": "TODO"
+    },
+    "noPermissionDetails": {
+      "title": "TODO",
+      "description": "TODO"
+    },
+    "empty": {
+      "noAppointments": "TODO",
+      "addFirst": "TODO"
+    },
+    "sections": {
+      "today": "TODO",
+      "tomorrow": "TODO",
+      "upcoming": "TODO"
+    },
+    "detail": {
+      "title": "TODO",
+      "dateTime": "TODO",
+      "service": "TODO",
+      "customer": "TODO",
+      "staff": "TODO",
+      "notes": "TODO",
+      "actions": "TODO",
+      "changeStatus": "TODO",
+      "deleteAppointment": "TODO",
+      "deleteConfirm": "TODO",
+      "deleteSuccess": "TODO",
+      "deleteError": "TODO",
+      "statusUpdateSuccess": "TODO",
+      "statusUpdateError": "TODO"
+    },
+    "create": {
+      "title": "TODO",
+      "loading": "TODO",
+      "customerData": "TODO",
+      "appointmentDetails": "TODO",
+      "labels": {
+        "name": "TODO",
+        "email": "TODO",
+        "phone": "TODO",
+        "service": "TODO",
+        "staff": "TODO",
+        "date": "TODO",
+        "time": "TODO",
+        "status": "TODO",
+        "notes": "TODO"
+      },
+      "placeholders": {
+        "name": "TODO",
+        "email": "TODO",
+        "phone": "TODO",
+        "notes": "TODO",
+        "selectService": "TODO",
+        "selectStaff": "TODO"
+      },
+      "validation": {
+        "nameRequired": "TODO",
+        "emailRequired": "TODO",
+        "emailInvalid": "TODO",
+        "serviceRequired": "TODO",
+        "staffRequired": "TODO"
+      },
+      "submit": "TODO",
+      "success": "TODO",
+      "errorLoading": "TODO",
+      "errorCreating": "TODO"
+    }
+  },
+  "staff": {
+    "title": "TODO",
+    "subtitle": "TODO",
+    "search": "TODO",
+    "loading": "TODO",
+    "loadingStaff": "TODO",
+    "loadingDetails": "TODO",
+    "retry": "TODO",
+    "noPermission": {
+      "title": "TODO",
+      "description": "TODO",
+      "hint": "TODO"
+    },
+    "noPermissionDetails": {
+      "title": "TODO",
+      "description": "TODO",
+      "hint": "TODO"
+    },
+    "error": "TODO",
+    "errorDetails": "TODO",
+    "notFound": "TODO",
+    "empty": {
+      "noStaff": "TODO",
+      "noResults": "TODO",
+      "addFirst": "TODO",
+      "tryOtherSearch": "TODO"
+    },
+    "detail": {
+      "title": "TODO",
+      "appointmentsToday": "TODO",
+      "totalToday": "TODO",
+      "todaysAppointments": "TODO",
+      "moreAppointments": "TODO"
+    }
+  },
+  "services": {
+    "title": "TODO",
+    "subtitle": "TODO",
+    "loading": "TODO",
+    "loadingServices": "TODO",
+    "loadingDetails": "TODO",
+    "retry": "TODO",
+    "error": "TODO",
+    "errorDetails": "TODO",
+    "notFound": "TODO",
+    "empty": {
+      "noServices": "TODO",
+      "addFirst": "TODO"
+    },
+    "duration": {
+      "minutes": "TODO",
+      "hours": "TODO",
+      "hoursMinutes": "TODO"
+    },
+    "status": {
+      "active": "TODO",
+      "inactive": "TODO",
+      "confirmed": "TODO",
+      "pending": "TODO",
+      "cancelled": "TODO"
+    },
+    "detail": {
+      "title": "TODO",
+      "created": "TODO",
+      "updated": "TODO",
+      "totalBookings": "TODO",
+      "upcomingBookings": "TODO",
+      "recentBookings": "TODO",
+      "noBookings": "TODO",
+      "noBookingsDescription": "TODO"
+    }
+  },
+  "customers": {
+    "title": "TODO",
+    "subtitle": "TODO",
+    "search": "TODO",
+    "loading": "TODO",
+    "loadingCustomers": "TODO",
+    "loadingDetails": "TODO",
+    "retry": "TODO",
+    "noPermission": {
+      "title": "TODO",
+      "description": "TODO",
+      "hint": "TODO"
+    },
+    "noPermissionDetails": {
+      "title": "TODO",
+      "description": "TODO"
+    },
+    "error": "TODO",
+    "errorDetails": "TODO",
+    "notFound": "TODO",
+    "empty": {
+      "noCustomers": "TODO",
+      "noResults": "TODO",
+      "addFirst": "TODO",
+      "tryOtherSearch": "TODO"
+    },
+    "created": "TODO",
+    "relativeTime": {
+      "today": "TODO",
+      "yesterday": "TODO",
+      "daysAgo": "TODO",
+      "weekAgo": "TODO",
+      "weeksAgo": "TODO",
+      "monthAgo": "TODO",
+      "monthsAgo": "TODO",
+      "yearAgo": "TODO",
+      "yearsAgo": "TODO"
+    },
+    "detail": {
+      "title": "TODO",
+      "totalAppointments": "TODO",
+      "upcomingAppointments": "TODO",
+      "totalSpent": "TODO",
+      "appointmentsHistory": "TODO",
+      "noAppointments": "TODO",
+      "noAppointmentsDescription": "TODO",
+      "delete": {
+        "button": "TODO",
+        "confirm": "TODO",
+        "success": "TODO",
+        "error": "TODO"
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { API, Customer, Appointment } from "../services/api";
 import { StorageService } from "../services/storage";
 
@@ -10,6 +11,7 @@ interface CustomerDetailProps {
 }
 
 export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
+  const { t } = useTranslation();
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -86,7 +88,7 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
 
     } catch (err: any) {
       console.error("Error loading customer detail:", err);
-      setError(err.message || "Fehler beim Laden der Kundendetails");
+      setError(err.message || t('customers.errorDetails'));
     } finally {
       setIsLoading(false);
     }
@@ -96,23 +98,23 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
     if (!customer || !hasEditPermission) return;
 
     Alert.alert(
-      "Kunde löschen",
-      `Möchtest du ${customer.first_name} ${customer.last_name} wirklich löschen?`,
+      t('customers.detail.delete.button'),
+      t('customers.detail.delete.confirm', { name: `${customer.first_name} ${customer.last_name}` }),
       [
         {
-          text: "Abbrechen",
+          text: t('common.cancel'),
           style: "cancel",
         },
         {
-          text: "Löschen",
+          text: t('common.delete'),
           style: "destructive",
           onPress: async () => {
             try {
               await API.deleteCustomer(customerId!);
-              Alert.alert("Erfolg", "Kunde wurde erfolgreich gelöscht.");
+              Alert.alert(t('common.success'), t('customers.detail.delete.success'));
               onBack();
             } catch (err: any) {
-              Alert.alert("Fehler", err.message || "Kunde konnte nicht gelöscht werden.");
+              Alert.alert(t('common.error'), err.message || t('customers.detail.delete.error'));
             }
           },
         },
@@ -151,11 +153,11 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
   const getStatusLabel = (status: string): string => {
     switch (status) {
       case "confirmed":
-        return "Bestätigt";
+        return t('services.status.confirmed');
       case "pending":
-        return "Ausstehend";
+        return t('services.status.pending');
       case "cancelled":
-        return "Abgesagt";
+        return t('services.status.cancelled');
       default:
         return status;
     }
@@ -172,7 +174,7 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#7C3AED" />
-        <Text style={styles.loadingText}>Lade Kundendetails...</Text>
+        <Text style={styles.loadingText}>{t('customers.loadingDetails')}</Text>
       </View>
     );
   }
@@ -184,7 +186,7 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
           <TouchableOpacity onPress={onBack} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
           </TouchableOpacity>
-          <Text style={styles.title}>Kundendetails</Text>
+          <Text style={styles.title}>{t('customers.detail.title')}</Text>
           <View style={{ width: 40 }} />
         </View>
 
@@ -192,9 +194,9 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
           <View style={styles.noPermissionIcon}>
             <Ionicons name="lock-closed" size={64} color="#6B7280" />
           </View>
-          <Text style={styles.noPermissionTitle}>Keine Berechtigung</Text>
+          <Text style={styles.noPermissionTitle}>{t('customers.noPermissionDetails.title')}</Text>
           <Text style={styles.noPermissionText}>
-            Du hast keine Berechtigung, Kundendetails anzuzeigen.
+            {t('customers.noPermissionDetails.description')}
           </Text>
         </View>
       </View>
@@ -208,15 +210,15 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
           <TouchableOpacity onPress={onBack} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
           </TouchableOpacity>
-          <Text style={styles.title}>Kundendetails</Text>
+          <Text style={styles.title}>{t('customers.detail.title')}</Text>
           <View style={{ width: 40 }} />
         </View>
 
         <View style={styles.errorCard}>
           <Ionicons name="alert-circle" size={48} color="#EF4444" />
-          <Text style={styles.errorText}>{error || "Kunde nicht gefunden"}</Text>
+          <Text style={styles.errorText}>{error || t('customers.notFound')}</Text>
           <TouchableOpacity style={styles.retryButton} onPress={loadCustomerDetail}>
-            <Text style={styles.retryButtonText}>Erneut versuchen</Text>
+            <Text style={styles.retryButtonText}>{t('customers.retry')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -230,7 +232,7 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
         <TouchableOpacity onPress={onBack} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={styles.title}>Kundendetails</Text>
+        <Text style={styles.title}>{t('customers.detail.title')}</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -257,7 +259,7 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
             <View style={styles.contactRow}>
               <Ionicons name="calendar-outline" size={16} color="#9CA3AF" />
               <Text style={styles.contactText}>
-                Kunde seit {formatDate(customer.created_at)}
+                {t('customers.created')}: {formatDate(customer.created_at)}
               </Text>
             </View>
           </View>
@@ -268,7 +270,7 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
           <View style={styles.actionButtons}>
             <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteCustomer}>
               <Ionicons name="trash-outline" size={20} color="#EF4444" />
-              <Text style={styles.deleteButtonText}>Löschen</Text>
+              <Text style={styles.deleteButtonText}>{t('customers.detail.delete.button')}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -281,7 +283,7 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
             <Ionicons name="calendar" size={24} color="#7C3AED" />
           </View>
           <Text style={styles.statValue}>{stats.totalAppointments}</Text>
-          <Text style={styles.statLabel}>Gesamt Termine</Text>
+          <Text style={styles.statLabel}>{t('customers.detail.totalAppointments')}</Text>
         </View>
 
         <View style={styles.statCard}>
@@ -289,20 +291,20 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
             <Ionicons name="time" size={24} color="#10B981" />
           </View>
           <Text style={styles.statValue}>{stats.upcomingAppointments}</Text>
-          <Text style={styles.statLabel}>Bevorstehend</Text>
+          <Text style={styles.statLabel}>{t('customers.detail.upcomingAppointments')}</Text>
         </View>
       </View>
 
       {/* Appointments Section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Termine</Text>
+        <Text style={styles.sectionTitle}>{t('customers.detail.appointmentsHistory')}</Text>
 
         {appointments.length === 0 ? (
           <View style={styles.emptyState}>
             <Ionicons name="calendar-outline" size={48} color="#6B7280" />
-            <Text style={styles.emptyText}>Keine Termine</Text>
+            <Text style={styles.emptyText}>{t('customers.detail.noAppointments')}</Text>
             <Text style={styles.emptySubtext}>
-              Dieser Kunde hat noch keine Termine gebucht
+              {t('customers.detail.noAppointmentsDescription')}
             </Text>
           </View>
         ) : (

@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, RefreshControl } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { API, Staff } from "../services/api";
 import { StorageService } from "../services/storage";
 
@@ -14,6 +15,7 @@ interface StaffWithExtras extends Staff {
 }
 
 export function StaffList({ onStaffClick }: StaffListProps) {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [staff, setStaff] = useState<StaffWithExtras[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -70,7 +72,7 @@ export function StaffList({ onStaffClick }: StaffListProps) {
       setStaff(processedStaff);
     } catch (err: any) {
       console.error("Error loading staff:", err);
-      setError("Fehler beim Laden des Personals");
+      setError(t('staff.error'));
     } finally {
       setIsLoading(false);
       setRefreshing(false);
@@ -97,9 +99,9 @@ export function StaffList({ onStaffClick }: StaffListProps) {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>Personal</Text>
+          <Text style={styles.title}>{t('staff.title')}</Text>
           <Text style={styles.subtitle}>
-            {isLoading ? "Lade..." : `${staff.length} Mitarbeiter`}
+            {isLoading ? t('staff.loading') : t('staff.subtitle', { count: staff.length })}
           </Text>
         </View>
       </View>
@@ -109,7 +111,7 @@ export function StaffList({ onStaffClick }: StaffListProps) {
         <Ionicons name="search-outline" size={20} color="#6B7280" style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
-          placeholder="Personal suchen..."
+          placeholder={t('staff.search')}
           placeholderTextColor="#6B7280"
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -138,19 +140,19 @@ export function StaffList({ onStaffClick }: StaffListProps) {
           <View style={styles.noPermissionIcon}>
             <Ionicons name="lock-closed" size={64} color="#6B7280" />
           </View>
-          <Text style={styles.noPermissionTitle}>Keine Berechtigung</Text>
+          <Text style={styles.noPermissionTitle}>{t('staff.noPermission.title')}</Text>
           <Text style={styles.noPermissionText}>
-            Du hast keine Berechtigung, das Personal anzuzeigen.
+            {t('staff.noPermission.description')}
           </Text>
           <Text style={styles.noPermissionHint}>
-            Kontaktiere den Administrator, um Zugriff zu erhalten.
+            {t('staff.noPermission.hint')}
           </Text>
         </View>
       ) : isLoading ? (
         /* Loading State */
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#7C3AED" />
-          <Text style={styles.loadingText}>Lade Personal...</Text>
+          <Text style={styles.loadingText}>{t('staff.loadingStaff')}</Text>
         </View>
       ) : error ? (
         /* Error State */
@@ -158,7 +160,7 @@ export function StaffList({ onStaffClick }: StaffListProps) {
           <Ionicons name="alert-circle" size={24} color="#EF4444" />
           <Text style={styles.errorText}>{error}</Text>
           <TouchableOpacity style={styles.retryButton} onPress={loadStaff}>
-            <Text style={styles.retryButtonText}>Erneut versuchen</Text>
+            <Text style={styles.retryButtonText}>{t('staff.retry')}</Text>
           </TouchableOpacity>
         </View>
       ) : filteredStaff.length === 0 ? (
@@ -166,12 +168,12 @@ export function StaffList({ onStaffClick }: StaffListProps) {
         <View style={styles.emptyContainer}>
           <Ionicons name="people-outline" size={48} color="#6B7280" />
           <Text style={styles.emptyText}>
-            {searchQuery ? "Kein Personal gefunden" : "Noch kein Personal"}
+            {searchQuery ? t('staff.empty.noResults') : t('staff.empty.noStaff')}
           </Text>
           <Text style={styles.emptySubtext}>
             {searchQuery
-              ? "Versuche einen anderen Suchbegriff"
-              : "Füge deinen ersten Mitarbeiter hinzu"}
+              ? t('staff.empty.tryOtherSearch')
+              : t('staff.empty.addFirst')}
           </Text>
         </View>
       ) : (

@@ -1,11 +1,14 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 interface NotificationsProps {
   onBack: () => void;
 }
 
 export function Notifications({ onBack }: NotificationsProps) {
+  const { t } = useTranslation();
+
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
@@ -13,7 +16,7 @@ export function Notifications({ onBack }: NotificationsProps) {
         <TouchableOpacity onPress={onBack} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={styles.title}>Benachrichtigungen</Text>
+        <Text style={styles.title}>{t('notifications.title')}</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -23,12 +26,12 @@ export function Notifications({ onBack }: NotificationsProps) {
           <View style={styles.emptyIconContainer}>
             <Ionicons name="notifications-outline" size={64} color="#6B7280" />
           </View>
-          <Text style={styles.emptyTitle}>Benachrichtigungen</Text>
+          <Text style={styles.emptyTitle}>{t('notifications.emptyTitle')}</Text>
           <Text style={styles.emptyDescription}>
-            Hier können Sie Ihre Benachrichtigungseinstellungen verwalten.
+            {t('notifications.emptyDescription')}
           </Text>
           <Text style={styles.emptyHint}>
-            Diese Funktion wird in Kürze verfügbar sein.
+            {t('notifications.emptyHint')}
           </Text>
         </View>
       </View>

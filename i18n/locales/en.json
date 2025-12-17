@@ -1,0 +1,339 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done",
+    "yes": "Yes",
+    "no": "No",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "close": "Close"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Welcome to Appoint",
+      "subtitle": "Your all-in-one solution for appointment management",
+      "features": {
+        "appointments": "Manage appointments",
+        "staff": "Staff & customers",
+        "services": "Organize services"
+      },
+      "getStarted": "Let's get started"
+    },
+    "domain": {
+      "title": "Connect WordPress Domain",
+      "subtitle": "Connect your WordPress installation",
+      "domainPlaceholder": "https://your-domain.com",
+      "domainLabel": "WordPress Domain",
+      "validateButton": "Validate domain",
+      "validating": "Validating...",
+      "errors": {
+        "required": "Please enter a domain",
+        "invalid": "Please enter a valid domain",
+        "connectionFailed": "Connection failed. Please check the domain.",
+        "pluginNotInstalled": "The Appoint plugin is not installed"
+      },
+      "infoCard": {
+        "title": "Plugin required",
+        "description": "Make sure the Appoint WordPress plugin is installed.",
+        "link": "Go to documentation"
+      }
+    },
+    "login": {
+      "title": "Sign In",
+      "subtitle": "Sign in with your WordPress account",
+      "connectedTo": "Connected to",
+      "usernameLabel": "Username or email",
+      "usernamePlaceholder": "username@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Your password",
+      "loginButton": "Sign in",
+      "loggingIn": "Signing in...",
+      "errors": {
+        "invalidCredentials": "Invalid credentials",
+        "loginFailed": "Login failed. Please try again."
+      }
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "profile": {
+      "title": "Staff Profile",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "namePlaceholder": "Your name",
+      "emailPlaceholder": "your@email.com",
+      "phonePlaceholder": "+1 123 456789",
+      "errors": {
+        "nameRequired": "Please enter a name",
+        "emailInvalid": "Please enter a valid email",
+        "saveFailed": "Error saving profile"
+      },
+      "saveSuccess": "Profile saved successfully"
+    },
+    "design": {
+      "title": "Use custom design",
+      "description": "Use colors from your WordPress settings"
+    },
+    "language": {
+      "title": "Language",
+      "description": "Choose your preferred language"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Manage notification settings"
+    },
+    "permissions": {
+      "title": "Refresh permissions",
+      "description": "Load the latest permissions from the server"
+    },
+    "logout": {
+      "title": "Sign out",
+      "confirm": "Are you sure you want to sign out?"
+    },
+    "version": "Version"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "emptyTitle": "Notifications",
+    "emptyDescription": "Here you can manage your notification settings.",
+    "emptyHint": "This feature will be available soon."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back",
+    "stats": {
+      "todayAppointments": "Today's Appointments",
+      "growth": "Growth",
+      "customers": "Customers",
+      "todayRevenue": "Today's Revenue"
+    },
+    "appointments": {
+      "today": "Today's Appointments",
+      "tomorrow": "Tomorrow's Appointments",
+      "tomorrowBadge": "Tomorrow",
+      "loading": "Loading appointments...",
+      "retry": "Retry",
+      "errorLoading": "Error loading appointments",
+      "errorStaffNotFound": "Staff data not found. Token: {{hasToken}}, Domain: {{domain}}",
+      "noUpcoming": "No upcoming appointments today or tomorrow",
+      "noTomorrow": "No appointments for tomorrow"
+    }
+  },
+  "appointments": {
+    "title": "Appointments",
+    "new": "New appointment",
+    "subtitle": "{{count}} appointments",
+    "loading": "Loading...",
+    "loadingAppointments": "Loading appointments...",
+    "loadingDetails": "Loading appointment details...",
+    "retry": "Retry",
+    "error": "Error loading appointments",
+    "errorDetails": "Error loading appointment details",
+    "errorStaffNotFound": "Staff data not found",
+    "notFound": "Appointment not found",
+    "noPermission": {
+      "title": "No Permission",
+      "description": "You don't have permission to view appointments.",
+      "hint": "Contact the administrator to get access."
+    },
+    "noPermissionDetails": {
+      "title": "No Permission",
+      "description": "You don't have permission to view appointment details."
+    },
+    "empty": {
+      "noAppointments": "No upcoming appointments",
+      "addFirst": "Create a new appointment with the button above"
+    },
+    "sections": {
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "upcoming": "Upcoming"
+    },
+    "detail": {
+      "title": "Appointment Details",
+      "dateTime": "Date & Time",
+      "service": "Service",
+      "customer": "Customer",
+      "staff": "Staff",
+      "notes": "Notes",
+      "actions": "Actions",
+      "changeStatus": "Change status",
+      "deleteAppointment": "Delete Appointment",
+      "deleteConfirm": "Do you really want to delete the appointment with {{name}}?",
+      "deleteSuccess": "Appointment was successfully deleted.",
+      "deleteError": "Appointment could not be deleted.",
+      "statusUpdateSuccess": "Status was successfully updated.",
+      "statusUpdateError": "Status could not be updated."
+    },
+    "create": {
+      "title": "New Appointment",
+      "loading": "Loading data...",
+      "customerData": "Customer Data",
+      "appointmentDetails": "Appointment Details",
+      "labels": {
+        "name": "Name *",
+        "email": "Email *",
+        "phone": "Phone",
+        "service": "Service *",
+        "staff": "Staff *",
+        "date": "Date *",
+        "time": "Time *",
+        "status": "Status",
+        "notes": "Notes"
+      },
+      "placeholders": {
+        "name": "John Doe",
+        "email": "john@example.com",
+        "phone": "+1 123 456789",
+        "notes": "Optional: Additional information...",
+        "selectService": "Select service",
+        "selectStaff": "Select staff"
+      },
+      "validation": {
+        "nameRequired": "Please enter a customer name.",
+        "emailRequired": "Please enter an email address.",
+        "emailInvalid": "Please enter a valid email address.",
+        "serviceRequired": "Please select a service.",
+        "staffRequired": "Please select a staff member."
+      },
+      "submit": "Create Appointment",
+      "success": "Appointment was successfully created.",
+      "errorLoading": "Data could not be loaded: {{error}}",
+      "errorCreating": "Appointment could not be created."
+    }
+  },
+  "staff": {
+    "title": "Staff",
+    "subtitle": "{{count}} staff members",
+    "search": "Search staff...",
+    "loading": "Loading...",
+    "loadingStaff": "Loading staff...",
+    "loadingDetails": "Loading details...",
+    "retry": "Retry",
+    "noPermission": {
+      "title": "No Permission",
+      "description": "You don't have permission to view staff.",
+      "hint": "Contact the administrator to get access."
+    },
+    "noPermissionDetails": {
+      "title": "No Permission",
+      "description": "You don't have permission to view staff details.",
+      "hint": "Contact the administrator to get access."
+    },
+    "error": "Error loading staff",
+    "errorDetails": "Error loading staff details",
+    "notFound": "Staff member not found",
+    "empty": {
+      "noStaff": "No staff yet",
+      "noResults": "No staff found",
+      "addFirst": "Add your first staff member",
+      "tryOtherSearch": "Try a different search term"
+    },
+    "detail": {
+      "title": "Staff Details",
+      "appointmentsToday": "Appointments today",
+      "totalToday": "Total today",
+      "todaysAppointments": "Today's Appointments",
+      "moreAppointments": "+{{count}} more appointments"
+    }
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "{{count}} services",
+    "loading": "Loading...",
+    "loadingServices": "Loading services...",
+    "loadingDetails": "Loading service details...",
+    "retry": "Retry",
+    "error": "Error loading services",
+    "errorDetails": "Error loading service details",
+    "notFound": "Service not found",
+    "empty": {
+      "noServices": "No services",
+      "addFirst": "Add your first service"
+    },
+    "duration": {
+      "minutes": "{{count}} min",
+      "hours": "{{count}} hr",
+      "hoursMinutes": "{{hours}} hr {{minutes}} min"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "confirmed": "Confirmed",
+      "pending": "Pending",
+      "cancelled": "Cancelled"
+    },
+    "detail": {
+      "title": "Service Details",
+      "created": "Created",
+      "updated": "Updated",
+      "totalBookings": "Total Bookings",
+      "upcomingBookings": "Upcoming",
+      "recentBookings": "Recent Bookings",
+      "noBookings": "No bookings",
+      "noBookingsDescription": "This service has not been booked yet"
+    }
+  },
+  "customers": {
+    "title": "Customers",
+    "subtitle": "{{count}} customers",
+    "search": "Search customers...",
+    "loading": "Loading...",
+    "loadingCustomers": "Loading customers...",
+    "loadingDetails": "Loading customer details...",
+    "retry": "Retry",
+    "noPermission": {
+      "title": "No Permission",
+      "description": "You don't have permission to view customers.",
+      "hint": "Contact the administrator to get access."
+    },
+    "noPermissionDetails": {
+      "title": "No Permission",
+      "description": "You don't have permission to view customer details."
+    },
+    "error": "Error loading customers",
+    "errorDetails": "Error loading customer details",
+    "notFound": "Customer not found",
+    "empty": {
+      "noCustomers": "No customers yet",
+      "noResults": "No customers found",
+      "addFirst": "Add your first customer",
+      "tryOtherSearch": "Try a different search term"
+    },
+    "created": "Created",
+    "relativeTime": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "daysAgo": "{{count}} days ago",
+      "weekAgo": "{{count}} week ago",
+      "weeksAgo": "{{count}} weeks ago",
+      "monthAgo": "{{count}} month ago",
+      "monthsAgo": "{{count}} months ago",
+      "yearAgo": "{{count}} year ago",
+      "yearsAgo": "{{count}} years ago"
+    },
+    "detail": {
+      "title": "Customer Details",
+      "totalAppointments": "Total Appointments",
+      "upcomingAppointments": "Upcoming",
+      "totalSpent": "Total Spent",
+      "appointmentsHistory": "Appointments History",
+      "noAppointments": "No appointments",
+      "noAppointmentsDescription": "This customer has not booked any appointments yet",
+      "delete": {
+        "button": "Delete Customer",
+        "confirm": "Do you really want to delete {{name}}?",
+        "success": "Customer was successfully deleted.",
+        "error": "Customer could not be deleted."
+      }
+    }
+  }
+}

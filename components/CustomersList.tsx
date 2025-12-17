@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, RefreshControl } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { API, Customer } from "../services/api";
 import { StorageService } from "../services/storage";
 
@@ -14,6 +15,7 @@ interface CustomersListProps {
 }
 
 export function CustomersList({ onCustomerClick }: CustomersListProps) {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [customers, setCustomers] = useState<CustomerWithStats[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -64,7 +66,7 @@ export function CustomersList({ onCustomerClick }: CustomersListProps) {
       setCustomers(processedCustomers);
     } catch (err: any) {
       console.error("Error loading customers:", err);
-      setError("Fehler beim Laden der Kunden");
+      setError(t('customers.error'));
     } finally {
       setIsLoading(false);
       setRefreshing(false);
@@ -83,20 +85,26 @@ export function CustomersList({ onCustomerClick }: CustomersListProps) {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays === 0) {
-      return "Heute";
+      return t('customers.relativeTime.today');
     } else if (diffDays === 1) {
-      return "Gestern";
+      return t('customers.relativeTime.yesterday');
     } else if (diffDays < 7) {
-      return `vor ${diffDays} Tagen`;
+      return t('customers.relativeTime.daysAgo', { count: diffDays });
     } else if (diffDays < 30) {
       const weeks = Math.floor(diffDays / 7);
-      return `vor ${weeks} ${weeks === 1 ? 'Woche' : 'Wochen'}`;
+      return weeks === 1
+        ? t('customers.relativeTime.weekAgo', { count: weeks })
+        : t('customers.relativeTime.weeksAgo', { count: weeks });
     } else if (diffDays < 365) {
       const months = Math.floor(diffDays / 30);
-      return `vor ${months} ${months === 1 ? 'Monat' : 'Monaten'}`;
+      return months === 1
+        ? t('customers.relativeTime.monthAgo', { count: months })
+        : t('customers.relativeTime.monthsAgo', { count: months });
     } else {
       const years = Math.floor(diffDays / 365);
-      return `vor ${years} ${years === 1 ? 'Jahr' : 'Jahren'}`;
+      return years === 1
+        ? t('customers.relativeTime.yearAgo', { count: years })
+        : t('customers.relativeTime.yearsAgo', { count: years });
     }
   };
 
@@ -116,9 +124,9 @@ export function CustomersList({ onCustomerClick }: CustomersListProps) {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>Kunden</Text>
+          <Text style={styles.title}>{t('customers.title')}</Text>
           <Text style={styles.subtitle}>
-            {isLoading ? "Lade..." : `${customers.length} Kunden`}
+            {isLoading ? t('customers.loading') : t('customers.subtitle', { count: customers.length })}
           </Text>
         </View>
       </View>
@@ -128,7 +136,7 @@ export function CustomersList({ onCustomerClick }: CustomersListProps) {
         <Ionicons name="search-outline" size={20} color="#6B7280" style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
-          placeholder="Kunden suchen..."
+          placeholder={t('customers.search')}
           placeholderTextColor="#6B7280"
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -157,19 +165,19 @@ export function CustomersList({ onCustomerClick }: CustomersListProps) {
           <View style={styles.noPermissionIcon}>
             <Ionicons name="lock-closed" size={64} color="#6B7280" />
           </View>
-          <Text style={styles.noPermissionTitle}>Keine Berechtigung</Text>
+          <Text style={styles.noPermissionTitle}>{t('customers.noPermission.title')}</Text>
           <Text style={styles.noPermissionText}>
-            Du hast keine Berechtigung, Kunden anzuzeigen.
+            {t('customers.noPermission.description')}
           </Text>
           <Text style={styles.noPermissionHint}>
-            Kontaktiere den Administrator, um Zugriff zu erhalten.
+            {t('customers.noPermission.hint')}
           </Text>
         </View>
       ) : isLoading ? (
         /* Loading State */
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#7C3AED" />
-          <Text style={styles.loadingText}>Lade Kunden...</Text>
+          <Text style={styles.loadingText}>{t('customers.loadingCustomers')}</Text>
         </View>
       ) : error ? (
         /* Error State */
@@ -177,7 +185,7 @@ export function CustomersList({ onCustomerClick }: CustomersListProps) {
           <Ionicons name="alert-circle" size={24} color="#EF4444" />
           <Text style={styles.errorText}>{error}</Text>
           <TouchableOpacity style={styles.retryButton} onPress={loadCustomers}>
-            <Text style={styles.retryButtonText}>Erneut versuchen</Text>
+            <Text style={styles.retryButtonText}>{t('customers.retry')}</Text>
           </TouchableOpacity>
         </View>
       ) : filteredCustomers.length === 0 ? (
@@ -185,12 +193,12 @@ export function CustomersList({ onCustomerClick }: CustomersListProps) {
         <View style={styles.emptyContainer}>
           <Ionicons name="people-outline" size={48} color="#6B7280" />
           <Text style={styles.emptyText}>
-            {searchQuery ? "Keine Kunden gefunden" : "Noch keine Kunden"}
+            {searchQuery ? t('customers.empty.noResults') : t('customers.empty.noCustomers')}
           </Text>
           <Text style={styles.emptySubtext}>
             {searchQuery
-              ? "Versuche einen anderen Suchbegriff"
-              : "Füge deinen ersten Kunden hinzu"}
+              ? t('customers.empty.tryOtherSearch')
+              : t('customers.empty.addFirst')}
           </Text>
         </View>
       ) : (
@@ -222,7 +230,7 @@ export function CustomersList({ onCustomerClick }: CustomersListProps) {
                 </View>
                 <View style={styles.customerMeta}>
                   <Ionicons name="calendar-outline" size={12} color="#6B7280" />
-                  <Text style={styles.metaText}>Erstellt: {formatDate(customer.created_at)}</Text>
+                  <Text style={styles.metaText}>{t('customers.created')}: {formatDate(customer.created_at)}</Text>
                 </View>
               </View>
               {hasViewPermission ? (

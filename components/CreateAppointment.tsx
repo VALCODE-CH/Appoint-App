@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, ActivityIndicator, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useTranslation } from "react-i18next";
 import { API, Service, Staff } from "../services/api";
 import { StorageService } from "../services/storage";
 
@@ -11,6 +12,8 @@ interface CreateAppointmentProps {
 }
 
 export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps) {
+  const { t, i18n } = useTranslation();
+
   // Form state
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
@@ -64,7 +67,7 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
 
     } catch (error: any) {
       console.error("Error loading data:", error);
-      Alert.alert("Fehler", "Daten konnten nicht geladen werden: " + error.message);
+      Alert.alert(t('common.error'), t('appointments.create.errorLoading', { error: error.message }));
     } finally {
       setIsLoadingData(false);
     }
@@ -72,29 +75,29 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
 
   const validateForm = (): boolean => {
     if (!customerName.trim()) {
-      Alert.alert("Fehler", "Bitte gib einen Kundennamen ein.");
+      Alert.alert(t('common.error'), t('appointments.create.validation.nameRequired'));
       return false;
     }
 
     if (!customerEmail.trim()) {
-      Alert.alert("Fehler", "Bitte gib eine E-Mail-Adresse ein.");
+      Alert.alert(t('common.error'), t('appointments.create.validation.emailRequired'));
       return false;
     }
 
     // Einfache E-Mail-Validierung
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(customerEmail)) {
-      Alert.alert("Fehler", "Bitte gib eine gültige E-Mail-Adresse ein.");
+      Alert.alert(t('common.error'), t('appointments.create.validation.emailInvalid'));
       return false;
     }
 
     if (!selectedServiceId) {
-      Alert.alert("Fehler", "Bitte wähle eine Dienstleistung aus.");
+      Alert.alert(t('common.error'), t('appointments.create.validation.serviceRequired'));
       return false;
     }
 
     if (!selectedStaffId) {
-      Alert.alert("Fehler", "Bitte wähle einen Mitarbeiter aus.");
+      Alert.alert(t('common.error'), t('appointments.create.validation.staffRequired'));
       return false;
     }
 
@@ -148,8 +151,8 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
       });
 
       Alert.alert(
-        "Erfolg",
-        "Termin wurde erfolgreich erstellt.",
+        t('common.success'),
+        t('appointments.create.success'),
         [
           {
             text: "OK",
@@ -163,7 +166,7 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
 
     } catch (error: any) {
       console.error("Error creating appointment:", error);
-      Alert.alert("Fehler", error.message || "Termin konnte nicht erstellt werden.");
+      Alert.alert(t('common.error'), error.message || t('appointments.create.errorCreating'));
     } finally {
       setIsSaving(false);
     }
@@ -171,19 +174,19 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
 
   const getServiceName = (serviceId: string): string => {
     const service = services.find(s => s.id === serviceId);
-    return service ? service.name : "Dienstleistung wählen";
+    return service ? service.name : t('appointments.create.placeholders.selectService');
   };
 
   const getStaffName = (staffId: string): string => {
     const staffMember = staff.find(s => s.id === staffId);
-    return staffMember ? staffMember.name : "Mitarbeiter wählen";
+    return staffMember ? staffMember.name : t('appointments.create.placeholders.selectStaff');
   };
 
   const getStatusLabel = (statusValue: string): string => {
     switch (statusValue) {
-      case "confirmed": return "Bestätigt";
-      case "pending": return "Ausstehend";
-      case "cancelled": return "Abgesagt";
+      case "confirmed": return t('services.status.confirmed');
+      case "pending": return t('services.status.pending');
+      case "cancelled": return t('services.status.cancelled');
       default: return statusValue;
     }
   };
@@ -235,7 +238,7 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#7C3AED" />
-        <Text style={styles.loadingText}>Lade Daten...</Text>
+        <Text style={styles.loadingText}>{t('appointments.create.loading')}</Text>
       </View>
     );
   }
@@ -247,33 +250,33 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
         <TouchableOpacity onPress={onBack} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={styles.title}>Neuer Termin</Text>
+        <Text style={styles.title}>{t('appointments.create.title')}</Text>
         <View style={{ width: 40 }} />
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Kundendaten */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Kundendaten</Text>
+          <Text style={styles.sectionTitle}>{t('appointments.create.customerData')}</Text>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Name *</Text>
+            <Text style={styles.label}>{t('appointments.create.labels.name')}</Text>
             <TextInput
               style={styles.input}
               value={customerName}
               onChangeText={setCustomerName}
-              placeholder="Max Mustermann"
+              placeholder={t('appointments.create.placeholders.name')}
               placeholderTextColor="#6B7280"
             />
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>E-Mail *</Text>
+            <Text style={styles.label}>{t('appointments.create.labels.email')}</Text>
             <TextInput
               style={styles.input}
               value={customerEmail}
               onChangeText={setCustomerEmail}
-              placeholder="max@example.com"
+              placeholder={t('appointments.create.placeholders.email')}
               placeholderTextColor="#6B7280"
               keyboardType="email-address"
               autoCapitalize="none"
@@ -281,12 +284,12 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Telefon</Text>
+            <Text style={styles.label}>{t('appointments.create.labels.phone')}</Text>
             <TextInput
               style={styles.input}
               value={customerPhone}
               onChangeText={setCustomerPhone}
-              placeholder="+49 123 456789"
+              placeholder={t('appointments.create.placeholders.phone')}
               placeholderTextColor="#6B7280"
               keyboardType="phone-pad"
             />
@@ -295,11 +298,11 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
 
         {/* Termindetails */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Termindetails</Text>
+          <Text style={styles.sectionTitle}>{t('appointments.create.appointmentDetails')}</Text>
 
           {/* Service Picker */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Dienstleistung *</Text>
+            <Text style={styles.label}>{t('appointments.create.labels.service')}</Text>
             <TouchableOpacity
               style={styles.pickerButton}
               onPress={() => setShowServicePicker(!showServicePicker)}
@@ -341,7 +344,7 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
 
           {/* Staff Picker */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Mitarbeiter *</Text>
+            <Text style={styles.label}>{t('appointments.create.labels.staff')}</Text>
             <TouchableOpacity
               style={styles.pickerButton}
               onPress={() => setShowStaffPicker(!showStaffPicker)}
@@ -381,7 +384,7 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
 
           {/* Datum */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Datum *</Text>
+            <Text style={styles.label}>{t('appointments.create.labels.date')}</Text>
             <TouchableOpacity
               style={styles.pickerButton}
               onPress={() => setShowDatePicker(true)}
@@ -403,14 +406,14 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
                   display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                   onChange={handleDateChange}
                   minimumDate={new Date()}
-                  locale="de-DE"
+                  locale={i18n.language === 'en' ? 'en-US' : 'de-DE'}
                 />
                 {Platform.OS === 'ios' && (
                   <TouchableOpacity
                     style={styles.pickerDoneButton}
                     onPress={() => setShowDatePicker(false)}
                   >
-                    <Text style={styles.pickerDoneButtonText}>Fertig</Text>
+                    <Text style={styles.pickerDoneButtonText}>{t('common.done')}</Text>
                   </TouchableOpacity>
                 )}
               </>
@@ -419,7 +422,7 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
 
           {/* Zeit */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Uhrzeit *</Text>
+            <Text style={styles.label}>{t('appointments.create.labels.time')}</Text>
             <TouchableOpacity
               style={styles.pickerButton}
               onPress={() => setShowTimePicker(true)}
@@ -441,14 +444,14 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
                   display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                   onChange={handleTimeChange}
                   is24Hour={true}
-                  locale="de-DE"
+                  locale={i18n.language === 'en' ? 'en-US' : 'de-DE'}
                 />
                 {Platform.OS === 'ios' && (
                   <TouchableOpacity
                     style={styles.pickerDoneButton}
                     onPress={() => setShowTimePicker(false)}
                   >
-                    <Text style={styles.pickerDoneButtonText}>Fertig</Text>
+                    <Text style={styles.pickerDoneButtonText}>{t('common.done')}</Text>
                   </TouchableOpacity>
                 )}
               </>
@@ -457,7 +460,7 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
 
           {/* Status Picker */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Status</Text>
+            <Text style={styles.label}>{t('appointments.create.labels.status')}</Text>
             <TouchableOpacity
               style={styles.pickerButton}
               onPress={() => setShowStatusPicker(!showStatusPicker)}
@@ -471,9 +474,9 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
             {showStatusPicker && (
               <View style={styles.pickerOptions}>
                 {[
-                  { value: "pending", label: "Ausstehend" },
-                  { value: "confirmed", label: "Bestätigt" },
-                  { value: "cancelled", label: "Abgesagt" }
+                  { value: "pending", label: t('services.status.pending') },
+                  { value: "confirmed", label: t('services.status.confirmed') },
+                  { value: "cancelled", label: t('services.status.cancelled') }
                 ].map((statusOption) => (
                   <TouchableOpacity
                     key={statusOption.value}
@@ -498,12 +501,12 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
 
           {/* Notizen */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Notizen</Text>
+            <Text style={styles.label}>{t('appointments.create.labels.notes')}</Text>
             <TextInput
               style={[styles.input, styles.textArea]}
               value={notes}
               onChangeText={setNotes}
-              placeholder="Optional: Zusätzliche Informationen..."
+              placeholder={t('appointments.create.placeholders.notes')}
               placeholderTextColor="#6B7280"
               multiline
               numberOfLines={4}
@@ -523,7 +526,7 @@ export function CreateAppointment({ onBack, onSuccess }: CreateAppointmentProps)
           ) : (
             <>
               <Ionicons name="checkmark-circle" size={20} color="#FFFFFF" />
-              <Text style={styles.submitButtonText}>Termin erstellen</Text>
+              <Text style={styles.submitButtonText}>{t('appointments.create.submit')}</Text>
             </>
           )}
         </TouchableOpacity>

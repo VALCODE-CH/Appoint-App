@@ -18,6 +18,7 @@ import { Onboarding } from "./components/Onboarding";
 import { StorageService } from "./services/storage";
 import { API } from "./services/api";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
+import "./i18n/config";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const TABS: Tab[] = ["dashboard", "staff", "services", "customers", "appointments"];

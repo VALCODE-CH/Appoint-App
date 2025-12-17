@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { API, Service, Appointment } from "../services/api";
 
 interface ServiceDetailProps {
@@ -9,6 +10,7 @@ interface ServiceDetailProps {
 }
 
 export function ServiceDetail({ serviceId, onBack }: ServiceDetailProps) {
+  const { t, i18n } = useTranslation();
   const [service, setService] = useState<Service | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -65,7 +67,7 @@ export function ServiceDetail({ serviceId, onBack }: ServiceDetailProps) {
 
     } catch (err: any) {
       console.error("Error loading service detail:", err);
-      setError(err.message || "Fehler beim Laden der Dienstleistungsdetails");
+      setError(err.message || t('services.errorDetails'));
     } finally {
       setIsLoading(false);
     }
@@ -74,14 +76,14 @@ export function ServiceDetail({ serviceId, onBack }: ServiceDetailProps) {
   const formatDuration = (minutes: string): string => {
     const mins = parseInt(minutes);
     if (mins < 60) {
-      return `${mins} Min.`;
+      return t('services.duration.minutes', { count: mins });
     } else {
       const hours = Math.floor(mins / 60);
       const remainingMins = mins % 60;
       if (remainingMins === 0) {
-        return `${hours} ${hours === 1 ? 'Std.' : 'Std.'}`;
+        return t('services.duration.hours', { count: hours });
       } else {
-        return `${hours} Std. ${remainingMins} Min.`;
+        return t('services.duration.hoursMinutes', { hours, minutes: remainingMins });
       }
     }
   };

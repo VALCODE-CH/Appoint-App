@@ -1,0 +1,339 @@
+{
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "confirm": "Bestätigen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "done": "Fertig",
+    "yes": "Ja",
+    "no": "Nein",
+    "loading": "Lädt...",
+    "error": "Fehler",
+    "success": "Erfolgreich",
+    "close": "Schließen"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Willkommen bei Appoint",
+      "subtitle": "Deine All-in-One Lösung für Terminverwaltung",
+      "features": {
+        "appointments": "Termine verwalten",
+        "staff": "Mitarbeiter & Kunden",
+        "services": "Dienstleistungen organisieren"
+      },
+      "getStarted": "Los geht's"
+    },
+    "domain": {
+      "title": "WordPress Domain verbinden",
+      "subtitle": "Verbinde deine WordPress-Installation",
+      "domainPlaceholder": "https://deine-domain.de",
+      "domainLabel": "WordPress Domain",
+      "validateButton": "Domain validieren",
+      "validating": "Validiere...",
+      "errors": {
+        "required": "Bitte gib eine Domain ein",
+        "invalid": "Bitte gib eine gültige Domain ein",
+        "connectionFailed": "Verbindung fehlgeschlagen. Bitte überprüfe die Domain.",
+        "pluginNotInstalled": "Das Appoint-Plugin ist nicht installiert"
+      },
+      "infoCard": {
+        "title": "Plugin erforderlich",
+        "description": "Stelle sicher, dass das Appoint WordPress Plugin installiert ist.",
+        "link": "Zur Dokumentation"
+      }
+    },
+    "login": {
+      "title": "Anmelden",
+      "subtitle": "Melde dich mit deinem WordPress-Konto an",
+      "connectedTo": "Verbunden mit",
+      "usernameLabel": "Benutzername oder E-Mail",
+      "usernamePlaceholder": "benutzername@beispiel.de",
+      "passwordLabel": "Passwort",
+      "passwordPlaceholder": "Dein Passwort",
+      "loginButton": "Anmelden",
+      "loggingIn": "Melde an...",
+      "errors": {
+        "invalidCredentials": "Ungültige Anmeldedaten",
+        "loginFailed": "Anmeldung fehlgeschlagen. Bitte versuche es erneut."
+      }
+    }
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "profile": {
+      "title": "Mitarbeiterprofil",
+      "name": "Name",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "namePlaceholder": "Dein Name",
+      "emailPlaceholder": "deine@email.de",
+      "phonePlaceholder": "+49 123 456789",
+      "errors": {
+        "nameRequired": "Bitte gib einen Namen ein",
+        "emailInvalid": "Bitte gib eine gültige E-Mail ein",
+        "saveFailed": "Fehler beim Speichern des Profils"
+      },
+      "saveSuccess": "Profil erfolgreich gespeichert"
+    },
+    "design": {
+      "title": "Eigenes Design verwenden",
+      "description": "Verwende die Farben aus deinen WordPress-Einstellungen"
+    },
+    "language": {
+      "title": "Sprache",
+      "description": "Wähle deine bevorzugte Sprache"
+    },
+    "notifications": {
+      "title": "Benachrichtigungen",
+      "description": "Benachrichtigungseinstellungen verwalten"
+    },
+    "permissions": {
+      "title": "Berechtigungen aktualisieren",
+      "description": "Lade die neuesten Berechtigungen vom Server"
+    },
+    "logout": {
+      "title": "Abmelden",
+      "confirm": "Möchtest du dich wirklich abmelden?"
+    },
+    "version": "Version"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "emptyTitle": "Benachrichtigungen",
+    "emptyDescription": "Hier können Sie Ihre Benachrichtigungseinstellungen verwalten.",
+    "emptyHint": "Diese Funktion wird in Kürze verfügbar sein."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Willkommen zurück",
+    "stats": {
+      "todayAppointments": "Heutige Termine",
+      "growth": "Wachstum",
+      "customers": "Kunden",
+      "todayRevenue": "Heute Umsatz"
+    },
+    "appointments": {
+      "today": "Heutige Termine",
+      "tomorrow": "Termine von Morgen",
+      "tomorrowBadge": "Morgen",
+      "loading": "Lade Termine...",
+      "retry": "Erneut versuchen",
+      "errorLoading": "Fehler beim Laden der Termine",
+      "errorStaffNotFound": "Staff-Daten nicht gefunden. Token: {{hasToken}}, Domain: {{domain}}",
+      "noUpcoming": "Keine bevorstehenden Termine heute oder morgen",
+      "noTomorrow": "Keine Termine für morgen"
+    }
+  },
+  "appointments": {
+    "title": "Termine",
+    "new": "Neuer Termin",
+    "subtitle": "{{count}} Termine",
+    "loading": "Lade...",
+    "loadingAppointments": "Lade Termine...",
+    "loadingDetails": "Lade Termindetails...",
+    "retry": "Erneut versuchen",
+    "error": "Fehler beim Laden der Termine",
+    "errorDetails": "Fehler beim Laden der Termindetails",
+    "errorStaffNotFound": "Staff-Daten nicht gefunden",
+    "notFound": "Termin nicht gefunden",
+    "noPermission": {
+      "title": "Keine Berechtigung",
+      "description": "Du hast keine Berechtigung, Termine anzuzeigen.",
+      "hint": "Kontaktiere den Administrator, um Zugriff zu erhalten."
+    },
+    "noPermissionDetails": {
+      "title": "Keine Berechtigung",
+      "description": "Du hast keine Berechtigung, Termindetails anzuzeigen."
+    },
+    "empty": {
+      "noAppointments": "Keine bevorstehenden Termine",
+      "addFirst": "Erstelle einen neuen Termin mit dem Button oben"
+    },
+    "sections": {
+      "today": "Heute",
+      "tomorrow": "Morgen",
+      "upcoming": "Kommende"
+    },
+    "detail": {
+      "title": "Termindetails",
+      "dateTime": "Datum & Uhrzeit",
+      "service": "Dienstleistung",
+      "customer": "Kunde",
+      "staff": "Mitarbeiter",
+      "notes": "Notizen",
+      "actions": "Aktionen",
+      "changeStatus": "Status ändern",
+      "deleteAppointment": "Termin löschen",
+      "deleteConfirm": "Möchtest du den Termin mit {{name}} wirklich löschen?",
+      "deleteSuccess": "Termin wurde erfolgreich gelöscht.",
+      "deleteError": "Termin konnte nicht gelöscht werden.",
+      "statusUpdateSuccess": "Status wurde erfolgreich aktualisiert.",
+      "statusUpdateError": "Status konnte nicht aktualisiert werden."
+    },
+    "create": {
+      "title": "Neuer Termin",
+      "loading": "Lade Daten...",
+      "customerData": "Kundendaten",
+      "appointmentDetails": "Termindetails",
+      "labels": {
+        "name": "Name *",
+        "email": "E-Mail *",
+        "phone": "Telefon",
+        "service": "Dienstleistung *",
+        "staff": "Mitarbeiter *",
+        "date": "Datum *",
+        "time": "Uhrzeit *",
+        "status": "Status",
+        "notes": "Notizen"
+      },
+      "placeholders": {
+        "name": "Max Mustermann",
+        "email": "max@example.com",
+        "phone": "+49 123 456789",
+        "notes": "Optional: Zusätzliche Informationen...",
+        "selectService": "Dienstleistung wählen",
+        "selectStaff": "Mitarbeiter wählen"
+      },
+      "validation": {
+        "nameRequired": "Bitte gib einen Kundennamen ein.",
+        "emailRequired": "Bitte gib eine E-Mail-Adresse ein.",
+        "emailInvalid": "Bitte gib eine gültige E-Mail-Adresse ein.",
+        "serviceRequired": "Bitte wähle eine Dienstleistung aus.",
+        "staffRequired": "Bitte wähle einen Mitarbeiter aus."
+      },
+      "submit": "Termin erstellen",
+      "success": "Termin wurde erfolgreich erstellt.",
+      "errorLoading": "Daten konnten nicht geladen werden: {{error}}",
+      "errorCreating": "Termin konnte nicht erstellt werden."
+    }
+  },
+  "staff": {
+    "title": "Mitarbeiter",
+    "subtitle": "{{count}} Mitarbeiter",
+    "search": "Personal suchen...",
+    "loading": "Lade...",
+    "loadingStaff": "Lade Personal...",
+    "loadingDetails": "Lade Details...",
+    "retry": "Erneut versuchen",
+    "noPermission": {
+      "title": "Keine Berechtigung",
+      "description": "Du hast keine Berechtigung, das Personal anzuzeigen.",
+      "hint": "Kontaktiere den Administrator, um Zugriff zu erhalten."
+    },
+    "noPermissionDetails": {
+      "title": "Keine Berechtigung",
+      "description": "Du hast keine Berechtigung, Personaldetails anzuzeigen.",
+      "hint": "Kontaktiere den Administrator, um Zugriff zu erhalten."
+    },
+    "error": "Fehler beim Laden des Personals",
+    "errorDetails": "Fehler beim Laden der Mitarbeiter-Details",
+    "notFound": "Mitarbeiter nicht gefunden",
+    "empty": {
+      "noStaff": "Noch kein Personal",
+      "noResults": "Kein Personal gefunden",
+      "addFirst": "Füge deinen ersten Mitarbeiter hinzu",
+      "tryOtherSearch": "Versuche einen anderen Suchbegriff"
+    },
+    "detail": {
+      "title": "Personal Details",
+      "appointmentsToday": "Termine heute",
+      "totalToday": "Gesamt heute",
+      "todaysAppointments": "Heutige Termine",
+      "moreAppointments": "+{{count}} weitere Termine"
+    }
+  },
+  "services": {
+    "title": "Dienstleistungen",
+    "subtitle": "{{count}} Dienstleistungen",
+    "loading": "Lade...",
+    "loadingServices": "Lade Dienstleistungen...",
+    "loadingDetails": "Lade Dienstleistungsdetails...",
+    "retry": "Erneut versuchen",
+    "error": "Fehler beim Laden der Dienstleistungen",
+    "errorDetails": "Fehler beim Laden der Dienstleistungsdetails",
+    "notFound": "Dienstleistung nicht gefunden",
+    "empty": {
+      "noServices": "Keine Dienstleistungen",
+      "addFirst": "Füge deine erste Dienstleistung hinzu"
+    },
+    "duration": {
+      "minutes": "{{count}} Min.",
+      "hours": "{{count}} Std.",
+      "hoursMinutes": "{{hours}} Std. {{minutes}} Min."
+    },
+    "status": {
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "confirmed": "Bestätigt",
+      "pending": "Ausstehend",
+      "cancelled": "Abgesagt"
+    },
+    "detail": {
+      "title": "Dienstleistungsdetails",
+      "created": "Erstellt",
+      "updated": "Aktualisiert",
+      "totalBookings": "Gesamt Buchungen",
+      "upcomingBookings": "Bevorstehend",
+      "recentBookings": "Letzte Buchungen",
+      "noBookings": "Keine Buchungen",
+      "noBookingsDescription": "Diese Dienstleistung wurde noch nicht gebucht"
+    }
+  },
+  "customers": {
+    "title": "Kunden",
+    "subtitle": "{{count}} Kunden",
+    "search": "Kunden suchen...",
+    "loading": "Lade...",
+    "loadingCustomers": "Lade Kunden...",
+    "loadingDetails": "Lade Kundendetails...",
+    "retry": "Erneut versuchen",
+    "noPermission": {
+      "title": "Keine Berechtigung",
+      "description": "Du hast keine Berechtigung, Kunden anzuzeigen.",
+      "hint": "Kontaktiere den Administrator, um Zugriff zu erhalten."
+    },
+    "noPermissionDetails": {
+      "title": "Keine Berechtigung",
+      "description": "Du hast keine Berechtigung, Kundendetails anzuzeigen."
+    },
+    "error": "Fehler beim Laden der Kunden",
+    "errorDetails": "Fehler beim Laden der Kundendetails",
+    "notFound": "Kunde nicht gefunden",
+    "empty": {
+      "noCustomers": "Noch keine Kunden",
+      "noResults": "Keine Kunden gefunden",
+      "addFirst": "Füge deinen ersten Kunden hinzu",
+      "tryOtherSearch": "Versuche einen anderen Suchbegriff"
+    },
+    "created": "Erstellt",
+    "relativeTime": {
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "daysAgo": "vor {{count}} Tagen",
+      "weekAgo": "vor {{count}} Woche",
+      "weeksAgo": "vor {{count}} Wochen",
+      "monthAgo": "vor {{count}} Monat",
+      "monthsAgo": "vor {{count}} Monaten",
+      "yearAgo": "vor {{count}} Jahr",
+      "yearsAgo": "vor {{count}} Jahren"
+    },
+    "detail": {
+      "title": "Kundendetails",
+      "totalAppointments": "Gesamt Termine",
+      "upcomingAppointments": "Bevorstehend",
+      "totalSpent": "Gesamt ausgegeben",
+      "appointmentsHistory": "Terminhistorie",
+      "noAppointments": "Keine Termine",
+      "noAppointmentsDescription": "Dieser Kunde hat noch keine Termine gebucht",
+      "delete": {
+        "button": "Kunde löschen",
+        "confirm": "Möchtest du {{name}} wirklich löschen?",
+        "success": "Kunde wurde erfolgreich gelöscht.",
+        "error": "Kunde konnte nicht gelöscht werden."
+      }
+    }
+  }
+}

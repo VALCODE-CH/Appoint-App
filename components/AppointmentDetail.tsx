@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { API, Appointment } from "../services/api";
 import { StorageService } from "../services/storage";
 
@@ -10,6 +11,7 @@ interface AppointmentDetailProps {
 }
 
 export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailProps) {
+  const { t } = useTranslation();
   const [appointment, setAppointment] = useState<Appointment | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -58,7 +60,7 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
 
     } catch (err: any) {
       console.error("Error loading appointment detail:", err);
-      setError(err.message || "Fehler beim Laden der Termindetails");
+      setError(err.message || t('appointments.errorDetails'));
     } finally {
       setIsLoading(false);
     }
@@ -70,9 +72,9 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
     try {
       await API.updateAppointment(appointmentId!, { status: newStatus });
       setAppointment({ ...appointment, status: newStatus });
-      Alert.alert("Erfolg", "Status wurde erfolgreich aktualisiert.");
+      Alert.alert(t('common.success'), t('appointments.detail.statusUpdateSuccess'));
     } catch (err: any) {
-      Alert.alert("Fehler", err.message || "Status konnte nicht aktualisiert werden.");
+      Alert.alert(t('common.error'), err.message || t('appointments.detail.statusUpdateError'));
     }
   };
 
@@ -80,27 +82,27 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
     if (!appointment || !hasDeletePermission) return;
 
     Alert.alert(
-      "Termin löschen",
-      `Möchtest du den Termin mit ${appointment.customer_name} wirklich löschen?`,
+      t('appointments.detail.deleteAppointment'),
+      t('appointments.detail.deleteConfirm', { name: appointment.customer_name }),
       [
         {
-          text: "Abbrechen",
+          text: t('common.cancel'),
           style: "cancel",
         },
         {
-          text: "Löschen",
+          text: t('common.delete'),
           style: "destructive",
           onPress: async () => {
             try {
               await API.deleteAppointment(appointmentId!);
-              Alert.alert("Erfolg", "Termin wurde erfolgreich gelöscht.", [
+              Alert.alert(t('common.success'), t('appointments.detail.deleteSuccess'), [
                 {
                   text: "OK",
                   onPress: () => onBack(),
                 },
               ]);
             } catch (err: any) {
-              Alert.alert("Fehler", err.message || "Termin konnte nicht gelöscht werden.");
+              Alert.alert(t('common.error'), err.message || t('appointments.detail.deleteError'));
             }
           },
         },
@@ -139,11 +141,11 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
   const getStatusLabel = (status: string): string => {
     switch (status) {
       case "confirmed":
-        return "Bestätigt";
+        return t('services.status.confirmed');
       case "pending":
-        return "Ausstehend";
+        return t('services.status.pending');
       case "cancelled":
-        return "Abgesagt";
+        return t('services.status.cancelled');
       default:
         return status;
     }
@@ -157,14 +159,14 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
     const minutes = Math.floor(diff / 60000);
 
     if (minutes < 60) {
-      return `${minutes} Min.`;
+      return t('services.duration.minutes', { count: minutes });
     } else {
       const hours = Math.floor(minutes / 60);
       const remainingMins = minutes % 60;
       if (remainingMins === 0) {
-        return `${hours} Std.`;
+        return t('services.duration.hours', { count: hours });
       } else {
-        return `${hours} Std. ${remainingMins} Min.`;
+        return t('services.duration.hoursMinutes', { hours, minutes: remainingMins });
       }
     }
   };
@@ -173,7 +175,7 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#7C3AED" />
-        <Text style={styles.loadingText}>Lade Termindetails...</Text>
+        <Text style={styles.loadingText}>{t('appointments.loadingDetails')}</Text>
       </View>
     );
   }
@@ -185,7 +187,7 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
           <TouchableOpacity onPress={onBack} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
           </TouchableOpacity>
-          <Text style={styles.title}>Termindetails</Text>
+          <Text style={styles.title}>{t('appointments.detail.title')}</Text>
           <View style={{ width: 40 }} />
         </View>
 
@@ -193,9 +195,9 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
           <View style={styles.noPermissionIcon}>
             <Ionicons name="lock-closed" size={64} color="#6B7280" />
           </View>
-          <Text style={styles.noPermissionTitle}>Keine Berechtigung</Text>
+          <Text style={styles.noPermissionTitle}>{t('appointments.noPermissionDetails.title')}</Text>
           <Text style={styles.noPermissionText}>
-            Du hast keine Berechtigung, Termindetails anzuzeigen.
+            {t('appointments.noPermissionDetails.description')}
           </Text>
         </View>
       </View>
@@ -209,15 +211,15 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
           <TouchableOpacity onPress={onBack} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
           </TouchableOpacity>
-          <Text style={styles.title}>Termindetails</Text>
+          <Text style={styles.title}>{t('appointments.detail.title')}</Text>
           <View style={{ width: 40 }} />
         </View>
 
         <View style={styles.errorCard}>
           <Ionicons name="alert-circle" size={48} color="#EF4444" />
-          <Text style={styles.errorText}>{error || "Termin nicht gefunden"}</Text>
+          <Text style={styles.errorText}>{error || t('appointments.notFound')}</Text>
           <TouchableOpacity style={styles.retryButton} onPress={loadAppointmentDetail}>
-            <Text style={styles.retryButtonText}>Erneut versuchen</Text>
+            <Text style={styles.retryButtonText}>{t('appointments.retry')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -231,7 +233,7 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
         <TouchableOpacity onPress={onBack} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={styles.title}>Termindetails</Text>
+        <Text style={styles.title}>{t('appointments.detail.title')}</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -258,7 +260,7 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
       {/* Appointment Info Card */}
       <View style={styles.appointmentCard}>
         <View style={styles.infoSection}>
-          <Text style={styles.sectionTitle}>Datum & Uhrzeit</Text>
+          <Text style={styles.sectionTitle}>{t('appointments.detail.dateTime')}</Text>
           <View style={styles.infoRow}>
             <View style={styles.iconContainer}>
               <Ionicons name="calendar" size={20} color="#7C3AED" />
@@ -284,7 +286,7 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
         <View style={styles.divider} />
 
         <View style={styles.infoSection}>
-          <Text style={styles.sectionTitle}>Dienstleistung</Text>
+          <Text style={styles.sectionTitle}>{t('appointments.detail.service')}</Text>
           <View style={styles.infoRow}>
             <View style={styles.iconContainer}>
               <Ionicons name="briefcase" size={20} color="#7C3AED" />
@@ -296,7 +298,7 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
         <View style={styles.divider} />
 
         <View style={styles.infoSection}>
-          <Text style={styles.sectionTitle}>Kunde</Text>
+          <Text style={styles.sectionTitle}>{t('appointments.detail.customer')}</Text>
           <View style={styles.infoRow}>
             <View style={styles.iconContainer}>
               <Ionicons name="person" size={20} color="#7C3AED" />
@@ -322,7 +324,7 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
         <View style={styles.divider} />
 
         <View style={styles.infoSection}>
-          <Text style={styles.sectionTitle}>Mitarbeiter</Text>
+          <Text style={styles.sectionTitle}>{t('appointments.detail.staff')}</Text>
           <View style={styles.infoRow}>
             <View style={styles.iconContainer}>
               <Ionicons name="people" size={20} color="#7C3AED" />
@@ -335,7 +337,7 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
           <>
             <View style={styles.divider} />
             <View style={styles.infoSection}>
-              <Text style={styles.sectionTitle}>Notizen</Text>
+              <Text style={styles.sectionTitle}>{t('appointments.detail.notes')}</Text>
               <View style={styles.notesBox}>
                 <Text style={styles.notesText}>{appointment.notes}</Text>
               </View>
@@ -347,11 +349,11 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
       {/* Actions */}
       {(hasEditPermission || hasDeletePermission) && (
         <View style={styles.actionsCard}>
-          <Text style={styles.sectionTitle}>Aktionen</Text>
+          <Text style={styles.sectionTitle}>{t('appointments.detail.actions')}</Text>
 
           {hasEditPermission && (
             <>
-              <Text style={styles.actionSubtitle}>Status ändern</Text>
+              <Text style={styles.actionSubtitle}>{t('appointments.detail.changeStatus')}</Text>
               <View style={styles.statusButtons}>
                 <TouchableOpacity
                   style={[
@@ -372,7 +374,7 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
                       appointment.status === "pending" && { color: "#F59E0B" },
                     ]}
                   >
-                    Ausstehend
+                    {t('services.status.pending')}
                   </Text>
                 </TouchableOpacity>
 
@@ -395,7 +397,7 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
                       appointment.status === "confirmed" && { color: "#10B981" },
                     ]}
                   >
-                    Bestätigt
+                    {t('services.status.confirmed')}
                   </Text>
                 </TouchableOpacity>
 
@@ -418,7 +420,7 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
                       appointment.status === "cancelled" && { color: "#EF4444" },
                     ]}
                   >
-                    Abgesagt
+                    {t('services.status.cancelled')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -428,7 +430,7 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
           {hasDeletePermission && (
             <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteAppointment}>
               <Ionicons name="trash-outline" size={20} color="#EF4444" />
-              <Text style={styles.deleteButtonText}>Termin löschen</Text>
+              <Text style={styles.deleteButtonText}>{t('appointments.detail.deleteAppointment')}</Text>
             </TouchableOpacity>
           )}
         </View>

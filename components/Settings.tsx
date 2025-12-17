@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, TextInput, ActivityIndicator, Switch } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, TextInput, ActivityIndicator, Switch, Modal } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StorageService } from "../services/storage";
 import { API, Staff } from "../services/api";
 import { Notifications } from "./Notifications";
 import { ThemeServiceInstance, ThemeMode } from "../services/theme";
+import { useTranslation } from "react-i18next";
+import { changeLanguage, getAvailableLanguages } from "../i18n/config";
 
 interface SettingsProps {
   onBack: () => void;
@@ -14,6 +16,7 @@ interface SettingsProps {
 type SettingsView = "main" | "notifications";
 
 export function Settings({ onBack, onLogout }: SettingsProps) {
+  const { t, i18n } = useTranslation();
   const [currentView, setCurrentView] = useState<SettingsView>("main");
   const [staffData, setStaffData] = useState<Staff | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -24,6 +27,8 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
   const [editedPhone, setEditedPhone] = useState("");
   const [themeMode, setThemeMode] = useState<ThemeMode>("standard");
   const [isThemeLoading, setIsThemeLoading] = useState(false);
+  const [isLanguageModalVisible, setIsLanguageModalVisible] = useState(false);
+  const availableLanguages = getAvailableLanguages();
 
   useEffect(() => {
     loadUserData();
@@ -75,6 +80,21 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
       Alert.alert("Fehler", "Design konnte nicht geändert werden.");
     } finally {
       setIsThemeLoading(false);
+    }
+  };
+
+  const handleLanguageChange = async (languageCode: string) => {
+    try {
+      await changeLanguage(languageCode);
+      setIsLanguageModalVisible(false);
+      Alert.alert(
+        t("settings.language.title"),
+        "Language changed successfully. Please restart the app for full effect.",
+        [{ text: "OK" }]
+      );
+    } catch (error) {
+      console.error("Error changing language:", error);
+      Alert.alert("Error", "Language could not be changed.");
     }
   };
 
@@ -352,6 +372,23 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
           />
         </View>
 
+        {/* Language Selector */}
+        <TouchableOpacity
+          style={styles.settingItem}
+          onPress={() => setIsLanguageModalVisible(true)}
+        >
+          <View style={[styles.settingIcon, { backgroundColor: "rgba(59, 130, 246, 0.15)" }]}>
+            <Ionicons name="language-outline" size={24} color="#3B82F6" />
+          </View>
+          <View style={styles.settingContent}>
+            <Text style={styles.settingTitle}>{t("settings.language.title")}</Text>
+            <Text style={styles.settingDescription}>
+              {availableLanguages.find(lang => lang.code === i18n.language)?.name || "Deutsch"}
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color="#6B7280" />
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.settingItem}
           onPress={() => setCurrentView("notifications")}
@@ -389,6 +426,45 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
 
       {/* Version */}
       <Text style={styles.versionText}>Version 1.0.0</Text>
+
+      {/* Language Selection Modal */}
+      <Modal
+        visible={isLanguageModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsLanguageModalVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setIsLanguageModalVisible(false)}
+        >
+          <View style={styles.modalContent} onStartShouldSetResponder={() => true}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>{t("settings.language.title")}</Text>
+              <TouchableOpacity onPress={() => setIsLanguageModalVisible(false)}>
+                <Ionicons name="close" size={24} color="#9CA3AF" />
+              </TouchableOpacity>
+            </View>
+
+            {availableLanguages.map((language) => (
+              <TouchableOpacity
+                key={language.code}
+                style={[
+                  styles.languageOption,
+                  i18n.language === language.code && styles.languageOptionSelected
+                ]}
+                onPress={() => handleLanguageChange(language.code)}
+              >
+                <Text style={styles.languageOptionText}>{language.name}</Text>
+                {i18n.language === language.code && (
+                  <Ionicons name="checkmark" size={24} color="#7C3AED" />
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </ScrollView>
   );
 }
@@ -607,5 +683,51 @@ const styles = StyleSheet.create({
     color: "#6B7280",
     fontSize: 12,
     marginBottom: 32,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: "#1E1E1E",
+    borderRadius: 16,
+    padding: 24,
+    width: "100%",
+    maxWidth: 400,
+    borderWidth: 1,
+    borderColor: "#2A2A2A",
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#FFFFFF",
+  },
+  languageOption: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 16,
+    backgroundColor: "#2A2A2A",
+    borderRadius: 12,
+    marginBottom: 8,
+  },
+  languageOptionSelected: {
+    backgroundColor: "rgba(124, 58, 237, 0.15)",
+    borderWidth: 1,
+    borderColor: "#7C3AED",
+  },
+  languageOptionText: {
+    fontSize: 16,
+    color: "#FFFFFF",
+    fontWeight: "500",
   },
 });

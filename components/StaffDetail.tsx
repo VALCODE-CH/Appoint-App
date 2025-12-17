@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { API, Staff, Appointment } from "../services/api";
 import { StorageService } from "../services/storage";
 
@@ -10,6 +11,7 @@ interface StaffDetailProps {
 }
 
 export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
+  const { t, i18n } = useTranslation();
   const [staff, setStaff] = useState<Staff | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -82,7 +84,7 @@ export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
       });
     } catch (err: any) {
       console.error("Error loading staff detail:", err);
-      setError("Fehler beim Laden der Mitarbeiter-Details");
+      setError(t('staff.errorDetails'));
     } finally {
       setIsLoading(false);
     }
@@ -110,12 +112,12 @@ export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
           <TouchableOpacity onPress={onBack} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
           </TouchableOpacity>
-          <Text style={styles.title}>Personal Details</Text>
+          <Text style={styles.title}>{t('staff.detail.title')}</Text>
           <View style={{ width: 40 }} />
         </View>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#7C3AED" />
-          <Text style={styles.loadingText}>Lade Details...</Text>
+          <Text style={styles.loadingText}>{t('staff.loadingDetails')}</Text>
         </View>
       </View>
     );
@@ -128,19 +130,19 @@ export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
           <TouchableOpacity onPress={onBack} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
           </TouchableOpacity>
-          <Text style={styles.title}>Personal Details</Text>
+          <Text style={styles.title}>{t('staff.detail.title')}</Text>
           <View style={{ width: 40 }} />
         </View>
         <View style={styles.noPermissionContainer}>
           <View style={styles.noPermissionIcon}>
             <Ionicons name="lock-closed" size={64} color="#6B7280" />
           </View>
-          <Text style={styles.noPermissionTitle}>Keine Berechtigung</Text>
+          <Text style={styles.noPermissionTitle}>{t('staff.noPermissionDetails.title')}</Text>
           <Text style={styles.noPermissionText}>
-            Du hast keine Berechtigung, Personaldetails anzuzeigen.
+            {t('staff.noPermissionDetails.description')}
           </Text>
           <Text style={styles.noPermissionHint}>
-            Kontaktiere den Administrator, um Zugriff zu erhalten.
+            {t('staff.noPermissionDetails.hint')}
           </Text>
         </View>
       </View>
@@ -154,14 +156,14 @@ export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
           <TouchableOpacity onPress={onBack} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
           </TouchableOpacity>
-          <Text style={styles.title}>Personal Details</Text>
+          <Text style={styles.title}>{t('staff.detail.title')}</Text>
           <View style={{ width: 40 }} />
         </View>
         <View style={styles.errorContainer}>
           <Ionicons name="alert-circle" size={48} color="#EF4444" />
-          <Text style={styles.errorText}>{error || "Mitarbeiter nicht gefunden"}</Text>
+          <Text style={styles.errorText}>{error || t('staff.notFound')}</Text>
           <TouchableOpacity style={styles.retryButton} onPress={checkPermissionAndLoadDetail}>
-            <Text style={styles.retryButtonText}>Erneut versuchen</Text>
+            <Text style={styles.retryButtonText}>{t('staff.retry')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -175,7 +177,7 @@ export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
         <TouchableOpacity onPress={onBack} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={styles.title}>Personal Details</Text>
+        <Text style={styles.title}>{t('staff.detail.title')}</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -204,21 +206,21 @@ export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
             <Ionicons name="calendar-outline" size={24} color="#60A5FA" />
           </View>
           <Text style={styles.statValue}>{stats.todayCount}</Text>
-          <Text style={styles.statLabel}>Termine heute</Text>
+          <Text style={styles.statLabel}>{t('staff.detail.appointmentsToday')}</Text>
         </View>
         <View style={styles.statCard}>
           <View style={styles.statIconContainer}>
             <Ionicons name="time-outline" size={24} color="#A78BFA" />
           </View>
           <Text style={styles.statValue}>{appointments.length}</Text>
-          <Text style={styles.statLabel}>Gesamt heute</Text>
+          <Text style={styles.statLabel}>{t('staff.detail.totalToday')}</Text>
         </View>
       </View>
 
       {/* Todays Appointments */}
       {appointments.length > 0 && (
         <View style={styles.appointmentsSection}>
-          <Text style={styles.sectionTitle}>Heutige Termine</Text>
+          <Text style={styles.sectionTitle}>{t('staff.detail.todaysAppointments')}</Text>
           {appointments.slice(0, 3).map((apt) => (
             <View key={apt.id} style={styles.appointmentCard}>
               <View style={styles.appointmentInfo}>
@@ -226,7 +228,7 @@ export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
                 <Text style={styles.appointmentService}>{apt.service_name}</Text>
               </View>
               <Text style={styles.appointmentTime}>
-                {new Date(apt.starts_at).toLocaleTimeString('de-DE', {
+                {new Date(apt.starts_at).toLocaleTimeString(i18n.language === 'en' ? 'en-US' : 'de-DE', {
                   hour: '2-digit',
                   minute: '2-digit'
                 })}
@@ -234,7 +236,7 @@ export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
             </View>
           ))}
           {appointments.length > 3 && (
-            <Text style={styles.moreText}>+{appointments.length - 3} weitere Termine</Text>
+            <Text style={styles.moreText}>{t('staff.detail.moreAppointments', { count: appointments.length - 3 })}</Text>
           )}
         </View>
       )}

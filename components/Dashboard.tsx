@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { API, Appointment } from "../services/api";
 import { StorageService } from "../services/storage";
 
@@ -13,6 +14,7 @@ interface DashboardProps {
 }
 
 export function Dashboard({ onNavigateToSettings, onNavigateToAppointment, onNavigateToAppointments, onNavigateToCustomers, shouldRefresh }: DashboardProps) {
+  const { t, i18n } = useTranslation();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -45,7 +47,7 @@ export function Dashboard({ onNavigateToSettings, onNavigateToAppointment, onNav
         console.log("Token exists:", !!token);
         console.log("Domain:", domain);
 
-        setError(`Staff-Daten nicht gefunden. Token: ${!!token}, Domain: ${domain}`);
+        setError(t('dashboard.appointments.errorStaffNotFound', { hasToken: !!token, domain: domain }));
         setIsLoading(false);
         return;
       }
@@ -103,7 +105,7 @@ export function Dashboard({ onNavigateToSettings, onNavigateToAppointment, onNav
       }
     } catch (err: any) {
       console.error("Error loading appointments:", err);
-      setError("Fehler beim Laden der Termine");
+      setError(t('dashboard.appointments.errorLoading'));
     } finally {
       setIsLoading(false);
       setRefreshing(false);
@@ -195,10 +197,10 @@ export function Dashboard({ onNavigateToSettings, onNavigateToAppointment, onNav
   };
 
   const statsDisplay = [
-    { label: "Heutige Termine", value: stats.todayAppointmentsCount.toString(), icon: "calendar-outline", color: "#60A5FA" },
-    { label: "Wachstum", value: stats.monthlyGrowth, icon: "trending-up-outline", color: "#FB923C" },
-    { label: "Kunden", value: stats.totalCustomers.toString(), icon: "people-outline", color: "#A78BFA" },
-    { label: "Heute Umsatz", value: `CHF ${stats.todayRevenue}`, icon: "cash-outline", color: "#4ADE80" },
+    { label: t('dashboard.stats.todayAppointments'), value: stats.todayAppointmentsCount.toString(), icon: "calendar-outline", color: "#60A5FA" },
+    { label: t('dashboard.stats.growth'), value: stats.monthlyGrowth, icon: "trending-up-outline", color: "#FB923C" },
+    { label: t('dashboard.stats.customers'), value: stats.totalCustomers.toString(), icon: "people-outline", color: "#A78BFA" },
+    { label: t('dashboard.stats.todayRevenue'), value: `CHF ${stats.todayRevenue}`, icon: "cash-outline", color: "#4ADE80" },
   ];
 
   const getCurrentDate = (): string => {
@@ -209,7 +211,9 @@ export function Dashboard({ onNavigateToSettings, onNavigateToAppointment, onNav
       month: 'long',
       day: 'numeric'
     };
-    return date.toLocaleDateString('de-DE', options);
+    // Use current language for date formatting
+    const locale = i18n.language === 'en' ? 'en-US' : 'de-DE';
+    return date.toLocaleDateString(locale, options);
   };
 
   return (
@@ -222,7 +226,7 @@ export function Dashboard({ onNavigateToSettings, onNavigateToAppointment, onNav
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>Dashboard</Text>
+          <Text style={styles.title}>{t('dashboard.title')}</Text>
           <Text style={styles.subtitle}>{getCurrentDate()}</Text>
         </View>
         <TouchableOpacity
@@ -236,10 +240,10 @@ export function Dashboard({ onNavigateToSettings, onNavigateToAppointment, onNav
       {/* Stats Grid */}
       <View style={styles.statsGrid}>
         {statsDisplay.map((stat, index) => {
-          const isClickable = stat.label === "Heutige Termine" || stat.label === "Kunden";
-          const onPress = stat.label === "Heutige Termine"
+          const isClickable = stat.label === t('dashboard.stats.todayAppointments') || stat.label === t('dashboard.stats.customers');
+          const onPress = stat.label === t('dashboard.stats.todayAppointments')
             ? onNavigateToAppointments
-            : stat.label === "Kunden"
+            : stat.label === t('dashboard.stats.customers')
             ? onNavigateToCustomers
             : undefined;
 
@@ -279,12 +283,12 @@ export function Dashboard({ onNavigateToSettings, onNavigateToAppointment, onNav
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>
-            {showingTomorrow ? "Termine von Morgen" : "Heutige Termine"}
+            {showingTomorrow ? t('dashboard.appointments.tomorrow') : t('dashboard.appointments.today')}
           </Text>
           {showingTomorrow && (
             <View style={styles.tomorrowBadge}>
               <Ionicons name="calendar" size={14} color="#60A5FA" />
-              <Text style={styles.tomorrowBadgeText}>Morgen</Text>
+              <Text style={styles.tomorrowBadgeText}>{t('dashboard.appointments.tomorrowBadge')}</Text>
             </View>
           )}
         </View>
@@ -292,14 +296,14 @@ export function Dashboard({ onNavigateToSettings, onNavigateToAppointment, onNav
         {isLoading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#7C3AED" />
-            <Text style={styles.loadingText}>Lade Termine...</Text>
+            <Text style={styles.loadingText}>{t('dashboard.appointments.loading')}</Text>
           </View>
         ) : error ? (
           <View style={styles.errorCard}>
             <Ionicons name="alert-circle" size={24} color="#EF4444" />
             <Text style={styles.errorText}>{error}</Text>
             <TouchableOpacity style={styles.retryButton} onPress={loadAppointments}>
-              <Text style={styles.retryButtonText}>Erneut versuchen</Text>
+              <Text style={styles.retryButtonText}>{t('dashboard.appointments.retry')}</Text>
             </TouchableOpacity>
           </View>
         ) : appointments.length === 0 ? (
@@ -307,8 +311,8 @@ export function Dashboard({ onNavigateToSettings, onNavigateToAppointment, onNav
             <Ionicons name="calendar-outline" size={48} color="#6B7280" />
             <Text style={styles.emptyText}>
               {showingTomorrow
-                ? "Keine Termine für morgen"
-                : "Keine bevorstehenden Termine heute oder morgen"}
+                ? t('dashboard.appointments.noTomorrow')
+                : t('dashboard.appointments.noUpcoming')}
             </Text>
           </View>
         ) : (
