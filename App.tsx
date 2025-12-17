@@ -58,6 +58,10 @@ function AppContent() {
       if (domain && token) {
         await API.initialize();
 
+        // Refresh theme after API is initialized
+        // This ensures custom theme colors are loaded if user has custom theme enabled
+        await refreshTheme();
+
         // Aktualisiere Permissions automatisch beim App-Start
         try {
           console.log("===============================================");

@@ -5,6 +5,7 @@ import { StorageService } from "../services/storage";
 import { API, Staff } from "../services/api";
 import { Notifications } from "./Notifications";
 import { ThemeServiceInstance, ThemeMode } from "../services/theme";
+import { useTheme } from "../contexts/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { changeLanguage, getAvailableLanguages } from "../i18n/config";
 
@@ -17,6 +18,7 @@ type SettingsView = "main" | "notifications";
 
 export function Settings({ onBack, onLogout }: SettingsProps) {
   const { t, i18n } = useTranslation();
+  const { refreshTheme } = useTheme();
   const [currentView, setCurrentView] = useState<SettingsView>("main");
   const [staffData, setStaffData] = useState<Staff | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,7 +49,7 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
       }
     } catch (error) {
       console.error("Error loading user data:", error);
-      Alert.alert("Fehler", "Benutzerdaten konnten nicht geladen werden.");
+      Alert.alert(t("common.error"), t("settings.profile.errors.loadFailed"));
     } finally {
       setIsLoading(false);
     }
@@ -70,14 +72,17 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
       await ThemeServiceInstance.setThemeMode(newMode);
       setThemeMode(newMode);
 
+      // Refresh theme in ThemeContext to apply changes immediately
+      await refreshTheme();
+
       Alert.alert(
-        "Design aktualisiert",
-        "Bitte starte die App neu, damit die Änderungen vollständig angewendet werden.",
+        t("settings.design.updateSuccess"),
+        t("settings.design.updateMessage"),
         [{ text: "OK" }]
       );
     } catch (error) {
       console.error("Error changing theme:", error);
-      Alert.alert("Fehler", "Design konnte nicht geändert werden.");
+      Alert.alert(t("common.error"), t("settings.design.updateFailed"));
     } finally {
       setIsThemeLoading(false);
     }
@@ -89,12 +94,12 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
       setIsLanguageModalVisible(false);
       Alert.alert(
         t("settings.language.title"),
-        "Language changed successfully. Please restart the app for full effect.",
+        t("settings.language.changeSuccess"),
         [{ text: "OK" }]
       );
     } catch (error) {
       console.error("Error changing language:", error);
-      Alert.alert("Error", "Language could not be changed.");
+      Alert.alert(t("common.error"), t("settings.language.changeFailed"));
     }
   };
 
@@ -114,10 +119,10 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
       setEditedEmail(response.staff.email);
       setEditedPhone(response.staff.phone || "");
 
-      Alert.alert("Erfolg", "Berechtigungen wurden erfolgreich aktualisiert.");
+      Alert.alert(t("common.success"), t("settings.permissions.updateSuccess"));
     } catch (error: any) {
       console.error("Error refreshing permissions:", error);
-      Alert.alert("Fehler", error.message || "Berechtigungen konnten nicht aktualisiert werden.");
+      Alert.alert(t("common.error"), error.message || t("settings.permissions.updateFailed"));
     } finally {
       setIsLoading(false);
     }
@@ -128,11 +133,11 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
 
     // Validierung
     if (!editedName.trim()) {
-      Alert.alert("Fehler", "Bitte gib einen Namen ein.");
+      Alert.alert(t("common.error"), t("settings.profile.errors.nameRequired"));
       return;
     }
     if (!editedEmail.trim()) {
-      Alert.alert("Fehler", "Bitte gib eine E-Mail-Adresse ein.");
+      Alert.alert(t("common.error"), t("settings.profile.errors.emailRequired"));
       return;
     }
 
@@ -155,10 +160,10 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
       setStaffData(updatedStaff);
       setIsEditing(false);
 
-      Alert.alert("Erfolg", "Deine Daten wurden erfolgreich aktualisiert.");
+      Alert.alert(t("common.success"), t("settings.profile.saveSuccess"));
     } catch (error: any) {
       console.error("Error updating profile:", error);
-      Alert.alert("Fehler", error.message || "Profil konnte nicht aktualisiert werden.");
+      Alert.alert(t("common.error"), error.message || t("settings.profile.errors.updateFailed"));
     } finally {
       setIsSaving(false);
     }
@@ -174,15 +179,15 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
   };
   const handleLogout = () => {
     Alert.alert(
-      "Abmelden",
-      "Möchtest du dich wirklich abmelden?",
+      t("settings.logout.title"),
+      t("settings.logout.confirm"),
       [
         {
-          text: "Abbrechen",
+          text: t("common.cancel"),
           style: "cancel",
         },
         {
-          text: "Abmelden",
+          text: t("settings.logout.title"),
           style: "destructive",
           onPress: async () => {
             try {
@@ -192,7 +197,7 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
               }
             } catch (error) {
               console.error("Error during logout:", error);
-              Alert.alert("Fehler", "Abmelden fehlgeschlagen. Bitte versuche es erneut.");
+              Alert.alert(t("common.error"), t("settings.logout.failed"));
             }
           },
         },
@@ -218,7 +223,7 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#7C3AED" />
-        <Text style={styles.loadingText}>Lade Benutzerdaten...</Text>
+        <Text style={styles.loadingText}>{t("settings.loadingUserData")}</Text>
       </View>
     );
   }
@@ -230,7 +235,7 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
         <TouchableOpacity onPress={onBack} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={styles.title}>Einstellungen</Text>
+        <Text style={styles.title}>{t("settings.title")}</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -241,18 +246,18 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
             {staffData ? getInitials(staffData.name) : "??"}
           </Text>
         </View>
-        <Text style={styles.profileName}>{staffData?.name || "Unbekannt"}</Text>
-        <Text style={styles.profileEmail}>{staffData?.email || "Keine E-Mail"}</Text>
+        <Text style={styles.profileName}>{staffData?.name || t("settings.profile.unknown")}</Text>
+        <Text style={styles.profileEmail}>{staffData?.email || t("settings.profile.noEmail")}</Text>
       </View>
 
       {/* Business Profile Section */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Mitarbeiterprofil</Text>
+          <Text style={styles.sectionTitle}>{t("settings.profile.title")}</Text>
           {!isEditing ? (
             <TouchableOpacity onPress={() => setIsEditing(true)} style={styles.editButton}>
               <Ionicons name="create-outline" size={20} color="#7C3AED" />
-              <Text style={styles.editButtonText}>Bearbeiten</Text>
+              <Text style={styles.editButtonText}>{t("settings.profile.edit")}</Text>
             </TouchableOpacity>
           ) : null}
         </View>
@@ -262,14 +267,14 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
           <View style={styles.inputGroup}>
             <View style={styles.inputLabel}>
               <Ionicons name="person-outline" size={20} color="#9CA3AF" />
-              <Text style={styles.labelText}>Name</Text>
+              <Text style={styles.labelText}>{t("settings.profile.name")}</Text>
             </View>
             {isEditing ? (
               <TextInput
                 style={styles.input}
                 value={editedName}
                 onChangeText={setEditedName}
-                placeholder="Dein Name"
+                placeholder={t("settings.profile.namePlaceholder")}
                 placeholderTextColor="#6B7280"
               />
             ) : (
@@ -281,14 +286,14 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
           <View style={styles.inputGroup}>
             <View style={styles.inputLabel}>
               <Ionicons name="mail-outline" size={20} color="#9CA3AF" />
-              <Text style={styles.labelText}>E-Mail</Text>
+              <Text style={styles.labelText}>{t("settings.profile.email")}</Text>
             </View>
             {isEditing ? (
               <TextInput
                 style={styles.input}
                 value={editedEmail}
                 onChangeText={setEditedEmail}
-                placeholder="deine@email.com"
+                placeholder={t("settings.profile.emailPlaceholder")}
                 placeholderTextColor="#6B7280"
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -302,14 +307,14 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
           <View style={styles.inputGroup}>
             <View style={styles.inputLabel}>
               <Ionicons name="call-outline" size={20} color="#9CA3AF" />
-              <Text style={styles.labelText}>Telefon</Text>
+              <Text style={styles.labelText}>{t("settings.profile.phone")}</Text>
             </View>
             {isEditing ? (
               <TextInput
                 style={styles.input}
                 value={editedPhone}
                 onChangeText={setEditedPhone}
-                placeholder="Telefonnummer (optional)"
+                placeholder={t("settings.profile.phonePlaceholder")}
                 placeholderTextColor="#6B7280"
                 keyboardType="phone-pad"
               />
@@ -327,7 +332,7 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
                 disabled={isSaving}
               >
                 <Ionicons name="close" size={20} color="#6B7280" />
-                <Text style={styles.cancelButtonText}>Abbrechen</Text>
+                <Text style={styles.cancelButtonText}>{t("common.cancel")}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleSaveProfile}
@@ -339,7 +344,7 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
                 ) : (
                   <>
                     <Ionicons name="checkmark" size={20} color="#FFFFFF" />
-                    <Text style={styles.saveButtonText}>Speichern</Text>
+                    <Text style={styles.saveButtonText}>{t("common.save")}</Text>
                   </>
                 )}
               </TouchableOpacity>
@@ -350,7 +355,7 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
 
       {/* Other Settings */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Weitere Einstellungen</Text>
+        <Text style={styles.sectionTitle}>{t("settings.otherSettings")}</Text>
 
         {/* Theme Toggle */}
         <View style={styles.settingItem}>
@@ -358,9 +363,9 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
             <Ionicons name="color-palette-outline" size={24} color="#8B5CF6" />
           </View>
           <View style={styles.settingContent}>
-            <Text style={styles.settingTitle}>Custom Design</Text>
+            <Text style={styles.settingTitle}>{t("settings.design.title")}</Text>
             <Text style={styles.settingDescription}>
-              {themeMode === "custom" ? "Verwendet Server-Farben" : "Verwendet Standard-Design"}
+              {themeMode === "custom" ? t("settings.design.description") : t("settings.design.descriptionStandard")}
             </Text>
           </View>
           <Switch
@@ -397,8 +402,8 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
             <Ionicons name="notifications-outline" size={24} color="#FB923C" />
           </View>
           <View style={styles.settingContent}>
-            <Text style={styles.settingTitle}>Benachrichtigungen</Text>
-            <Text style={styles.settingDescription}>Benachrichtigungseinstellungen verwalten</Text>
+            <Text style={styles.settingTitle}>{t("settings.notifications.title")}</Text>
+            <Text style={styles.settingDescription}>{t("settings.notifications.description")}</Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color="#6B7280" />
         </TouchableOpacity>
@@ -411,8 +416,8 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
             <Ionicons name="shield-checkmark-outline" size={24} color="#7C3AED" />
           </View>
           <View style={styles.settingContent}>
-            <Text style={styles.settingTitle}>Berechtigungen aktualisieren</Text>
-            <Text style={styles.settingDescription}>Lade die neuesten Berechtigungen vom Server</Text>
+            <Text style={styles.settingTitle}>{t("settings.permissions.title")}</Text>
+            <Text style={styles.settingDescription}>{t("settings.permissions.description")}</Text>
           </View>
           <Ionicons name="refresh" size={20} color="#6B7280" />
         </TouchableOpacity>
@@ -421,11 +426,11 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
       {/* Logout Button */}
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Ionicons name="log-out-outline" size={20} color="#EF4444" />
-        <Text style={styles.logoutButtonText}>Abmelden</Text>
+        <Text style={styles.logoutButtonText}>{t("settings.logout.title")}</Text>
       </TouchableOpacity>
 
       {/* Version */}
-      <Text style={styles.versionText}>Version 1.0.0</Text>
+      <Text style={styles.versionText}>{t("settings.version")} 1.0.0</Text>
 
       {/* Language Selection Modal */}
       <Modal

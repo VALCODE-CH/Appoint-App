@@ -211,8 +211,15 @@ export function Dashboard({ onNavigateToSettings, onNavigateToAppointment, onNav
       month: 'long',
       day: 'numeric'
     };
-    // Use current language for date formatting
-    const locale = i18n.language === 'en' ? 'en-US' : 'de-DE';
+    // Map language codes to locale strings
+    const localeMap: { [key: string]: string } = {
+      'en': 'en-US',
+      'de': 'de-DE',
+      'fr': 'fr-FR',
+      'hr': 'hr-HR',
+      'pt': 'pt-PT'
+    };
+    const locale = localeMap[i18n.language] || 'en-US';
     return date.toLocaleDateString(locale, options);
   };
 
