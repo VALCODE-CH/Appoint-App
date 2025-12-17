@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { API, Customer, Appointment } from "../services/api";
 import { StorageService } from "../services/storage";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface CustomerDetailProps {
   customerId: string | null;
@@ -12,6 +13,7 @@ interface CustomerDetailProps {
 
 export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -173,7 +175,7 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#7C3AED" />
+        <ActivityIndicator size="large" color={theme.primary} />
         <Text style={styles.loadingText}>{t('customers.loadingDetails')}</Text>
       </View>
     );
@@ -217,7 +219,7 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
         <View style={styles.errorCard}>
           <Ionicons name="alert-circle" size={48} color="#EF4444" />
           <Text style={styles.errorText}>{error || t('customers.notFound')}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={loadCustomerDetail}>
+          <TouchableOpacity style={[styles.retryButton, { backgroundColor: theme.primary }]} onPress={loadCustomerDetail}>
             <Text style={styles.retryButtonText}>{t('customers.retry')}</Text>
           </TouchableOpacity>
         </View>
@@ -239,7 +241,7 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
       {/* Customer Info Card */}
       <View style={styles.customerCard}>
         <View style={styles.customerHeader}>
-          <View style={styles.avatar}>
+          <View style={[styles.avatar, { backgroundColor: theme.primary }]}>
             <Text style={styles.avatarText}>{getInitials()}</Text>
           </View>
           <View style={styles.customerInfo}>
@@ -279,16 +281,16 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
       {/* Stats */}
       <View style={styles.statsContainer}>
         <View style={styles.statCard}>
-          <View style={[styles.statIcon, { backgroundColor: "rgba(124, 58, 237, 0.15)" }]}>
-            <Ionicons name="calendar" size={24} color="#7C3AED" />
+          <View style={[styles.statIcon, { backgroundColor: `${theme.primary}26` }]}>
+            <Ionicons name="calendar" size={24} color={theme.primary} />
           </View>
           <Text style={styles.statValue}>{stats.totalAppointments}</Text>
           <Text style={styles.statLabel}>{t('customers.detail.totalAppointments')}</Text>
         </View>
 
         <View style={styles.statCard}>
-          <View style={[styles.statIcon, { backgroundColor: "rgba(16, 185, 129, 0.15)" }]}>
-            <Ionicons name="time" size={24} color="#10B981" />
+          <View style={[styles.statIcon, { backgroundColor: `${theme.primary}26` }]}>
+            <Ionicons name="time" size={24} color={theme.primaryLight} />
           </View>
           <Text style={styles.statValue}>{stats.upcomingAppointments}</Text>
           <Text style={styles.statLabel}>{t('customers.detail.upcomingAppointments')}</Text>
@@ -313,7 +315,7 @@ export function CustomerDetail({ customerId, onBack }: CustomerDetailProps) {
               <View key={appointment.id} style={styles.appointmentCard}>
                 <View style={styles.appointmentHeader}>
                   <View style={styles.appointmentDate}>
-                    <Ionicons name="calendar-outline" size={16} color="#7C3AED" />
+                    <Ionicons name="calendar-outline" size={16} color={theme.primary} />
                     <Text style={styles.appointmentDateText}>
                       {formatDate(appointment.starts_at)}
                     </Text>

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { API, Staff } from "../services/api";
 import { StorageService } from "../services/storage";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface StaffListProps {
   onStaffClick: (staffId: number) => void;
@@ -16,6 +17,7 @@ interface StaffWithExtras extends Staff {
 
 export function StaffList({ onStaffClick }: StaffListProps) {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const [staff, setStaff] = useState<StaffWithExtras[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -93,7 +95,7 @@ export function StaffList({ onStaffClick }: StaffListProps) {
     <ScrollView
       style={styles.container}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#7C3AED" />
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.primary} />
       }
     >
       {/* Header */}
@@ -151,7 +153,7 @@ export function StaffList({ onStaffClick }: StaffListProps) {
       ) : isLoading ? (
         /* Loading State */
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#7C3AED" />
+          <ActivityIndicator size="large" color={theme.primary} />
           <Text style={styles.loadingText}>{t('staff.loadingStaff')}</Text>
         </View>
       ) : error ? (
@@ -159,7 +161,7 @@ export function StaffList({ onStaffClick }: StaffListProps) {
         <View style={styles.errorCard}>
           <Ionicons name="alert-circle" size={24} color="#EF4444" />
           <Text style={styles.errorText}>{error}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={loadStaff}>
+          <TouchableOpacity style={[styles.retryButton, { backgroundColor: theme.primary }]} onPress={loadStaff}>
             <Text style={styles.retryButtonText}>{t('staff.retry')}</Text>
           </TouchableOpacity>
         </View>
@@ -185,7 +187,7 @@ export function StaffList({ onStaffClick }: StaffListProps) {
               onPress={() => onStaffClick(parseInt(member.id))}
               style={styles.staffCard}
             >
-              <View style={styles.avatar}>
+              <View style={[styles.avatar, { backgroundColor: theme.primary }]}>
                 <Text style={styles.avatarText}>{member.initials}</Text>
               </View>
               <View style={styles.staffInfo}>

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { API, Customer } from "../services/api";
 import { StorageService } from "../services/storage";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface CustomerWithStats extends Customer {
   fullName: string;
@@ -16,6 +17,7 @@ interface CustomersListProps {
 
 export function CustomersList({ onCustomerClick }: CustomersListProps) {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const [customers, setCustomers] = useState<CustomerWithStats[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -118,7 +120,7 @@ export function CustomersList({ onCustomerClick }: CustomersListProps) {
     <ScrollView
       style={styles.container}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#7C3AED" />
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.primary} />
       }
     >
       {/* Header */}
@@ -176,7 +178,7 @@ export function CustomersList({ onCustomerClick }: CustomersListProps) {
       ) : isLoading ? (
         /* Loading State */
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#7C3AED" />
+          <ActivityIndicator size="large" color={theme.primary} />
           <Text style={styles.loadingText}>{t('customers.loadingCustomers')}</Text>
         </View>
       ) : error ? (
@@ -184,7 +186,7 @@ export function CustomersList({ onCustomerClick }: CustomersListProps) {
         <View style={styles.errorCard}>
           <Ionicons name="alert-circle" size={24} color="#EF4444" />
           <Text style={styles.errorText}>{error}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={loadCustomers}>
+          <TouchableOpacity style={[styles.retryButton, { backgroundColor: theme.primary }]} onPress={loadCustomers}>
             <Text style={styles.retryButtonText}>{t('customers.retry')}</Text>
           </TouchableOpacity>
         </View>
@@ -215,7 +217,7 @@ export function CustomersList({ onCustomerClick }: CustomersListProps) {
               activeOpacity={hasViewPermission ? 0.7 : 1}
               onPress={() => onCustomerClick && onCustomerClick(customer.id)}
             >
-              <View style={styles.avatar}>
+              <View style={[styles.avatar, { backgroundColor: theme.primary }]}>
                 <Text style={styles.avatarText}>{customer.initials}</Text>
               </View>
               <View style={styles.customerInfo}>

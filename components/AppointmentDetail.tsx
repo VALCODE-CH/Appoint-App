@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { API, Appointment } from "../services/api";
 import { StorageService } from "../services/storage";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface AppointmentDetailProps {
   appointmentId: string | null;
@@ -12,6 +13,7 @@ interface AppointmentDetailProps {
 
 export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailProps) {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const [appointment, setAppointment] = useState<Appointment | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -174,7 +176,7 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#7C3AED" />
+        <ActivityIndicator size="large" color={theme.primary} />
         <Text style={styles.loadingText}>{t('appointments.loadingDetails')}</Text>
       </View>
     );
@@ -218,7 +220,7 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
         <View style={styles.errorCard}>
           <Ionicons name="alert-circle" size={48} color="#EF4444" />
           <Text style={styles.errorText}>{error || t('appointments.notFound')}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={loadAppointmentDetail}>
+          <TouchableOpacity style={[styles.retryButton, { backgroundColor: theme.primary }]} onPress={loadAppointmentDetail}>
             <Text style={styles.retryButtonText}>{t('appointments.retry')}</Text>
           </TouchableOpacity>
         </View>
@@ -262,22 +264,22 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
         <View style={styles.infoSection}>
           <Text style={styles.sectionTitle}>{t('appointments.detail.dateTime')}</Text>
           <View style={styles.infoRow}>
-            <View style={styles.iconContainer}>
-              <Ionicons name="calendar" size={20} color="#7C3AED" />
+            <View style={[styles.iconContainer, { backgroundColor: `${theme.primary}26` }]}>
+              <Ionicons name="calendar" size={20} color={theme.primary} />
             </View>
             <Text style={styles.infoText}>{formatDate(appointment.starts_at)}</Text>
           </View>
           <View style={styles.infoRow}>
-            <View style={styles.iconContainer}>
-              <Ionicons name="time" size={20} color="#7C3AED" />
+            <View style={[styles.iconContainer, { backgroundColor: `${theme.primary}26` }]}>
+              <Ionicons name="time" size={20} color={theme.primary} />
             </View>
             <Text style={styles.infoText}>
               {formatTime(appointment.starts_at)} - {formatTime(appointment.ends_at)}
             </Text>
           </View>
           <View style={styles.infoRow}>
-            <View style={styles.iconContainer}>
-              <Ionicons name="hourglass" size={20} color="#7C3AED" />
+            <View style={[styles.iconContainer, { backgroundColor: `${theme.primary}26` }]}>
+              <Ionicons name="hourglass" size={20} color={theme.primary} />
             </View>
             <Text style={styles.infoText}>{getDuration()}</Text>
           </View>
@@ -288,8 +290,8 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
         <View style={styles.infoSection}>
           <Text style={styles.sectionTitle}>{t('appointments.detail.service')}</Text>
           <View style={styles.infoRow}>
-            <View style={styles.iconContainer}>
-              <Ionicons name="briefcase" size={20} color="#7C3AED" />
+            <View style={[styles.iconContainer, { backgroundColor: `${theme.primary}26` }]}>
+              <Ionicons name="briefcase" size={20} color={theme.primary} />
             </View>
             <Text style={styles.infoText}>{appointment.service_name}</Text>
           </View>
@@ -300,21 +302,21 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
         <View style={styles.infoSection}>
           <Text style={styles.sectionTitle}>{t('appointments.detail.customer')}</Text>
           <View style={styles.infoRow}>
-            <View style={styles.iconContainer}>
-              <Ionicons name="person" size={20} color="#7C3AED" />
+            <View style={[styles.iconContainer, { backgroundColor: `${theme.primary}26` }]}>
+              <Ionicons name="person" size={20} color={theme.primary} />
             </View>
             <Text style={styles.infoText}>{appointment.customer_name}</Text>
           </View>
           <View style={styles.infoRow}>
-            <View style={styles.iconContainer}>
-              <Ionicons name="mail" size={20} color="#7C3AED" />
+            <View style={[styles.iconContainer, { backgroundColor: `${theme.primary}26` }]}>
+              <Ionicons name="mail" size={20} color={theme.primary} />
             </View>
             <Text style={styles.infoText}>{appointment.customer_email}</Text>
           </View>
           {appointment.customer_phone && (
             <View style={styles.infoRow}>
-              <View style={styles.iconContainer}>
-                <Ionicons name="call" size={20} color="#7C3AED" />
+              <View style={[styles.iconContainer, { backgroundColor: `${theme.primary}26` }]}>
+                <Ionicons name="call" size={20} color={theme.primary} />
               </View>
               <Text style={styles.infoText}>{appointment.customer_phone}</Text>
             </View>
@@ -326,8 +328,8 @@ export function AppointmentDetail({ appointmentId, onBack }: AppointmentDetailPr
         <View style={styles.infoSection}>
           <Text style={styles.sectionTitle}>{t('appointments.detail.staff')}</Text>
           <View style={styles.infoRow}>
-            <View style={styles.iconContainer}>
-              <Ionicons name="people" size={20} color="#7C3AED" />
+            <View style={[styles.iconContainer, { backgroundColor: `${theme.primary}26` }]}>
+              <Ionicons name="people" size={20} color={theme.primary} />
             </View>
             <Text style={styles.infoText}>{appointment.staff_name}</Text>
           </View>

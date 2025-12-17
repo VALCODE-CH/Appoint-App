@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { API, Service, Appointment } from "../services/api";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface ServiceDetailProps {
   serviceId: string | null;
@@ -11,6 +12,7 @@ interface ServiceDetailProps {
 
 export function ServiceDetail({ serviceId, onBack }: ServiceDetailProps) {
   const { t, i18n } = useTranslation();
+  const { theme } = useTheme();
   const [service, setService] = useState<Service | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -132,7 +134,7 @@ export function ServiceDetail({ serviceId, onBack }: ServiceDetailProps) {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#7C3AED" />
+        <ActivityIndicator size="large" color={theme.primary} />
         <Text style={styles.loadingText}>Lade Dienstleistungsdetails...</Text>
       </View>
     );
@@ -152,7 +154,7 @@ export function ServiceDetail({ serviceId, onBack }: ServiceDetailProps) {
         <View style={styles.errorCard}>
           <Ionicons name="alert-circle" size={48} color="#EF4444" />
           <Text style={styles.errorText}>{error || "Dienstleistung nicht gefunden"}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={loadServiceDetail}>
+          <TouchableOpacity style={[styles.retryButton, { backgroundColor: theme.primary }]} onPress={loadServiceDetail}>
             <Text style={styles.retryButtonText}>Erneut versuchen</Text>
           </TouchableOpacity>
         </View>
@@ -174,8 +176,8 @@ export function ServiceDetail({ serviceId, onBack }: ServiceDetailProps) {
       {/* Service Info Card */}
       <View style={styles.serviceCard}>
         <View style={styles.serviceHeader}>
-          <View style={styles.iconContainer}>
-            <Ionicons name="briefcase" size={32} color="#7C3AED" />
+          <View style={[styles.iconContainer, { backgroundColor: `${theme.primary}26` }]}>
+            <Ionicons name="briefcase" size={32} color={theme.primary} />
           </View>
           <View style={styles.serviceInfo}>
             <Text style={styles.serviceName}>{service.name}</Text>
@@ -221,16 +223,16 @@ export function ServiceDetail({ serviceId, onBack }: ServiceDetailProps) {
       {/* Stats */}
       <View style={styles.statsContainer}>
         <View style={styles.statCard}>
-          <View style={[styles.statIcon, { backgroundColor: "rgba(124, 58, 237, 0.15)" }]}>
-            <Ionicons name="calendar" size={24} color="#7C3AED" />
+          <View style={[styles.statIcon, { backgroundColor: `${theme.primary}26` }]}>
+            <Ionicons name="calendar" size={24} color={theme.primary} />
           </View>
           <Text style={styles.statValue}>{stats.totalBookings}</Text>
           <Text style={styles.statLabel}>Gesamt Buchungen</Text>
         </View>
 
         <View style={styles.statCard}>
-          <View style={[styles.statIcon, { backgroundColor: "rgba(16, 185, 129, 0.15)" }]}>
-            <Ionicons name="time" size={24} color="#10B981" />
+          <View style={[styles.statIcon, { backgroundColor: `${theme.primary}26` }]}>
+            <Ionicons name="time" size={24} color={theme.primaryLight} />
           </View>
           <Text style={styles.statValue}>{stats.upcomingBookings}</Text>
           <Text style={styles.statLabel}>Bevorstehend</Text>
@@ -255,7 +257,7 @@ export function ServiceDetail({ serviceId, onBack }: ServiceDetailProps) {
               <View key={appointment.id} style={styles.appointmentCard}>
                 <View style={styles.appointmentHeader}>
                   <View style={styles.appointmentDate}>
-                    <Ionicons name="calendar-outline" size={16} color="#7C3AED" />
+                    <Ionicons name="calendar-outline" size={16} color={theme.primary} />
                     <Text style={styles.appointmentDateText}>
                       {formatDate(appointment.starts_at)}
                     </Text>

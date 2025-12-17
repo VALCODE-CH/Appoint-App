@@ -18,7 +18,7 @@ type SettingsView = "main" | "notifications";
 
 export function Settings({ onBack, onLogout }: SettingsProps) {
   const { t, i18n } = useTranslation();
-  const { refreshTheme } = useTheme();
+  const { theme, refreshTheme } = useTheme();
   const [currentView, setCurrentView] = useState<SettingsView>("main");
   const [staffData, setStaffData] = useState<Staff | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -241,7 +241,7 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
 
       {/* Profile Section */}
       <View style={styles.profileSection}>
-        <View style={styles.profileAvatar}>
+        <View style={[styles.profileAvatar, { backgroundColor: theme.primary }]}>
           <Text style={styles.profileAvatarText}>
             {staffData ? getInitials(staffData.name) : "??"}
           </Text>
@@ -255,9 +255,18 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>{t("settings.profile.title")}</Text>
           {!isEditing ? (
-            <TouchableOpacity onPress={() => setIsEditing(true)} style={styles.editButton}>
-              <Ionicons name="create-outline" size={20} color="#7C3AED" />
-              <Text style={styles.editButtonText}>{t("settings.profile.edit")}</Text>
+            <TouchableOpacity
+              onPress={() => setIsEditing(true)}
+              style={[
+                styles.editButton,
+                {
+                  backgroundColor: `${theme.primary}1A`,
+                  borderColor: theme.primary
+                }
+              ]}
+            >
+              <Ionicons name="create-outline" size={20} color={theme.primary} />
+              <Text style={[styles.editButtonText, { color: theme.primary }]}>{t("settings.profile.edit")}</Text>
             </TouchableOpacity>
           ) : null}
         </View>
@@ -336,7 +345,7 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleSaveProfile}
-                style={[styles.actionButton, styles.saveButton]}
+                style={[styles.actionButton, styles.saveButton, { backgroundColor: theme.primary }]}
                 disabled={isSaving}
               >
                 {isSaving ? (
@@ -359,8 +368,8 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
 
         {/* Theme Toggle */}
         <View style={styles.settingItem}>
-          <View style={[styles.settingIcon, { backgroundColor: "rgba(139, 92, 246, 0.15)" }]}>
-            <Ionicons name="color-palette-outline" size={24} color="#8B5CF6" />
+          <View style={[styles.settingIcon, { backgroundColor: `${theme.primary}26` }]}>
+            <Ionicons name="color-palette-outline" size={24} color={theme.primary} />
           </View>
           <View style={styles.settingContent}>
             <Text style={styles.settingTitle}>{t("settings.design.title")}</Text>
@@ -371,7 +380,7 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
           <Switch
             value={themeMode === "custom"}
             onValueChange={handleThemeToggle}
-            trackColor={{ false: "#3A3A3A", true: "#7C3AED" }}
+            trackColor={{ false: "#3A3A3A", true: theme.primary }}
             thumbColor={themeMode === "custom" ? "#FFFFFF" : "#9CA3AF"}
             disabled={isThemeLoading}
           />
@@ -457,13 +466,19 @@ export function Settings({ onBack, onLogout }: SettingsProps) {
                 key={language.code}
                 style={[
                   styles.languageOption,
-                  i18n.language === language.code && styles.languageOptionSelected
+                  i18n.language === language.code && [
+                    styles.languageOptionSelected,
+                    {
+                      backgroundColor: `${theme.primary}26`,
+                      borderColor: theme.primary
+                    }
+                  ]
                 ]}
                 onPress={() => handleLanguageChange(language.code)}
               >
                 <Text style={styles.languageOptionText}>{language.name}</Text>
                 {i18n.language === language.code && (
-                  <Ionicons name="checkmark" size={24} color="#7C3AED" />
+                  <Ionicons name="checkmark" size={24} color={theme.primary} />
                 )}
               </TouchableOpacity>
             ))}

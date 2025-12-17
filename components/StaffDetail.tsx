@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { API, Staff, Appointment } from "../services/api";
 import { StorageService } from "../services/storage";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface StaffDetailProps {
   staffId: number | null;
@@ -12,6 +13,7 @@ interface StaffDetailProps {
 
 export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
   const { t, i18n } = useTranslation();
+  const { theme } = useTheme();
   const [staff, setStaff] = useState<Staff | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -116,7 +118,7 @@ export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
           <View style={{ width: 40 }} />
         </View>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#7C3AED" />
+          <ActivityIndicator size="large" color={theme.primary} />
           <Text style={styles.loadingText}>{t('staff.loadingDetails')}</Text>
         </View>
       </View>
@@ -162,7 +164,7 @@ export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
         <View style={styles.errorContainer}>
           <Ionicons name="alert-circle" size={48} color="#EF4444" />
           <Text style={styles.errorText}>{error || t('staff.notFound')}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={checkPermissionAndLoadDetail}>
+          <TouchableOpacity style={[styles.retryButton, { backgroundColor: theme.primary }]} onPress={checkPermissionAndLoadDetail}>
             <Text style={styles.retryButtonText}>{t('staff.retry')}</Text>
           </TouchableOpacity>
         </View>
@@ -183,7 +185,7 @@ export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
 
       {/* Profile */}
       <View style={styles.profileSection}>
-        <View style={styles.avatar}>
+        <View style={[styles.avatar, { backgroundColor: theme.primary }]}>
           <Text style={styles.avatarText}>{getInitials(staff.name)}</Text>
         </View>
         <Text style={styles.name}>{staff.name}</Text>
@@ -202,15 +204,15 @@ export function StaffDetail({ staffId, onBack }: StaffDetailProps) {
       {/* Stats */}
       <View style={styles.statsSection}>
         <View style={styles.statCard}>
-          <View style={styles.statIconContainer}>
-            <Ionicons name="calendar-outline" size={24} color="#60A5FA" />
+          <View style={[styles.statIconContainer, { backgroundColor: `${theme.primary}33` }]}>
+            <Ionicons name="calendar-outline" size={24} color={theme.primary} />
           </View>
           <Text style={styles.statValue}>{stats.todayCount}</Text>
           <Text style={styles.statLabel}>{t('staff.detail.appointmentsToday')}</Text>
         </View>
         <View style={styles.statCard}>
-          <View style={styles.statIconContainer}>
-            <Ionicons name="time-outline" size={24} color="#A78BFA" />
+          <View style={[styles.statIconContainer, { backgroundColor: `${theme.primary}33` }]}>
+            <Ionicons name="time-outline" size={24} color={theme.primaryLight} />
           </View>
           <Text style={styles.statValue}>{appointments.length}</Text>
           <Text style={styles.statLabel}>{t('staff.detail.totalToday')}</Text>

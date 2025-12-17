@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { API, Appointment } from "../services/api";
 import { StorageService } from "../services/storage";
 import { CreateAppointment } from "./CreateAppointment";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface GroupedAppointments {
   heute: Appointment[];
@@ -18,6 +19,7 @@ interface AppointmentsProps {
 
 export function Appointments({ onAppointmentClick }: AppointmentsProps) {
   const { t, i18n } = useTranslation();
+  const { theme } = useTheme();
   const [appointments, setAppointments] = useState<GroupedAppointments>({
     heute: [],
     morgen: [],
@@ -206,7 +208,7 @@ export function Appointments({ onAppointmentClick }: AppointmentsProps) {
           <Text style={styles.customerName}>{appointment.customer_name}</Text>
           <Text style={styles.serviceName}>{appointment.service_name}</Text>
           <View style={styles.staffContainer}>
-            <Ionicons name="person-outline" size={16} color="#A78BFA" />
+            <Ionicons name="person-outline" size={16} color={theme.primaryLight} />
             <Text style={styles.staffName}>{appointment.staff_name}</Text>
           </View>
         </View>
@@ -235,7 +237,7 @@ export function Appointments({ onAppointmentClick }: AppointmentsProps) {
     <ScrollView
       style={styles.container}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#7C3AED" />
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.primary} />
       }
     >
       {/* Header */}
@@ -251,7 +253,7 @@ export function Appointments({ onAppointmentClick }: AppointmentsProps) {
       {/* Add Button - nur anzeigen wenn Berechtigung vorhanden */}
       {hasCreatePermission && (
         <TouchableOpacity
-          style={styles.addButton}
+          style={[styles.addButton, { backgroundColor: theme.primary, shadowColor: theme.primary }]}
           onPress={() => setShowCreateForm(true)}
         >
           <Ionicons name="add" size={20} color="#FFFFFF" />
@@ -276,7 +278,7 @@ export function Appointments({ onAppointmentClick }: AppointmentsProps) {
       ) : isLoading ? (
         /* Loading State */
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#7C3AED" />
+          <ActivityIndicator size="large" color={theme.primary} />
           <Text style={styles.loadingText}>{t('appointments.loadingAppointments')}</Text>
         </View>
       ) : error ? (
@@ -284,7 +286,7 @@ export function Appointments({ onAppointmentClick }: AppointmentsProps) {
         <View style={styles.errorCard}>
           <Ionicons name="alert-circle" size={24} color="#EF4444" />
           <Text style={styles.errorText}>{error}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={loadAppointments}>
+          <TouchableOpacity style={[styles.retryButton, { backgroundColor: theme.primary }]} onPress={loadAppointments}>
             <Text style={styles.retryButtonText}>{t('appointments.retry')}</Text>
           </TouchableOpacity>
         </View>
@@ -304,7 +306,7 @@ export function Appointments({ onAppointmentClick }: AppointmentsProps) {
           {appointments.heute.length > 0 && (
             <View style={styles.sectionContainer}>
               <View style={styles.sectionHeader}>
-                <Ionicons name="today" size={20} color="#60A5FA" />
+                <Ionicons name="today" size={20} color={theme.primary} />
                 <Text style={styles.sectionTitle}>{t('appointments.sections.today')} ({appointments.heute.length})</Text>
               </View>
               {appointments.heute.map((apt) =>
@@ -317,7 +319,7 @@ export function Appointments({ onAppointmentClick }: AppointmentsProps) {
           {appointments.morgen.length > 0 && (
             <View style={styles.sectionContainer}>
               <View style={styles.sectionHeader}>
-                <Ionicons name="calendar" size={20} color="#FB923C" />
+                <Ionicons name="calendar" size={20} color={theme.primaryLight} />
                 <Text style={styles.sectionTitle}>{t('appointments.sections.tomorrow')} ({appointments.morgen.length})</Text>
               </View>
               {appointments.morgen.map((apt) =>
@@ -330,7 +332,7 @@ export function Appointments({ onAppointmentClick }: AppointmentsProps) {
           {appointments.zukunft.length > 0 && (
             <View style={styles.sectionContainer}>
               <View style={styles.sectionHeader}>
-                <Ionicons name="time" size={20} color="#A78BFA" />
+                <Ionicons name="time" size={20} color={theme.primaryLight} />
                 <Text style={styles.sectionTitle}>{t('appointments.sections.upcoming')} ({appointments.zukunft.length})</Text>
               </View>
               {appointments.zukunft.map((apt) =>

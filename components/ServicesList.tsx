@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { API, Service } from "../services/api";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface ServicesListProps {
   onServiceClick?: (serviceId: string) => void;
@@ -10,6 +11,7 @@ interface ServicesListProps {
 
 export function ServicesList({ onServiceClick }: ServicesListProps) {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -101,7 +103,7 @@ export function ServicesList({ onServiceClick }: ServicesListProps) {
     <ScrollView
       style={styles.container}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#7C3AED" />
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.primary} />
       }
     >
       {/* Header */}
@@ -125,7 +127,7 @@ export function ServicesList({ onServiceClick }: ServicesListProps) {
       {/* Loading State */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#7C3AED" />
+          <ActivityIndicator size="large" color={theme.primary} />
           <Text style={styles.loadingText}>{t('services.loadingServices')}</Text>
         </View>
       ) : error ? (
@@ -133,7 +135,7 @@ export function ServicesList({ onServiceClick }: ServicesListProps) {
         <View style={styles.errorCard}>
           <Ionicons name="alert-circle" size={24} color="#EF4444" />
           <Text style={styles.errorText}>{error}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={loadServices}>
+          <TouchableOpacity style={[styles.retryButton, { backgroundColor: theme.primary }]} onPress={loadServices}>
             <Text style={styles.retryButtonText}>{t('services.retry')}</Text>
           </TouchableOpacity>
         </View>
@@ -155,8 +157,8 @@ export function ServicesList({ onServiceClick }: ServicesListProps) {
               style={styles.serviceCard}
               onPress={() => onServiceClick && onServiceClick(service.id)}
             >
-              <View style={styles.serviceIcon}>
-                <Ionicons name={getServiceIcon(service.name) as any} size={24} color="#7C3AED" />
+              <View style={[styles.serviceIcon, { backgroundColor: `${theme.primary}33` }]}>
+                <Ionicons name={getServiceIcon(service.name) as any} size={24} color={theme.primary} />
               </View>
               <View style={styles.serviceInfo}>
                 <Text style={styles.serviceName}>{service.name}</Text>
